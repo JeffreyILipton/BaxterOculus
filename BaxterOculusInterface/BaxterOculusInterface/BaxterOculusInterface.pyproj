@@ -23,6 +23,12 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="BaxterOculusInterface.py" />
+    <Compile Include="oculuslcm\hand_t.py" />
+    <Compile Include="oculuslcm\oculus_t.py" />
+    <Compile Include="oculuslcm\__init__.py" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="oculuslcm\" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

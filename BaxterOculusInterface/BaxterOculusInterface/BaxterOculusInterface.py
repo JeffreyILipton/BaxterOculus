@@ -2,7 +2,8 @@
 if os.name!='nt':
     import lcm
     import rospy
-    import baxter_interface
+    from baxter_interface import *
 
+import argparse
 from oculuslcm import *
 
