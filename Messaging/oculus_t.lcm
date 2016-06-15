@@ -1,0 +1,16 @@
+package oculuslcm;
+struct oculus_t
+{
+    double   position[3];
+    double   orientation[4]; 
+    boolean  enabled;
+}
+
+struct hand_t
+{
+    double   position[3];
+    double   orientation[4];
+	int32_t  trigger;
+    boolean  enabled;
+}
+
