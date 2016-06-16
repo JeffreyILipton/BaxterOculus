@@ -67,6 +67,7 @@ def iksvcForLimb(limb):
     return iksvc
 
 def ProcessHand(thresh,arduino,iksvc,timeout,handToBaxter, limb,limb_obj, data):
+    #http://sdk.rethinkrobotics.com/wiki/IK_Service_-_Code_Walkthrough 
     msg = hand_t.decode(data)
     baxter_pos = handToBaxter(msg.position)
 
