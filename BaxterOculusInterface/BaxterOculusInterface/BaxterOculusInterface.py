@@ -24,6 +24,7 @@ from functools import *
 from math import *
 from ArduinoInterface import *
 from oculuslcm import *
+from Threadsys import *
 
 def minMax(min_val,max_val,val):
     return max(min_val,min(val,max_val))
@@ -101,6 +102,14 @@ def ProcessHead(Head,OculusToAngle,data):
     Head.set_pan(ang)
 
 
+def setupBaxterPart(lc,dt,channel,processor):
+    l_channel = channel
+    l_lock = Lock()
+    l_holder = MessageHolder(l_lock,'')
+    l_LCM = LCMInterface(lc,l_channel,l_holder)
+    l_Controller = BaxterPartInterface(dt,l_holder,processor)
+    return l_LCM,l_Controller
+
 def main():
         
     scales=[1,1,1]
@@ -135,16 +144,26 @@ def main():
 
 
     lc = lcm.LCM()
-    r_subscription = lc.subscribe("Right", RightHand)
-    l_subscription = lc.subscribe("Left",LeftHand)
-    h_subscription = lc.subscribe("Head",HeadControl)
- 
-    try:
-         while True:
-             lc.handle()
-    except KeyboardInterrupt:
-         pass
-    
+    #r_subscription = lc.subscribe("Right", RightHand)
+    #l_subscription = lc.subscribe("Left",LeftHand)
+    #h_subscription = lc.subscribe("Head",HeadControl)
+    l_LCM, l_Controller = setupBaxterPart(lc,dt,"Left",LeftHand)
+    r_LCM, r_Controller = setupBaxterPart(lc,dt,"Right",RightHand)
+    h_LCM, h_Controller = setupBaxterPart(lc,dt,"Head",HeadControl)
+    threads = [l_LCM, l_Controller,r_LCM, r_Controller,h_LCM, h_Controller]
+
+
+    #Start movement
+    rs = RobotEnable(CHECK_VERSION)
+
+    dt = 0.05
+
+    for thread in threads: thread.start()
+    for thread in threads: thread.join()
+
+    rs.disable()
+    return 0
+        
 
 
 if __name__ == "__main__":
