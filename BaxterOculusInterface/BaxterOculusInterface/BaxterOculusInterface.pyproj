@@ -22,6 +22,9 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="ArduinoInterface.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="BaxterOculusInterface.py" />
     <Compile Include="oculuslcm\hand_t.py" />
     <Compile Include="oculuslcm\oculus_t.py" />
