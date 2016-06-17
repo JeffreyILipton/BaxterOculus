@@ -2,7 +2,6 @@ import os
 import sys
 if os.name!='nt':
     import lcm
-    import rospy
 
 from oculuslcm import *
 

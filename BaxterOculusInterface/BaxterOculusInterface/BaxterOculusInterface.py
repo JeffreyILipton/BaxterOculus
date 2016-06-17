@@ -84,18 +84,18 @@ def ProcessHand(thresh,arduino,iksvc,timeout,handToBaxter, limb,limb_obj, data):
     try:
         print "trying"
         print ikreq
-        #rospy.wait_for_service(ns, timeout)
-        #resp = iksvc(ikreq)
-        #if (resp.isValid[0]):
-        #    print "SUCCESS - Valid Joint Solution Found:"
-        #    # Format solution into Limb API-compatible dictionary
-        #    limb_joints = dict(zip(resp.joints[0].name, resp.joints[0].position))
-        #    print limb_joints
-        #    limb_obj.move_to_joint_positions(limb_joints)
-        #else:
-        if msg.position[0]>10: limb_obj.move_to_joint_positions(wave_1)
-        else: limb_obj.move_to_joint_positions(wave_2)
-        print "huh"
+        rospy.wait_for_service(ns, timeout)
+        resp = iksvc(ikreq)
+        if (resp.isValid[0]):
+            print "SUCCESS - Valid Joint Solution Found:"
+            # Format solution into Limb API-compatible dictionary
+            limb_joints = dict(zip(resp.joints[0].name, resp.joints[0].position))
+            print limb_joints
+            limb_obj.move_to_joint_positions(limb_joints)
+        else:
+        #if msg.position[0]>10: limb_obj.move_to_joint_positions(wave_1)
+        #else: limb_obj.move_to_joint_positions(wave_2)
+            print "huh"
         #print resp
             
 
@@ -115,8 +115,7 @@ def ProcessHead(Head,OculusToAngle,data):
     Head.set_pan(ang)
 
 
-def setupBaxterPart(dt,channel,processor):
-    l_channel = channel
+def setupBaxterPart(dt,processor):
     l_lock = Lock()
     l_holder = MessageHolder(l_lock,'')
     l_Controller = BaxterPartInterface(dt,l_holder,processor)
@@ -127,9 +126,9 @@ def main():
     rospy.init_node('BaxterLCM')
     #startIKService()
     dt = 0.05    
-    scales=[1,1,1]
-    offsets = [0,0,0]
-    mins = [0,0,0]
+    scales=[0.001,0.001,0.001]# m/mm
+    offsets = [600,600,600]
+    mins = [0.2,0,0]
     maxs = [200,200,200]
     handToBaxter = partial(XYZRescale,scales, offsets, mins, maxs)
 
@@ -177,6 +176,7 @@ def main():
     rs = RobotEnable(CHECK_VERSION)
 
     print "starting"
+    for thread in threads: thread.deamon = True
     for thread in threads: thread.start()
     for thread in threads: thread.join()
     print "done"

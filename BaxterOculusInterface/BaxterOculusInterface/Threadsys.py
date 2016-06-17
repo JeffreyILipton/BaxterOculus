@@ -48,7 +48,7 @@ class BaxterPartInterface(Thread):
     def run(self):
         try:
             while True:
-                print "-"
+                #print "-"
                 tic = time.time()
                 msg, isread = self.holder.getMsg()
                 if not isread:
@@ -57,7 +57,7 @@ class BaxterPartInterface(Thread):
                 time_taken = toc-tic
                 waittime = self.dt-time_taken
                 waittime = max(waittime,0)
-                print waittime
+                #print waittime
                 time.sleep(waittime)
         except KeyboardInterrupt:
             pass    
