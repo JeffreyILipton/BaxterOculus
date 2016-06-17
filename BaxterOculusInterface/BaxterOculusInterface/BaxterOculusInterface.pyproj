@@ -29,6 +29,9 @@
     <Compile Include="oculuslcm\hand_t.py" />
     <Compile Include="oculuslcm\oculus_t.py" />
     <Compile Include="oculuslcm\__init__.py" />
+    <Compile Include="LCMTest.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Threadsys.py">
       <SubType>Code</SubType>
     </Compile>

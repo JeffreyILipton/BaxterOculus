@@ -1,4 +1,4 @@
-from threading import Thread, Lock
+﻿from threading import Thread, Lock
 from functools import *
 import time
 from math import *
@@ -8,7 +8,7 @@ class MessageHolder():
         self.msg = message
         self.lock = lock
         self.read = True
-    def setMsg(self,message):
+    def setMsg(self,channel,message):
         self.lock.acquire()
         self.msg = message
         self.read = False
@@ -22,16 +22,19 @@ def lcm_handler(state_holder,msg):
     state_holder.setMsg(msg)
 
 class LCMInterface(Thread):
-    def __init__(self,lc,channel,state_holder):
-        self.channel = channel
+    def __init__(self,lc,channel_state_holder_dict):
         Thread.__init__(self)
         self.lc = lc
-        self.subscription = self.lc.subscribe(channel,state_holder.setMsg)
+        self.subscriptions={}
+        for key in channel_state_holder_dict:
+            state_holder = channel_state_holder_dict[key]
+            self.subscriptions[key] = self.lc.subscribe(key,state_holder.setMsg)
 
     def run(self):
         try:
             while True:
                  self.lc.handle()
+                 print "."
         except KeyboardInterrupt:
             pass    
 
@@ -45,6 +48,7 @@ class BaxterPartInterface(Thread):
     def run(self):
         try:
             while True:
+                print "-"
                 tic = time.time()
                 msg, isread = self.holder.getMsg()
                 if not isread:
@@ -53,7 +57,8 @@ class BaxterPartInterface(Thread):
                 time_taken = toc-tic
                 waittime = self.dt-time_taken
                 waittime = max(waittime,0)
-                time.sleep(waittime/self.speedup)
+                print waittime
+                time.sleep(waittime)
         except KeyboardInterrupt:
             pass    
 
