@@ -1,9 +1,9 @@
+#!/usr/bin/env python
 import os
 import sys
 if os.name!='nt':
     import lcm
     import rospy
-    import roshelper
     from baxter_interface import *
     from std_msgs.msg import Bool
     from geometry_msgs.msg import (
@@ -34,7 +34,7 @@ def PointQuatToPose(baxter_pos,orientation):
     return p
 
 def LCMPoseToRos(RosPub,LcmChannel,lcmData):
-    lcm_msg = hand_t.decode(lcmData)
+    lcm_msg = pose_t.decode(lcmData)
     p = Pose(lcm_msg.position, lcm_msg.orientation)
     RosPub.publish(p)
     
@@ -51,7 +51,7 @@ class LCMInterface():
 
 
         for connection in connections:
-            ros_channnel,lcm_channel,ros_msg_type = connnection
+            ros_channnel,lcm_channel,ros_msg_type = connection
             pub = rospy.Publisher(ros_channnel, ros_msg_type, queue_size=1)
             if ros_msg_type == Pose:
                 subscriber = partial(LCMPoseToRos,pub)
@@ -66,4 +66,19 @@ class LCMInterface():
                  self.lc.handle()
                  print "."
         except KeyboardInterrupt:
-            pass    
+            pass
+
+def main():
+    print "lcm start"
+    LCMI = LCMInterface()
+    rospy.init_node('LCM_rebroadcast',anonymous = True)
+    try:
+        LCMI.run()
+    except rospy.ROSInterruptException:pass
+
+
+
+if __name__ == "__main__":
+
+    sys.exit(int(main() or 0))
+
