@@ -1,7 +1,6 @@
 ﻿import os
 import sys
 if os.name!='nt':
-    import lcm
     import rospy
     from baxter_interface import *
     from geometry_msgs.msg import (
@@ -23,8 +22,11 @@ from itertools import *
 from functools import *
 from math import *
 from ArduinoInterface import *
-from oculuslcm import *
-from Threadsys import *
+
+
+wave_1 = {'left_s0': -0.459, 'left_s1': -0.202, 'left_e0': 1.807, 'left_e1': 1.714, 'left_w0': -0.906, 'left_w1': -1.545, 'left_w2': -0.276}
+wave_2 = {'left_s0': -0.395, 'left_s1': -0.202, 'left_e0': 1.831, 'left_e1': 1.981, 'left_w0': -1.979, 'left_w1': -1.100, 'left_w2': -0.448}
+
 
 def minMax(min_val,max_val,val):
     return max(min_val,min(val,max_val))
@@ -36,9 +38,6 @@ def YawFromQuat(theta_min,theta_max, quat):
     # https://en.wikipedia.org/wiki/Conversion_between_quaternions_and_Euler_angles
     q0,q1,q2,q3 = quat
     return atan2(2*(q0*q1+q2*q3),1-2*(q1*q1+q2*q2))
-
-wave_1 = {'left_s0': -0.459, 'left_s1': -0.202, 'left_e0': 1.807, 'left_e1': 1.714, 'left_w0': -0.906, 'left_w1': -1.545, 'left_w2': -0.276}
-wave_2 = {'left_s0': -0.395, 'left_s1': -0.202, 'left_e0': 1.831, 'left_e1': 1.981, 'left_w0': -1.979, 'left_w1': -1.100, 'left_w2': -0.448}
 
 
 def poseFromPosQuatLib(hdr,limb,baxter_pos,orientation):
@@ -52,10 +51,10 @@ def poseFromPosQuatLib(hdr,limb,baxter_pos,orientation):
                     z=baxter_pos[2],
                 ),
                 orientation=Quaternion(
-                    x=orientation[1],
-                    y=orientation[2],
-                    z=orientation[3],
-                    w=orientation[0],
+                    x=orientation[0],
+                    y=orientation[1],
+                    z=orientation[2],
+                    w=orientation[3],
                 ),
             ),
         )
@@ -69,17 +68,16 @@ def startIKService():
 def iksvcForLimb(limb):
     ns = "ExternalTools/" + limb + "/PositionKinematicsNode/IKService"
     iksvc = rospy.ServiceProxy(ns, SolvePositionIK)
-    return iksvc
+    return iksvc,ns
 
-def ProcessHand(thresh,arduino,iksvc,timeout,handToBaxter, limb,limb_obj, data):
+def ProcessHand(iksvc,ns,timeout,handToBaxter, limb,limb_obj, data):
     #http://sdk.rethinkrobotics.com/wiki/IK_Service_-_Code_Walkthrough 
     print "hand called for : ",limb
-    msg = hand_t.decode(data)
-    baxter_pos = handToBaxter(msg.position)
-    ns = "ExternalTools/" + limb + "/PositionKinematicsNode/IKService"
+
+    baxter_pos = handToBaxter(data.position)
     ikreq = SolvePositionIKRequest()
     hdr = Header(stamp=rospy.Time.now(), frame_id='base')
-    pose  = poseFromPosQuatLib(hdr,limb,baxter_pos,msg.orientation)
+    pose  = poseFromPosQuatLib(hdr,limb,baxter_pos,data.orientation)
     ikreq.pose_stamp.append(pose[limb])
     try:
         print "trying"
@@ -93,33 +91,24 @@ def ProcessHand(thresh,arduino,iksvc,timeout,handToBaxter, limb,limb_obj, data):
             print limb_joints
             limb_obj.move_to_joint_positions(limb_joints)
         else:
+            print "ERROR - No valid Join Solution:",limb
+            print resp
         #if msg.position[0]>10: limb_obj.move_to_joint_positions(wave_1)
         #else: limb_obj.move_to_joint_positions(wave_2)
-            print "huh"
-        #print resp
+
             
 
     except (rospy.ServiceException, rospy.ROSException), e:
         print "except"
         rospy.logerr("Service call failed: %s" % (e,))
-
-
-    
-    if (msg.trigger > thresh) and (type(arduino) != None) :
-        arduino.trigger()
     
     
 def ProcessHead(Head,OculusToAngle,data):
-    msg = oculus_t.decode(data)
-    ang = OculusToAngle(msg.orientation)
+    ang = OculusToAngle(data.orientation)
     Head.set_pan(ang)
 
-
-def setupBaxterPart(dt,processor):
-    l_lock = Lock()
-    l_holder = MessageHolder(l_lock,'')
-    l_Controller = BaxterPartInterface(dt,l_holder,processor)
-    return l_holder,l_Controller
+def ProcessTrigger(arduino,data):
+    if data.data: arduino.trigger()
 
 def main():
     print "turning on"
@@ -156,29 +145,13 @@ def main():
     #head = Head()
     #HeadControl = partial(ProcessHead,head,OculusToAngle)
 
-    print "parts made, setting up interface"
-    lc = lcm.LCM()
-    #r_subscription = lc.subscribe("Right", RightHand)
-    #l_subscription = lc.subscribe("Left",LeftHand)
-    #h_subscription = lc.subscribe("Head",HeadControl)
-    l_holder, l_Controller = setupBaxterPart(dt,"Left",LeftHand)
-    #r_holder, r_Controller = setupBaxterPart(dt,"Right",RightHand)
-    #h_holder, h_Controller = setupBaxterPart(dt,"Head",HeadControl)
-    channel_state_holder_dict={}
-    channel_state_holder_dict['left']  = l_holder
-    #channel_state_holder_dict['right'] = r_holder
-    #channel_state_holder_dict['head']  = h_holder
-    lcmInter = LCMInterface(lc,channel_state_holder_dict)
-    threads = [lcmInter,l_Controller]#,r_LCM, r_Controller,h_LCM, h_Controller]
 
     
     #Start movement
     rs = RobotEnable(CHECK_VERSION)
 
     print "starting"
-    for thread in threads: thread.deamon = True
-    for thread in threads: thread.start()
-    for thread in threads: thread.join()
+
     print "done"
     #rs.disable()
     return 0
