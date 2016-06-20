@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+﻿#!/usr/bin/env python
 import os
 import sys
 if os.name!='nt':
@@ -35,7 +35,7 @@ def PointQuatToPose(baxter_pos,orientation):
 
 def LCMPoseToRos(RosPub,LcmChannel,lcmData):
     lcm_msg = pose_t.decode(lcmData)
-    p = Pose(lcm_msg.position, lcm_msg.orientation)
+    p = PointQuatToPose(lcm_msg.position, lcm_msg.orientation)
     RosPub.publish(p)
     
 def LCMBoolToRos(RosPub,lcmChannel, lcmData):

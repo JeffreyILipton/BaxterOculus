@@ -1,5 +1,7 @@
-﻿import os
+﻿#!/usr/bin/env python
+import os
 import sys
+
 if os.name!='nt':
     import rospy
     from baxter_interface import *
@@ -10,7 +12,7 @@ if os.name!='nt':
         Quaternion,
     )
     from std_msgs.msg import Header
- 
+    from std_msgs.msg import Bool
     from baxter_core_msgs.srv import (
         SolvePositionIK,
         SolvePositionIKRequest,
@@ -22,6 +24,7 @@ from itertools import *
 from functools import *
 from math import *
 from ArduinoInterface import *
+from Comms import *
 
 
 wave_1 = {'left_s0': -0.459, 'left_s1': -0.202, 'left_e0': 1.807, 'left_e1': 1.714, 'left_w0': -0.906, 'left_w1': -1.545, 'left_w2': -0.276}
@@ -73,11 +76,13 @@ def iksvcForLimb(limb):
 def ProcessHand(iksvc,ns,timeout,handToBaxter, limb,limb_obj, data):
     #http://sdk.rethinkrobotics.com/wiki/IK_Service_-_Code_Walkthrough 
     print "hand called for : ",limb
+    position = [data.position.x,data.position.y,data.position.z]
+    orientation = [data.orientation.x,data.orientation.y,data.orientation.z,data.orientation.w] 
 
-    baxter_pos = handToBaxter(data.position)
+    baxter_pos = handToBaxter(position)
     ikreq = SolvePositionIKRequest()
     hdr = Header(stamp=rospy.Time.now(), frame_id='base')
-    pose  = poseFromPosQuatLib(hdr,limb,baxter_pos,data.orientation)
+    pose  = poseFromPosQuatLib(hdr,limb,baxter_pos,orientation)
     ikreq.pose_stamp.append(pose[limb])
     try:
         print "trying"
@@ -111,46 +116,87 @@ def ProcessTrigger(arduino,data):
     if data.data: arduino.trigger()
 
 def main():
-    print "turning on"
-    rospy.init_node('BaxterLCM')
+    """BaxterInterface
+ 
+   A program from MIT's DRL for using Baxter via LCM messages
+ 
+   Run this by passing the *limb*,head, or trigger, and the node 
+   for controlling that part will spin up
+   """
+    #arg_fmt = argparse.RawDescriptionHelpFormatter
+    #parser = argparse.ArgumentParser(formatter_class=arg_fmt,
+    #                                 description=main.__doc__)
+    #parser.add_argument(
+    #    '-p', '--part', choices=['left', 'right','head','trigger'], required=True,
+    #    help="the part to control, 'left', 'right','head','trigger'"
+    #)
+    #args = parser.parse_args(rospy.myargv()[1:])
+    rospy.init_node('part_listener', anonymous=True)
+    full_param_name = rospy.search_param('part')
+    param_value = rospy.get_param(full_param_name)
+    part = param_value
+    print "PART IS:",part
+
+    
     #startIKService()
     dt = 0.05    
     scales=[0.001,0.001,0.001]# m/mm
     offsets = [600,600,600]
     mins = [0.2,0,0]
     maxs = [200,200,200]
-    handToBaxter = partial(XYZRescale,scales, offsets, mins, maxs)
-
-
-
-    thresh=100
-    arduino=None
-    timeout =1.0
-    l = 'left'
-    left_limb = Limb(l)
-    iksvc_l = iksvcForLimb(l)
-    LeftHand = partial(ProcessHand,thresh,arduino,iksvc_l,timeout,handToBaxter, l,left_limb)    
-
-    #r = 'right'
-    #right_limb = Limb(r)
-    #iksvc_r = iksvcForLimb(r)
-    #RightHand = partial(ProcessHand,thresh,arduino,iksvc_l,timeout,handToBaxter, r,right_limb)    
-
-
-    #theta_max = pi
-    #theta_min = -pi
     
-    #OculusToAngle = partial(YawFromQuat,theta_min,theta_max)
 
-    #head = Head()
-    #HeadControl = partial(ProcessHead,head,OculusToAngle)
 
+    timeout =1.0
+    sub_func = None
+    channel = ""
+    msgType = None
+    if part == 'left':
+        channel = ROS_LEFT
+        handToBaxter = partial(XYZRescale,scales, offsets, mins, maxs)
+        l = 'left'
+        left_limb = Limb(l)
+        iksvc_l,ns_l = iksvcForLimb(l)
+        sub_func = partial(ProcessHand,iksvc_l,ns_l,timeout,handToBaxter, l,left_limb)
+        msgType = Pose   
+         
+    elif part == 'right':
+        channel = ROS_RIGHT
+        handToBaxter = partial(XYZRescale,scales, offsets, mins, maxs)
+        r = 'right'
+        right_limb = Limb(r)
+        iksvc_r = iksvcForLimb(r)
+        sub_func = partial(ProcessHand,thresh,arduino,iksvc_l,timeout,handToBaxter, r,right_limb)
+        msgType = Pose     
+         
+    elif part == 'head':
+        theta_max = pi
+        theta_min = -pi
+    
+        OculusToAngle = partial(YawFromQuat,theta_min,theta_max)
+
+        head = Head()
+        channel = ROS_HEAD
+        sub_func = partial(ProcessHead,head,OculusToAngle)
+        msgType = Pose  
+
+    elif part == 'trigger':
+        channel = ROS_TRIGGER
+        arduino = ArduinoInterface()
+        sub_func = partial(ProcessTrigger,arduino)
+        msgType = Bool
+
+    else :
+        print "unknown part:", part
+        return 0
+     
 
     
     #Start movement
+    print "starting part: ",part
     rs = RobotEnable(CHECK_VERSION)
-
-    print "starting"
+    rospy.Subscriber(channel, msgType, sub_func)
+    rospy.spin()
 
     print "done"
     #rs.disable()
@@ -160,3 +206,4 @@ def main():
 
 if __name__ == "__main__":
     sys.exit(int(main() or 0))
+
