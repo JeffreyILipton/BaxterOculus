@@ -1,4 +1,4 @@
-﻿#!/usr/bin/env python
+#!/usr/bin/env python
 import os
 import sys
 if os.name!='nt':
@@ -18,24 +18,25 @@ from Comms import *
 
 
 def PointQuatToPose(baxter_pos,orientation):
-    p = Pose(
-                position=Point(
+    p = Pose()
+    p.position = Point(
                     x=baxter_pos[0],
                     y=baxter_pos[1],
                     z=baxter_pos[2],
-                ),
-                orientation=Quaternion(
+                 )
+    p.orientation=Quaternion(
                     x=orientation[1],
                     y=orientation[2],
                     z=orientation[3],
                     w=orientation[0],
-                ),
-           )
+                )
     return p
 
 def LCMPoseToRos(RosPub,LcmChannel,lcmData):
     lcm_msg = pose_t.decode(lcmData)
     p = PointQuatToPose(lcm_msg.position, lcm_msg.orientation)
+    #print "lcm pose:",lcm_msg.position,lcm_msg.orientation
+    #print "ROS pose:",p
     RosPub.publish(p)
     
 def LCMBoolToRos(RosPub,lcmChannel, lcmData):

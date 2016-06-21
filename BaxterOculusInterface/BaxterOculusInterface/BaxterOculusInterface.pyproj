@@ -38,6 +38,9 @@
     <Compile Include="LCMTest.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="ServiceTimeout.py">
+      <SubType>Code</SubType>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="oculuslcm\" />

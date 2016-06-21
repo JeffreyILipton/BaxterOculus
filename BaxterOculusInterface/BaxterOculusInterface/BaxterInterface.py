@@ -1,4 +1,4 @@
-﻿#!/usr/bin/env python
+#!/usr/bin/env python
 import os
 import sys
 
@@ -25,10 +25,8 @@ from functools import *
 from math import *
 from ArduinoInterface import *
 from Comms import *
+from ServiceTimeout import *
 
-
-wave_1 = {'left_s0': -0.459, 'left_s1': -0.202, 'left_e0': 1.807, 'left_e1': 1.714, 'left_w0': -0.906, 'left_w1': -1.545, 'left_w2': -0.276}
-wave_2 = {'left_s0': -0.395, 'left_s1': -0.202, 'left_e0': 1.831, 'left_e1': 1.981, 'left_w0': -1.979, 'left_w1': -1.100, 'left_w2': -0.448}
 
 
 def minMax(min_val,max_val,val):
@@ -65,9 +63,6 @@ def poseFromPosQuatLib(hdr,limb,baxter_pos,orientation):
     return poses
 
 
-def startIKService():
-    rospy.init_node("rsdk_ik_service_client")
-
 def iksvcForLimb(limb):
     ns = "ExternalTools/" + limb + "/PositionKinematicsNode/IKService"
     iksvc = rospy.ServiceProxy(ns, SolvePositionIK)
@@ -86,10 +81,10 @@ def ProcessHand(iksvc,ns,timeout,handToBaxter, limb,limb_obj, data):
     ikreq.pose_stamp.append(pose[limb])
     try:
         print "trying"
-        print ikreq
-        rospy.wait_for_service(ns, timeout)
-        resp = iksvc(ikreq)
-        if (resp.isValid[0]):
+        #print ikreq
+        #rospy.wait_for_service(ns, timeout)
+        resp = ServiceTimeouter(timeout,iksvc, ikreq).call()
+        if (resp is resp.isValid[0]):
             print "SUCCESS - Valid Joint Solution Found:"
             # Format solution into Limb API-compatible dictionary
             limb_joints = dict(zip(resp.joints[0].name, resp.joints[0].position))
@@ -97,6 +92,7 @@ def ProcessHand(iksvc,ns,timeout,handToBaxter, limb,limb_obj, data):
             limb_obj.move_to_joint_positions(limb_joints)
         else:
             print "ERROR - No valid Join Solution:",limb
+            print "target:", baxter_pos," ",orientation
             print resp
         #if msg.position[0]>10: limb_obj.move_to_joint_positions(wave_1)
         #else: limb_obj.move_to_joint_positions(wave_2)
@@ -137,17 +133,15 @@ def main():
     part = param_value
     print "PART IS:",part
 
-    
-    #startIKService()
-    dt = 0.05    
+
     scales=[0.001,0.001,0.001]# m/mm
-    offsets = [600,600,600]
+    offsets = [600,00,300]
     mins = [0.2,0,0]
     maxs = [200,200,200]
     
 
 
-    timeout =1.0
+    timeout =0.5
     sub_func = None
     channel = ""
     msgType = None
@@ -165,8 +159,8 @@ def main():
         handToBaxter = partial(XYZRescale,scales, offsets, mins, maxs)
         r = 'right'
         right_limb = Limb(r)
-        iksvc_r = iksvcForLimb(r)
-        sub_func = partial(ProcessHand,thresh,arduino,iksvc_l,timeout,handToBaxter, r,right_limb)
+        iksvc_r,ns_r = iksvcForLimb(r)
+        sub_func = partial(ProcessHand,iksvc_r,ns_r,timeout,handToBaxter, r,right)
         msgType = Pose     
          
     elif part == 'head':
@@ -206,4 +200,6 @@ def main():
 
 if __name__ == "__main__":
     sys.exit(int(main() or 0))
+
+
 
