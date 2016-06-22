@@ -26,6 +26,9 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="BaxterInterface.py" />
+    <Compile Include="BaxterRange.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Comms.py">
       <SubType>Code</SubType>
     </Compile>
