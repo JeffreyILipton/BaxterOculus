@@ -12,7 +12,7 @@ if os.name!='nt':
         Quaternion,
     )
     from std_msgs.msg import Header
-    from std_msgs.msg import Bool
+    from std_msgs.msg import *
     from baxter_core_msgs.srv import (
         SolvePositionIK,
         SolvePositionIKRequest,
