@@ -18,11 +18,16 @@ struct range_t
 }
 
 
-struct gripper_command_t
+struct velocity_t
 {
 	double velocity;
+}
+
+struct cmd_t
+{
 	int16_t command;
 }
+
 
 struct image_t
 {

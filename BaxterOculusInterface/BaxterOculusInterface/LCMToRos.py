@@ -1,11 +1,11 @@
-#!/usr/bin/env python
+﻿#!/usr/bin/env python
 import os
 import sys
 if os.name!='nt':
     import lcm
     import rospy
     from baxter_interface import *
-    from std_msgs.msg import Bool
+    from std_msgs.msg import *
     from geometry_msgs.msg import (
         Pose,
         Point,
@@ -32,6 +32,18 @@ def PointQuatToPose(baxter_pos,orientation):
                 )
     return p
 
+
+def LCMGripperCMDToRos(RosPub,LcmChannel,lcmData):
+    lcm_msg = cmd_t.decode(lcmData)
+    i = UInt16(lcm_msg.command)
+    RosPub.publish(i)
+
+def LCMGripperVelToRos(RosPub,LcmChannel,lcmData):
+    lcm_msg = velocity_t.decode(lcmData)
+    v = Float64(lcm_msg.velocity)
+    RosPub.publish(v)
+
+
 def LCMPoseToRos(RosPub,LcmChannel,lcmData):
     lcm_msg = pose_t.decode(lcmData)
     p = PointQuatToPose(lcm_msg.position, lcm_msg.orientation)
@@ -49,7 +61,7 @@ class LCMInterface():
         self.lc = lcm.LCM()
         self.subscriptions={}
         connections = [(ROS_LEFT,LCM_LEFT,Pose)]#,
-
+        
 
         for connection in connections:
             ros_channnel,lcm_channel,ros_msg_type = connection
@@ -58,6 +70,10 @@ class LCMInterface():
                 subscriber = partial(LCMPoseToRos,pub)
             elif ros_msg_type == Bool:
                 subscriber = partial(LCMBoolToRos,pub)
+            elif ros_msg_type == UInt16:
+                subscriber = partial(LCMGripperCMDToRos,pub)
+            elif ros_msg_type == Float64:
+                subscriber = partial(LCMGripperVelToRos,pub)
 
             self.subscriptions[ros_channnel] = self.lc.subscribe(lcm_channel,subscriber)
 

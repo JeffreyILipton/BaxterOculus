@@ -35,8 +35,12 @@
     <Compile Include="LCMToRos.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="oculuslcm\cmd_t.py" />
+    <Compile Include="oculuslcm\image_t.py" />
     <Compile Include="oculuslcm\pose_t.py" />
+    <Compile Include="oculuslcm\range_t.py" />
     <Compile Include="oculuslcm\trigger_t.py" />
+    <Compile Include="oculuslcm\velocity_t.py" />
     <Compile Include="oculuslcm\__init__.py" />
     <Compile Include="LCMTest.py">
       <SubType>Code</SubType>

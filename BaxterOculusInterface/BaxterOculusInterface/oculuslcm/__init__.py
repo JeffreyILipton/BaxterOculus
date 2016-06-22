@@ -5,3 +5,7 @@ DO NOT MODIFY BY HAND!!!!
 
 from .pose_t import pose_t
 from .trigger_t import trigger_t
+from .range_t import range_t
+from .velocity_t import velocity_t
+from .cmd_t import cmd_t
+from .image_t import image_t
