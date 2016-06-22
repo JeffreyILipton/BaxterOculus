@@ -3,6 +3,7 @@ import os
 import sys
 
 if os.name!='nt':
+    import lcm
     import rospy
     from baxter_interface import *
     from geometry_msgs.msg import (
@@ -13,6 +14,7 @@ if os.name!='nt':
     )
     from std_msgs.msg import Header
     from std_msgs.msg import *
+    from sensor_msgs.msg import Range, Image
     from baxter_core_msgs.srv import (
         SolvePositionIK,
         SolvePositionIKRequest,
@@ -26,7 +28,7 @@ from math import *
 from ArduinoInterface import *
 from Comms import *
 from ServiceTimeout import *
-
+from oculuslcm import*
 
 
 def minMax(min_val,max_val,val):
@@ -122,6 +124,22 @@ def ProcessHead(Head,OculusToAngle,data):
 def ProcessTrigger(arduino,data):
     if data.data: arduino.trigger()
 
+
+def ProcessRange(lc,lcChannel,data):
+    msg = range_t()
+    msg.range = data.range
+    lc.publish(lcChannel,msg.encode())
+
+def ProcessImage(lc,lcChannel,rosmsg):
+    lcm_msg = image_t()
+    lcm_msg.height = rosmsg.height
+    lcm_msg.width = rosmsg.width
+    lcm_msg.row_stride = rosmsg.step
+    lcm_msg.data = rosmsg.data
+    lcm_msg.size = len(rosmsg.data)
+    lc.publish(lcChannel,lcm_msg.encode())
+
+
 def main():
     """BaxterInterface
  
@@ -134,8 +152,8 @@ def main():
     #parser = argparse.ArgumentParser(formatter_class=arg_fmt,
     #                                 description=main.__doc__)
     #parser.add_argument(
-    #    '-p', '--part', choices=['left', 'right','head','trigger','right_gripper','left_gripper'], required=True,
-    #    help="the part to control, 'left', 'right','head','trigger'"
+    #    '-p', '--part', choices=['left', 'right','head','trigger','right_gripper','left_gripper','left_range','right_range'], required=True,
+    #    help="the part to control, 'left', 'right','head','trigger','right_gripper','left_gripper','left_range','right_range'"
     #)
     #args = parser.parse_args(rospy.myargv()[1:])
     rospy.init_node('part_listener', anonymous=True)
@@ -219,6 +237,34 @@ def main():
         msgType = Float64
         sub_func = partial(ProcessGripperVel,gripper)
         connection_list.append((channel,msgType,sub_func))
+    elif part == 'left_range':
+        lcChannel = LCM_L_RANGE
+        lc = lcm.LCM()
+        channel = ROS_L_RANGE
+        msgType = Range
+        sub_func = partial(ProcessRange,lc,lcChannel)
+        connection_list.append((channel,msgType,sub_func))
+    elif part == 'right_range':
+        lcChannel = LCM_R_RANGE
+        lc = lcm.LCM()
+        channel = ROS_R_RANGE
+        msgType = Range
+        sub_func = partial(ProcessRange,lc,lcChannel)
+        connection_list.append((channel,msgType,sub_func))
+    elif part == 'right_camera':
+        lcChannel = LCM_R_CAMERA
+        lc = lcm.LCM()
+        channel = ROS_R_CAMERA
+        msgType = Image
+        sub_func = partial(ProcessImage,lc,lcChannel)
+        connection_list.append((channel,msgType,sub_func))
+    elif part == 'leftt_camera':
+        lcChannel = LCM_L_CAMERA
+        lc = lcm.LCM()
+        channel = ROS_L_CAMERA
+        msgType = Image
+        sub_func = partial(ProcessImage,lc,lcChannel)
+        connection_list.append((channel,msgType,sub_func))
     else :
         print "unknown part:", part
         return 0
@@ -233,7 +279,7 @@ def main():
         rospy.Subscriber(channel, msgType, sub_func)
     rospy.spin()
 
-    print "done"
+    #print "done"
     #rs.disable()
     return 0
         
