@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+﻿#!/usr/bin/env python
 import os
 import sys
 
@@ -63,6 +63,17 @@ def poseFromPosQuatLib(hdr,limb,baxter_pos,orientation):
     return poses
 
 
+def ProcessGripperCMD(gripper,data):
+    gripper.set_velocity(data)
+
+def ProcessGripperVel(gripper,data):
+    if data <1:
+        gripper.stop()
+    elif data<2:
+        gripper.open()
+    elif data<3:
+        gripper.close()
+
 def iksvcForLimb(limb):
     ns = "ExternalTools/" + limb + "/PositionKinematicsNode/IKService"
     iksvc = rospy.ServiceProxy(ns, SolvePositionIK)
@@ -123,7 +134,7 @@ def main():
     #parser = argparse.ArgumentParser(formatter_class=arg_fmt,
     #                                 description=main.__doc__)
     #parser.add_argument(
-    #    '-p', '--part', choices=['left', 'right','head','trigger'], required=True,
+    #    '-p', '--part', choices=['left', 'right','head','trigger','right_gripper','left_gripper'], required=True,
     #    help="the part to control, 'left', 'right','head','trigger'"
     #)
     #args = parser.parse_args(rospy.myargv()[1:])
@@ -145,6 +156,9 @@ def main():
     sub_func = None
     channel = ""
     msgType = None
+
+    connection_list = []
+
     if part == 'left':
         channel = ROS_LEFT
         handToBaxter = partial(XYZRescale,scales, offsets, mins, maxs)
@@ -152,7 +166,8 @@ def main():
         left_limb = Limb(l)
         iksvc_l,ns_l = iksvcForLimb(l)
         sub_func = partial(ProcessHand,iksvc_l,ns_l,timeout,handToBaxter, l,left_limb)
-        msgType = Pose   
+        msgType = Pose
+        connection_list.append((channel,msgType,sub_func))   
          
     elif part == 'right':
         channel = ROS_RIGHT
@@ -161,7 +176,8 @@ def main():
         right_limb = Limb(r)
         iksvc_r,ns_r = iksvcForLimb(r)
         sub_func = partial(ProcessHand,iksvc_r,ns_r,timeout,handToBaxter, r,right)
-        msgType = Pose     
+        msgType = Pose   
+        connection_list.append((channel,msgType,sub_func))  
          
     elif part == 'head':
         theta_max = pi
@@ -173,13 +189,36 @@ def main():
         channel = ROS_HEAD
         sub_func = partial(ProcessHead,head,OculusToAngle)
         msgType = Pose  
+        connection_list.append((channel,msgType,sub_func))
 
     elif part == 'trigger':
         channel = ROS_TRIGGER
         arduino = ArduinoInterface()
         sub_func = partial(ProcessTrigger,arduino)
         msgType = Bool
+        connection_list.append((channel,msgType,sub_func))
+    elif part == 'right_gripper':
+        gripper = Gripper('right', CHECK_VERSION)
+        channel = ROS_R_CMD
+        msgType = UInt16
+        sub_func = partial(ProcessGripperCMD,gripper)
+        connection_list.append((channel,msgType,sub_func))
 
+        channel = ROS_R_VEL
+        msgType = Float64
+        sub_func = partial(ProcessGripperVel,gripper)
+        connection_list.append((channel,msgType,sub_func))
+    elif part == 'left_gripper':
+        gripper = Gripper('left', CHECK_VERSION)
+        channel = ROS_L_CMD
+        msgType = UInt16
+        sub_func = partial(ProcessGripperCMD,gripper)
+        connection_list.append((channel,msgType,sub_func))
+
+        channel = ROS_L_VEL
+        msgType = Float64
+        sub_func = partial(ProcessGripperVel,gripper)
+        connection_list.append((channel,msgType,sub_func))
     else :
         print "unknown part:", part
         return 0
@@ -189,7 +228,9 @@ def main():
     #Start movement
     print "starting part: ",part
     rs = RobotEnable(CHECK_VERSION)
-    rospy.Subscriber(channel, msgType, sub_func)
+    for connection in connection_list:
+        channel,msgType,sub_func = connection
+        rospy.Subscriber(channel, msgType, sub_func)
     rospy.spin()
 
     print "done"
