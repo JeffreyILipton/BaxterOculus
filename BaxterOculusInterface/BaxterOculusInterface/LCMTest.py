@@ -1,4 +1,5 @@
-﻿import os
+#!/usr/bin/env python
+import os
 import sys
 if os.name!='nt':
     import lcm
@@ -31,16 +32,16 @@ try:
         else:
             message2.position=array
             lc.publish(channel,message2.encode())
-        #val = raw_input("A,B,C: ")
-        #if val == 'a' or val == 'A':
-        #    lc.publish(channel,message1.encode())
-        #elif val == 'b' or val == 'B':
-        #    lc.publish(channel,message2.encode())
+    #val = raw_input("A,B,C: ")
+    #if val == 'a' or val == 'A':
+    #    lc.publish(channel,message1.encode())
+    #elif val == 'b' or val == 'B':
+    #    lc.publish(channel,message2.encode())
 
-        #elif val == 'c' or val == 'C':
-        #    lc.publish(channel,message3.encode())
-        #else:
-        #    print "Not A or B or C, got : ",val
-        #    notdone = False
+    #elif val == 'c' or val == 'C':
+    #    lc.publish(channel,message3.encode())
+    #else:
+    #    print "Not A or B or C, got : ",val
+    #    notdone = False
 except KeyboardInterrupt:
     pass    

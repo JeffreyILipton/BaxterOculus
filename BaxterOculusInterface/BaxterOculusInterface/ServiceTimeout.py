@@ -45,7 +45,7 @@ class ServiceTimeouter(object):
         timeout = time.time() + self.timeout
         while time.time() < timeout and self.thread.isAlive():
             time.sleep(0.001)
-            print (timeout-time.time())/self.timeout
+            #print (timeout-time.time())/self.timeout
         if not self.returned:
             print "timed out"
             return None

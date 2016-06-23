@@ -1,4 +1,4 @@
-﻿#!/usr/bin/env python
+#!/usr/bin/env python
 import os
 import sys
 
@@ -30,6 +30,7 @@ from Comms import *
 from ServiceTimeout import *
 from oculuslcm import*
 
+DEBUG = True
 
 def minMax(min_val,max_val,val):
     return max(min_val,min(val,max_val))
@@ -97,7 +98,7 @@ def ProcessHand(iksvc,ns,timeout,handToBaxter, limb,limb_obj, data):
         #print ikreq
         #rospy.wait_for_service(ns, timeout)
         resp = ServiceTimeouter(timeout,iksvc, ikreq).call()
-        if (resp is resp.isValid[0]):
+        if (resp is not None and resp.isValid[0]):
             print "SUCCESS - Valid Joint Solution Found:"
             # Format solution into Limb API-compatible dictionary
             limb_joints = dict(zip(resp.joints[0].name, resp.joints[0].position))
@@ -128,6 +129,7 @@ def ProcessTrigger(arduino,data):
 def ProcessRange(lc,lcChannel,data):
     msg = range_t()
     msg.range = data.range
+    if DEBUG: print data.range
     lc.publish(lcChannel,msg.encode())
 
 def ProcessImage(lc,lcChannel,rosmsg):
@@ -164,13 +166,13 @@ def main():
 
 
     scales=[0.001,0.001,0.001]# m/mm
-    offsets = [600,00,300]
+    offsets = [600,00,00]
     mins = [0.2,0,0]
     maxs = [200,200,200]
     
 
 
-    timeout =0.5
+    timeout =12.5
     sub_func = None
     channel = ""
     msgType = None
