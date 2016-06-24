@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+﻿#!/usr/bin/env python
 import os
 import sys
 if os.name!='nt':
@@ -27,8 +27,9 @@ try:
     lc = lcm.LCM()
     notdone = True
     while notdone:
-	array = input('3 array: ')
-        if len(array)!=3: notdone = False
+        array = input('3 array: ')
+        if len(array)!=3: 
+            notdone = False
         else:
             message2.position=array
             lc.publish(channel,message2.encode())

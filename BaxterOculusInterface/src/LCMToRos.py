@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+﻿#!/usr/bin/env python
 import os
 import sys
 if os.name!='nt':
@@ -35,13 +35,11 @@ def PointQuatToPose(baxter_pos,orientation):
 
 def LCMGripperCMDToRos(RosPub,LcmChannel,lcmData):
     lcm_msg = cmd_t.decode(lcmData)
-    i = UInt16(lcm_msg.command)
-    RosPub.publish(i)
+    RosPub.publish(lcm_msg.command)
 
 def LCMGripperVelToRos(RosPub,LcmChannel,lcmData):
     lcm_msg = velocity_t.decode(lcmData)
-    v = Float64(lcm_msg.velocity)
-    RosPub.publish(v)
+    RosPub.publish(lcm_msg.velocity)
 
 
 def LCMPoseToRos(RosPub,LcmChannel,lcmData):
@@ -53,14 +51,15 @@ def LCMPoseToRos(RosPub,LcmChannel,lcmData):
     
 def LCMBoolToRos(RosPub,lcmChannel, lcmData):
     lcm_msg = trigger_t.decode(lcmData)
-    b = Bool(lcm_msg.trigger)
-    RosPub.publish(b)
+    RosPub.publish(lcm_msg.trigger)
 
 class LCMInterface():
     def __init__(self):
         self.lc = lcm.LCM()
         self.subscriptions={}
-        connections = [(ROS_LEFT,LCM_LEFT,Pose)]#,
+        connections = [(ROS_LEFT,LCM_LEFT,Pose),
+                       (ROS_R_CMD,LCM_R_CMD,UInt16),
+                       (ROS_R_VEL,LCM_R_CMD,Float64) ]#,
         
 
         for connection in connections:
