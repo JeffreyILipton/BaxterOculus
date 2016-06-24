@@ -11,13 +11,17 @@ def range_handler(channel,data):
     msg = range_t.decode(data)
     print msg.range
 
+def image_handler(channel,data):
+	msg = image_t.decode(data)
+	print "len: ",len(msg.data)
 
-channel = LCM_L_RANGE
 
+#channel = LCM_L_RANGE
+channel = LCM_L_CAMERA
 try:
     lc = lcm.LCM()
     notdone = True
-    subscription = lc.subscribe(channel, range_handler)
+    subscription = lc.subscribe(channel, image_handler)
     while notdone:
         lc.handle()
 

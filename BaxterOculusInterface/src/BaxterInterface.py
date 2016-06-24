@@ -137,7 +137,15 @@ def ProcessImage(lc,lcChannel,rosmsg):
     lcm_msg.row_stride = rosmsg.step
     lcm_msg.data = rosmsg.data
     lcm_msg.size = len(rosmsg.data)
+    print "pub on ",lcChannel
+    #print "ros data: ",len(rosmsg.data)
+    print "lcm data: ", len(lcm_msg.encode())
+    #tm = trigger_t()
+    #tm.trigger = True
     lc.publish(lcChannel,lcm_msg.encode())
+    
+    #lc.publish(LCM_L_CAMERA,tm.encode())
+    #lc.publish(LCM_L_TRIGGER,tm.encode())
 
 
 def main():
@@ -160,7 +168,7 @@ def main():
     full_param_name = rospy.search_param('part')
     param_value = rospy.get_param(full_param_name)
     part = param_value
-    print "PART IS:",part
+    #print "PART IS:",part
 
 
     scales=[0.001,0.001,0.001]# m/mm
@@ -229,6 +237,7 @@ def main():
         connection_list.append((channel,msgType,sub_func))
     elif part == 'left_gripper':
         gripper = Gripper('left', CHECK_VERSION)
+        gripper.calibrate()
         channel = ROS_L_CMD
         msgType = UInt16
         sub_func = partial(ProcessGripperCMD,gripper)
@@ -245,6 +254,7 @@ def main():
         msgType = Range
         sub_func = partial(ProcessRange,lc,lcChannel)
         connection_list.append((channel,msgType,sub_func))
+
     elif part == 'right_range':
         lcChannel = LCM_R_RANGE
         lc = lcm.LCM()
@@ -252,6 +262,7 @@ def main():
         msgType = Range
         sub_func = partial(ProcessRange,lc,lcChannel)
         connection_list.append((channel,msgType,sub_func))
+
     elif part == 'right_camera':
         lcChannel = LCM_R_CAMERA
         lc = lcm.LCM()
@@ -259,13 +270,24 @@ def main():
         msgType = Image
         sub_func = partial(ProcessImage,lc,lcChannel)
         connection_list.append((channel,msgType,sub_func))
-    elif part == 'leftt_camera':
+
+        r_cam = CameraController('right_hand_camera')
+        r_cam.resolution=(1280, 800)
+        r_cam.open()
+
+
+    elif part == 'left_camera':
+
         lcChannel = LCM_L_CAMERA
         lc = lcm.LCM()
         channel = ROS_L_CAMERA
         msgType = Image
         sub_func = partial(ProcessImage,lc,lcChannel)
         connection_list.append((channel,msgType,sub_func))
+
+        l_cam = CameraController('left_hand_camera')
+        l_cam.resolution=(1280, 800)
+        l_cam.open()
     else :
         print "unknown part:", part
         return 0
