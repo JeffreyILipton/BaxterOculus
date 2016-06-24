@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+﻿#!/usr/bin/env python
 import os
 import sys
 if os.name!='nt':
@@ -21,7 +21,7 @@ try:
     lc = lcm.LCM()
     notdone = True
     while notdone:
-	val = input('3 array: ')
+        val = input('3 array: ')
         if val >3: 
             notdone = False
             lc.publish(channel,stop_cmd_msg.encode())
