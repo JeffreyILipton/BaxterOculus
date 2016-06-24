@@ -30,8 +30,6 @@ from Comms import *
 from ServiceTimeout import *
 from oculuslcm import*
 
-DEBUG = True
-
 def minMax(min_val,max_val,val):
     return max(min_val,min(val,max_val))
 
@@ -130,7 +128,6 @@ def ProcessTrigger(arduino,data):
 def ProcessRange(lc,lcChannel,data):
     msg = range_t()
     msg.range = data.range
-    if DEBUG: print data.range
     lc.publish(lcChannel,msg.encode())
 
 def ProcessImage(lc,lcChannel,rosmsg):
@@ -155,8 +152,8 @@ def main():
     #parser = argparse.ArgumentParser(formatter_class=arg_fmt,
     #                                 description=main.__doc__)
     #parser.add_argument(
-    #    '-p', '--part', choices=['left', 'right','head','trigger','right_gripper','left_gripper','left_range','right_range'], required=True,
-    #    help="the part to control, 'left', 'right','head','trigger','right_gripper','left_gripper','left_range','right_range'"
+    #    '-p', '--part', choices=['left', 'right','head','right_trigger','right_gripper','left_gripper','left_range','right_range'], required=True,
+    #    help="the part to control, 'left', 'right','head','right_trigger','right_gripper','left_gripper','left_range','right_range'"
     #)
     #args = parser.parse_args(rospy.myargv()[1:])
     rospy.init_node('part_listener', anonymous=True)
@@ -212,8 +209,8 @@ def main():
         msgType = Pose  
         connection_list.append((channel,msgType,sub_func))
 
-    elif part == 'trigger':
-        channel = ROS_TRIGGER
+    elif part == 'right_trigger':
+        channel = ROS_R_TRIGGER
         arduino = ArduinoInterface()
         sub_func = partial(ProcessTrigger,arduino)
         msgType = Bool
@@ -226,10 +223,10 @@ def main():
         sub_func = partial(ProcessGripperCMD,gripper)
         connection_list.append((channel,msgType,sub_func))
 
-        #channel = ROS_R_VEL
-        #msgType = Float64
-        #sub_func = partial(ProcessGripperVel,gripper)
-        #connection_list.append((channel,msgType,sub_func))
+        channel = ROS_R_VEL
+        msgType = Float64
+        sub_func = partial(ProcessGripperVel,gripper)
+        connection_list.append((channel,msgType,sub_func))
     elif part == 'left_gripper':
         gripper = Gripper('left', CHECK_VERSION)
         channel = ROS_L_CMD
@@ -279,8 +276,6 @@ def main():
     print "starting part: ",part
     rs = RobotEnable(CHECK_VERSION)
     for connection in connection_list:
-        print "connections: ", channel
-        print "func:", sub_func
         channel,msgType,sub_func = connection
         rospy.Subscriber(channel, msgType, sub_func)
     rospy.spin()

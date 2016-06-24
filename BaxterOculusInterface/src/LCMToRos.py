@@ -60,8 +60,13 @@ class LCMInterface():
         self.subscriptions={}
 
         connections = [(ROS_LEFT,LCM_LEFT,Pose),
-                       (ROS_R_CMD,LCM_R_CMD,UInt16)]#,
-                       #(ROS_R_VEL,LCM_R_VEL,Float64) ]#,
+                       (ROS_L_CMD,LCM_L_CMD,UInt16),
+                       (ROS_L_VEL,LCM_L_VEL,Float64),
+                       (ROS_L_TRIGGER,LCM_L_TRIGGER,Bool),
+                       (ROS_RIGHT,LCM_RIGHT,Pose),
+                       (ROS_R_CMD,LCM_R_CMD,UInt16),
+                       (ROS_R_VEL,LCM_R_VEL,Float64),
+                       (ROS_R_TRIGGER,LCM_R_TRIGGER,Bool)]#,
 
         
 

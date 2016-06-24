@@ -1,13 +1,17 @@
 ROS_LEFT    = "left_arm_cmd"
 LCM_LEFT    = "left_lcm"
+
 ROS_RIGHT   = "right_arm_cmd"
 LCM_RIGHT   = "right_lcm"
 
 ROS_HEAD    = "head_cmd"
 LCM_HEAD    = "head_lcm"
 
-ROS_TRIGGER = "trigger_cmd"
-LCM_TRIGGER = "trigger_lcm"
+ROS_R_TRIGGER = "right_trigger_cmd"
+LCM_R_TRIGGER = "right_trigger_lcm"
+
+ROS_L_TRIGGER = "left_trigger_cmd"
+LCM_L_TRIGGER = "left_trigger_lcm"
 
 ROS_R_VEL   = "right_vel"
 LCM_R_VEL   = "right_lcm_vel"
