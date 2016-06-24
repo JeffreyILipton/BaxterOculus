@@ -35,6 +35,8 @@ def PointQuatToPose(baxter_pos,orientation):
 
 def LCMGripperCMDToRos(RosPub,LcmChannel,lcmData):
     lcm_msg = cmd_t.decode(lcmData)
+    #print "message: ", lcm_msg
+    #print "value: ", lcm_msg.command
     i = UInt16(lcm_msg.command)
     RosPub.publish(i)
 
@@ -60,7 +62,7 @@ class LCMInterface():
     def __init__(self):
         self.lc = lcm.LCM()
         self.subscriptions={}
-        connections = [(ROS_LEFT,LCM_LEFT,Pose)]#,
+        connections = [(ROS_R_CMD,LCM_R_CMD,UInt16)]#[(ROS_LEFT,LCM_LEFT,Pose)]#,
         
 
         for connection in connections:

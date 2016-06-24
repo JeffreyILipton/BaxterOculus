@@ -70,6 +70,7 @@ def ProcessGripperCMD(gripper,data):
     gripper.set_velocity(data)
 
 def ProcessGripperVel(gripper,data):
+    print "data:",data
     if data <1:
         gripper.stop()
     elif data<2:
@@ -224,10 +225,10 @@ def main():
         sub_func = partial(ProcessGripperCMD,gripper)
         connection_list.append((channel,msgType,sub_func))
 
-        channel = ROS_R_VEL
-        msgType = Float64
-        sub_func = partial(ProcessGripperVel,gripper)
-        connection_list.append((channel,msgType,sub_func))
+        #channel = ROS_R_VEL
+        #msgType = Float64
+        #sub_func = partial(ProcessGripperVel,gripper)
+        #connection_list.append((channel,msgType,sub_func))
     elif part == 'left_gripper':
         gripper = Gripper('left', CHECK_VERSION)
         channel = ROS_L_CMD
@@ -277,6 +278,7 @@ def main():
     print "starting part: ",part
     rs = RobotEnable(CHECK_VERSION)
     for connection in connection_list:
+        print "connections: ", channel
         channel,msgType,sub_func = connection
         rospy.Subscriber(channel, msgType, sub_func)
     rospy.spin()
