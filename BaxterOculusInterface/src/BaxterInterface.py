@@ -66,16 +66,16 @@ def poseFromPosQuatLib(hdr,limb,baxter_pos,orientation):
     return poses
 
 
-def ProcessGripperCMD(gripper,data):
-    gripper.set_velocity(data)
-
 def ProcessGripperVel(gripper,data):
-    print "data:",data
-    if data <1:
+    gripper.set_velocity(data.data)
+
+def ProcessGripperCMD(gripper,data):
+    #print "data:",data.data
+    if data.data <1:
         gripper.stop()
-    elif data<2:
+    elif data.data<2:
         gripper.open()
-    elif data<3:
+    elif data.data<3:
         gripper.close()
 
 def iksvcForLimb(limb):
@@ -220,6 +220,7 @@ def main():
         connection_list.append((channel,msgType,sub_func))
     elif part == 'right_gripper':
         gripper = Gripper('right', CHECK_VERSION)
+        gripper.calibrate()
         channel = ROS_R_CMD
         msgType = UInt16
         sub_func = partial(ProcessGripperCMD,gripper)
@@ -279,6 +280,7 @@ def main():
     rs = RobotEnable(CHECK_VERSION)
     for connection in connection_list:
         print "connections: ", channel
+        print "func:", sub_func
         channel,msgType,sub_func = connection
         rospy.Subscriber(channel, msgType, sub_func)
     rospy.spin()

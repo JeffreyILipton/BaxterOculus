@@ -1,4 +1,4 @@
-﻿ROS_LEFT    = "left_arm_cmd"
+ROS_LEFT    = "left_arm_cmd"
 LCM_LEFT    = "left_lcm"
 ROS_RIGHT   = "right_arm_cmd"
 LCM_RIGHT   = "right_lcm"
