@@ -56,7 +56,7 @@ def LCMBoolToRos(RosPub,lcmChannel, lcmData):
 
 class LCMInterface():
     def __init__(self):
-        self.lc = lcm.LCM()
+        self.lc = lcm.LCM("udpm://239.255.76.67:7667:?ttl=1")
         self.subscriptions={}
 
         connections = [(ROS_LEFT,LCM_LEFT,Pose),
@@ -88,7 +88,7 @@ class LCMInterface():
         try:
             while not rospy.is_shutdown():
                  self.lc.handle()
-                 print "."
+                 #print "."
         except KeyboardInterrupt:
             pass
 

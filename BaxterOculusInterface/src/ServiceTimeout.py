@@ -27,7 +27,7 @@ class ServiceTimeouter(object):
         self.srv = srv
         self.param = param
         self.timeout = timeout
-        print "timeout:", timeout
+        #print "timeout:", timeout
         self.retval = None
         self.returned = False
         self.lock = threading.Lock()

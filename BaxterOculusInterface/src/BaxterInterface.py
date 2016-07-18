@@ -29,6 +29,11 @@ from ArduinoInterface import *
 from Comms import *
 from ServiceTimeout import *
 from oculuslcm import*
+import time
+import numpy as np
+
+curtime = time.time()
+print "time:", curtime
 
 def minMax(min_val,max_val,val):
     return max(min_val,min(val,max_val))
@@ -40,6 +45,15 @@ def YawFromQuat(theta_min,theta_max, quat):
     # https://en.wikipedia.org/wiki/Conversion_between_quaternions_and_Euler_angles
     q0,q1,q2,q3 = quat
     return atan2(2*(q0*q1+q2*q3),1-2*(q1*q1+q2*q2))
+
+def QuatTransform(quat):
+    #Trans = np.mat([[-1,-1,0,0],[-1,-1,0,0],[0,0,-1,1],[0,0,-1,-1]])
+    #Trans = cos(pi/4)*Trans
+    #Q = np.mat(quat).T
+    #Q2 = Trans.dot(Q)
+    #Q3 =  Q2.T.tolist()[0]
+    Q3= quat
+    return [Q3[0],Q3[3],Q3[2],-Q3[1]]
 
 
 def poseFromPosQuatLib(hdr,limb,baxter_pos,orientation):
@@ -53,10 +67,10 @@ def poseFromPosQuatLib(hdr,limb,baxter_pos,orientation):
                     z=baxter_pos[2],
                 ),
                 orientation=Quaternion(
-                    x=orientation[0],
-                    y=orientation[1],
-                    z=orientation[2],
-                    w=orientation[3],
+                    x=orientation[1],
+                    y=orientation[2],
+                    z=orientation[3],
+                    w=orientation[0],
                 ),
             ),
         )
@@ -68,7 +82,7 @@ def ProcessGripperVel(gripper,data):
     gripper.set_velocity(data.data)
 
 def ProcessGripperCMD(gripper,data):
-    #print "data:",data.data
+    #print "gripper:",data.data
     if data.data <1:
         gripper.stop()
     elif data.data<2:
@@ -83,9 +97,13 @@ def iksvcForLimb(limb):
 
 def ProcessHand(iksvc,ns,timeout,handToBaxter, limb,limb_obj, data):
     #http://sdk.rethinkrobotics.com/wiki/IK_Service_-_Code_Walkthrough 
-    print "hand called for : ",limb
+    print "\n\nhand called for : ",limb
     position = [data.position.x,data.position.y,data.position.z]
-    orientation = [data.orientation.x,data.orientation.y,data.orientation.z,data.orientation.w] 
+    orientation = [data.orientation.w,data.orientation.x,data.orientation.y,data.orientation.z] 
+    print "  Old Q:",orientation
+    orientation = QuatTransform(orientation)
+    print "  New Q:",orientation
+
 
     baxter_pos = handToBaxter(position)
     ikreq = SolvePositionIKRequest()
@@ -93,7 +111,7 @@ def ProcessHand(iksvc,ns,timeout,handToBaxter, limb,limb_obj, data):
     pose  = poseFromPosQuatLib(hdr,limb,baxter_pos,orientation)
     ikreq.pose_stamp.append(pose[limb])
     try:
-        print "trying"
+        print "\ntarget:", baxter_pos,"\n\t",orientation
         #print ikreq
         #rospy.wait_for_service(ns, timeout)
         resp = ServiceTimeouter(timeout,iksvc, ikreq).call()
@@ -101,12 +119,12 @@ def ProcessHand(iksvc,ns,timeout,handToBaxter, limb,limb_obj, data):
             print "SUCCESS - Valid Joint Solution Found:"
             # Format solution into Limb API-compatible dictionary
             limb_joints = dict(zip(resp.joints[0].name, resp.joints[0].position))
-            print limb_joints
+            #print limb_joints
             limb_obj.move_to_joint_positions(limb_joints)
         else:
-            print "ERROR - No valid Join Solution:",limb
-            print "target:", baxter_pos," ",orientation
-            print resp
+            print "ERROR - No valid Joint Solution:",limb
+            
+            #print resp
         #if msg.position[0]>10: limb_obj.move_to_joint_positions(wave_1)
         #else: limb_obj.move_to_joint_positions(wave_2)
 
@@ -131,19 +149,23 @@ def ProcessRange(lc,lcChannel,data):
     lc.publish(lcChannel,msg.encode())
 
 def ProcessImage(lc,lcChannel,rosmsg):
-    lcm_msg = image_t()
-    lcm_msg.height = rosmsg.height
-    lcm_msg.width = rosmsg.width
-    lcm_msg.row_stride = rosmsg.step
-    lcm_msg.data = rosmsg.data
-    lcm_msg.size = len(rosmsg.data)
-    print "pub on ",lcChannel
-    #print "ros data: ",len(rosmsg.data)
-    print "lcm data: ", len(lcm_msg.encode())
-    #tm = trigger_t()
-    #tm.trigger = True
-    lc.publish(lcChannel,lcm_msg.encode())
-    
+    global curtime
+    #print "tick"
+    if time.time()-curtime >0.05:
+        #print "ros: %ix%i"%(rosmsg.height,rosmsg.width)
+        lcm_msg = image_t()
+        lcm_msg.height = rosmsg.height
+        lcm_msg.width = rosmsg.width
+        lcm_msg.row_stride = rosmsg.step
+        lcm_msg.data = rosmsg.data
+        lcm_msg.size = len(rosmsg.data)
+        #print "pub on ",lcChannel
+        #print "ros data: ",len(rosmsg.data)
+        #print "lcm data: ", len(lcm_msg.encode())
+        #tm = trigger_t()
+        #tm.trigger = True
+        lc.publish(lcChannel,lcm_msg.encode())
+        curtime = time.time()
     #lc.publish(LCM_L_CAMERA,tm.encode())
     #lc.publish(LCM_L_TRIGGER,tm.encode())
 
@@ -171,14 +193,14 @@ def main():
     #print "PART IS:",part
 
 
-    scales=[0.001,0.001,0.001]# m/mm
-    offsets = [600,00,00]
+    scales=[1.00,1.00,1.00]# m/mm
+    offsets = [0.5,00,0.0]
     mins = [0.2,0,0]
     maxs = [200,200,200]
     
 
 
-    timeout =12.5
+    timeout =0.5
     sub_func = None
     channel = ""
     msgType = None
@@ -201,7 +223,7 @@ def main():
         r = 'right'
         right_limb = Limb(r)
         iksvc_r,ns_r = iksvcForLimb(r)
-        sub_func = partial(ProcessHand,iksvc_r,ns_r,timeout,handToBaxter, r,right)
+        sub_func = partial(ProcessHand,iksvc_r,ns_r,timeout,handToBaxter, r,right_limb)
         msgType = Pose   
         connection_list.append((channel,msgType,sub_func))  
          
@@ -249,7 +271,7 @@ def main():
         connection_list.append((channel,msgType,sub_func))
     elif part == 'left_range':
         lcChannel = LCM_L_RANGE
-        lc = lcm.LCM()
+        lc = lcm.LCM("udpm://239.255.76.67:7667:?ttl=1")
         channel = ROS_L_RANGE
         msgType = Range
         sub_func = partial(ProcessRange,lc,lcChannel)
@@ -257,7 +279,7 @@ def main():
 
     elif part == 'right_range':
         lcChannel = LCM_R_RANGE
-        lc = lcm.LCM()
+        lc = lcm.LCM("udpm://239.255.76.67:7667:?ttl=1")
         channel = ROS_R_RANGE
         msgType = Range
         sub_func = partial(ProcessRange,lc,lcChannel)
@@ -265,28 +287,32 @@ def main():
 
     elif part == 'right_camera':
         lcChannel = LCM_R_CAMERA
-        lc = lcm.LCM()
+        lc = lcm.LCM("udpm://239.255.76.67:7667:?ttl=1")
         channel = ROS_R_CAMERA
         msgType = Image
-        sub_func = partial(ProcessImage,lc,lcChannel)
+
+        sub_func = lambda x: ProcessImage(lc,lcChannel,x)
+        #sub_func = partial(ProcessImage,lc,lcChannel)
         connection_list.append((channel,msgType,sub_func))
 
         r_cam = CameraController('right_hand_camera')
-        r_cam.resolution=(1280, 800)
+        r_cam.resolution=(320,200)#(1280, 800)
         r_cam.open()
 
 
     elif part == 'left_camera':
 
         lcChannel = LCM_L_CAMERA
-        lc = lcm.LCM()
+        lc = lcm.LCM("udpm://239.255.76.67:7667:?ttl=1")
         channel = ROS_L_CAMERA
         msgType = Image
-        sub_func = partial(ProcessImage,lc,lcChannel)
+        sub_func = lambda x : ProcessImage(lc,lcChannel,x)
+        #sub_func = partial(ProcessImage,lc,lcChannel)
+        connection_list.append((channel,msgType,sub_func))
         connection_list.append((channel,msgType,sub_func))
 
         l_cam = CameraController('left_hand_camera')
-        l_cam.resolution=(1280, 800)
+        l_cam.resolution=(320,200)#(1280, 800)
         l_cam.open()
     else :
         print "unknown part:", part
@@ -296,11 +322,16 @@ def main():
     
     #Start movement
     print "starting part: ",part
+    curtime = time.time()
     rs = RobotEnable(CHECK_VERSION)
     for connection in connection_list:
         channel,msgType,sub_func = connection
         rospy.Subscriber(channel, msgType, sub_func)
+        
+
+
     rospy.spin()
+
 
     #print "done"
     #rs.disable()
