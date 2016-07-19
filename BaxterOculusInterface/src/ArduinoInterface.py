@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 from enum import IntEnum
 import serial
 import struct
@@ -30,5 +31,9 @@ class ArduinoInterface(object):
             print int_form
 
     def trigger(self):
-        self._writeCommand(1)
-    
+        self._writeCommand("1")
+
+if __name__ == '__main__':
+    AI = ArduinoInterface("/dev/ttyACM1")
+    print AI.port.is_open
+    AI.trigger
