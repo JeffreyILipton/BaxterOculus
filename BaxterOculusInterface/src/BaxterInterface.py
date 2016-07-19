@@ -237,7 +237,8 @@ def ProcessHead(Head,OculusToAngle,data):
     Head.set_pan(ang)
 
 def ProcessTrigger(arduino,data):
-    if data.data: arduino.trigger()
+    if data.data: arduino.trigger(True)
+    else: arduino.trigger(False)
 
 
 def ProcessRange(lc,lcChannel,data):
@@ -338,7 +339,7 @@ def main():
 
     elif part == 'right_trigger':
         channel = ROS_R_TRIGGER
-        arduino = ArduinoInterface("/dev/ttyACM1")
+        arduino = ArduinoInterface("/dev/ttyACM0")
         sub_func = partial(ProcessTrigger,arduino)
         msgType = Bool
         connection_list.append((channel,msgType,sub_func))

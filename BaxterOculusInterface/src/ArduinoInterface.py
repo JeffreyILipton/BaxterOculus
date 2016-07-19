@@ -2,8 +2,9 @@
 from enum import IntEnum
 import serial
 import struct
+import time
 
-DEBUG = False#True
+DEBUG = True
 NO_SERIAL = False
 
 class ArduinoInterface(object):
@@ -12,7 +13,7 @@ class ArduinoInterface(object):
         if NO_SERIAL:
             self.port = serial.Serial()
         else:
-            self.port = serial.Serial(port,19200,parity = serial.PARITY_NONE, stopbits = serial.STOPBITS_ONE,xonxoff=False,timeout=10.0)
+            self.port = serial.Serial(port,9600,parity = serial.PARITY_NONE, stopbits = serial.STOPBITS_ONE,xonxoff=False,timeout=10.0)
 
     def _writeCommand(self,cmd):
         '''the input type should be a string, int, or Create_ value
@@ -27,13 +28,20 @@ class ArduinoInterface(object):
             int_form = []
             for i in range(0,nb):
                 int_form.append(int(ord(cmd[i])))
-            print cmd
-            print int_form
+            print "#######Trigger cmd:", cmd
+            print "int form:", int_form
+            print "read: ", self.port.read()
 
-    def trigger(self):
-        self._writeCommand("1")
+    def trigger(self,cmd=False):
+        if cmd:
+            self._writeCommand('T')
+        else:
+            self._writeCommand('R');
 
 if __name__ == '__main__':
-    AI = ArduinoInterface("/dev/ttyACM1")
+    AI = ArduinoInterface("/dev/ttyACM0")
     print AI.port.is_open
-    AI.trigger
+    val = 0
+    while val <2 and val>=0:
+        val = input("val 1/0")
+        AI.trigger(val)
