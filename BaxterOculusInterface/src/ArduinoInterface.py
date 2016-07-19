@@ -18,7 +18,7 @@ class ArduinoInterface(object):
         '''the input type should be a string, int, or Create_ value
            int is converted to a char string,
            strings are passed through'''
-        cmd = str(chr(cmd))
+        #cmd = str(chr(cmd))
         nb = len(cmd)
         if self.port.is_open:
             nb_written = self.port.write(cmd)

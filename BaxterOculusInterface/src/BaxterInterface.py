@@ -338,7 +338,7 @@ def main():
 
     elif part == 'right_trigger':
         channel = ROS_R_TRIGGER
-        arduino = ArduinoInterface()
+        arduino = ArduinoInterface("/dev/ttyACM1")
         sub_func = partial(ProcessTrigger,arduino)
         msgType = Bool
         connection_list.append((channel,msgType,sub_func))
