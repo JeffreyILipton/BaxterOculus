@@ -116,7 +116,7 @@ def qMult(q,r):
     return t
 
 def QuatTransform(quat):
-    tBU = np.mat([ [0,0,1], [1,0,0], [0,1,0] ])
+    tBU = np.mat([ [0,0,1], [-1,0,0], [0,1,0] ])
     #quat= [1,0,0,0]#[cos(pi/4.0),0,cos(pi/4.0),0]
     qUO = qInv(quat)
     tUO = tFromQ(qUO)
@@ -125,14 +125,20 @@ def QuatTransform(quat):
     Oy = tBO[:,1]
     Oz = tBO[:,2]
     Hz = Oz
-    Hx = Oy
-    Hy = -Ox
+    Hx = -Oy
+    Hy = -Ox#-Ox
     tHB = np.concatenate((Hx,Hy,Hz), axis=1)
+    ang = pi/2
+    w90 = cos(ang/2)
+    z90 = sin(ang/2)
+    #tHP = tFromQ([w90,0,0,z90])
+    #tHPB = tHP.dot(tHB)
     Q3 = qFromT(tHB)
     print "qUO: ",qUO
     print "tUO: \n",tUO
     print "TBO: \n",tBO
     print "THB: \n",tHB
+    #print "THPB \n",tHPB
     print "qHB: ",Q3
 
     #Trans = cos(pi/4)*Trans
