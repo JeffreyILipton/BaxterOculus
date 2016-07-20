@@ -1,8 +1,10 @@
 ROS_LEFT    = "left_arm_cmd"
 LCM_LEFT    = "left_lcm"
+LCM_LEFT_VALID = "left_lcm_valid"
 
 ROS_RIGHT   = "right_arm_cmd"
 LCM_RIGHT   = "right_lcm"
+LCM_RIGHT_VALID = "right_lcm_valid"
 
 ROS_HEAD    = "head_cmd"
 LCM_HEAD    = "head_lcm"

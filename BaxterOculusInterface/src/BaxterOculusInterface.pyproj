@@ -42,6 +42,9 @@
     <Compile Include="LCMTest.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Quaternion.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="ServiceTimeout.py">
       <SubType>Code</SubType>
     </Compile>

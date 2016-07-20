@@ -29,12 +29,15 @@ from ArduinoInterface import *
 from Comms import *
 from ServiceTimeout import *
 from oculuslcm import*
+from Quaternion import *
 import time
 import numpy as np
 
+DEBUG = False
 curtime = time.time()
-cur_range_time = time.time()
-print "time:", curtime
+if DEBUG: print "time:", curtime
+
+
 
 def minMax(min_val,max_val,val):
     return max(min_val,min(val,max_val))
@@ -42,92 +45,7 @@ def minMax(min_val,max_val,val):
 def XYZRescale(scales, offsets, mins, maxs, xyz):
     return [ minMax(mins[i],maxs[i], scales[i]*(xyz[i]+offsets[i])) for i in range(0,3)]
 
-def YawFromQuat(theta_min,theta_max, quat):
-    # https://en.wikipedia.org/wiki/Conversion_between_quaternions_and_Euler_angles
-    q0,q1,q2,q3 = quat
-    return atan2(2*(q0*q1+q2*q3),1-2*(q1*q1+q2*q2))
-def magQ(q):
-    return sqrt(q[0]*q[0] + q[1]*q[1] + q[2]*q[2] + q[3]*q[3])
 
-def qFromT(m):
-    tr = m[0,0]+m[1,1]+m[2,2]
-    if(tr>0):
-        print "c1"
-        s = 2*sqrt(tr+1.0)
-        print "s:",s
-        w = 0.25*s
-        x = (m[2,1] - m[1,2] )/s
-        y = (m[0,2] - m[2,0] )/s
-        z = (m[1,0] - m[0,1] )/s
-
-    elif ( (m[0,0]>m[1,1]) and ( m[0,0]>m[2,2])):
-        print "c2"
-        s = sqrt(1+m[0,0]-m[1,1]-m[2,2])*2
-        w = ( m[2,1] - m[1,2] )/s
-        x = 0.25*s
-        y = ( m[0,1] + m[1,0] )/s
-        z = ( m[0,2] + m[2,0] )/s
-
-    elif ( m[1,1]>m[2,2] ):
-        print "c3"
-        s = sqrt(1+m[1,1]-m[0,0]-m[2,2])*2
-        w = ( m[0,2] - m[2,0] )/s
-        x = ( m[0,1] + m[1,0] )/s
-        y = 0.25*s
-        z = ( m[1,2] + m[2,1] )/s
-
-    else:
-        print "c4"
-        s = sqrt(1.0 + m[2,2] - m[0,0] - m[1,1])*2
-        w = (m[1,0] - m[0,1])/s
-        x = (m[0,2] + m[2,0])/s
-        y = (m[1,2] + m[2,1])/s
-        z = 0.25*s
-
-    mag = magQ([w,x,y,z])
-    if mag<0.9 or mag>1.1: print "Mag error:",mag
-    w=w/mag
-    x=x/mag
-    y=y/mag
-    z=z/mag
-    return [w,x,y,z]
-def tFromQ(q):
-    t = np.mat(np.zeros((3,3)))
-    w,x,y,z = q
-    t[0,0] = 1 - 2*y*y - 2*z*z
-    t[0,1] = 0 + 2*x*y - 2*w*z
-    t[0,2] = 0 + 2*x*z + 2*w*y
-    t[1,0] = 0 + 2*x*y + 2*w*z
-    t[1,1] = 1 - 2*x*x - 2*z*z
-    t[1,2] = 0 + 2*y*z - 2*w*x
-    t[2,0] = 0 + 2*x*z - 2*w*y
-    t[2,1] = 0 + 2*y*z + 2*w*x
-    t[2,2] = 1 - 2*x*x - 2*y*y
-    return t
-
-
-def qInv(q):
-    return [q[0],-q[1],-q[2],-q[3]]
-def qMult(q,r):
-    t=[0,0,0,0]
-    t[0] = r[0]*q[0]-r[1]*q[1]-r[2]*q[2]-r[3]*q[3]
-    t[1] = r[0]*q[1]+r[1]*q[0]-r[2]*q[3]+r[3]*q[2]
-    t[2] = r[0]*q[2]+r[1]*q[3]+r[2]*q[0]-r[3]*q[1]
-    t[3] = r[0]*q[3]-r[1]*q[2]+r[2]*q[1]+r[3]*q[0]
-    return t
-
-def mCross(k,i):
-    u1 = k[0,0]
-    u2 = k[1,0]
-    u3 = k[2,0]
-    v1 = i[0,0]
-    v2 = i[1,0]
-    v3 = i[2,0]
-
-    s1 = u2*v3 - u3*v2
-    s2 = u3*v1 - u1*v3
-    s3 = u1*v2 - u2*v1
-    return np.mat([[s1],[s2],[s3]])
 
 def QuatTransform(quat):
     tBU = np.mat([ [0,0,1], [1,0,0], [0,1,0] ])
@@ -142,31 +60,19 @@ def QuatTransform(quat):
     Hy = Oy
     Hx = mCross(Oy,Oz) #-Ox
     tHB = np.concatenate((Hx,Hy,Hz), axis=1)
-    ang = pi/2
-    w90 = cos(ang/2)
-    z90 = sin(ang/2)
-    #tHP = tFromQ([w90,0,0,z90])
-    #tHPB = tHP.dot(tHB)
-    Q3 = qFromT(tHB)
-    print "qUO: ",qUO
-    print "tUO: \n",tUO
-    print "TBO: \n",tBO
-    print "THB: \n",tHB
-    print "Oy:\n",Oy
-    print "Hy:\n",Hy
-    #print "THPB \n",tHPB
-    print "qHB: ",Q3
 
-    #Trans = cos(pi/4)*Trans
-    #Q = np.mat(quat).uT
-    #Q2 = Trans.dot(Q)
-    #Q3 =  Q2.T.tolist()[0]
-    #qZ = [cos(pi/4),0,0,0]
-    #qZInv = qInv(qZ)
-    #qBU = [0.5,0.5,0.5,-0.5]
-    #qBUInv = qInv(qBU)
-    #Q3 = qMult(qBU, qMult(quat,qBUInv))
-    return Q3 #[Q3[0],Q3[3],Q3[2],-Q3[1]]
+    Q3 = qFromT(tHB)
+    global DEBUG
+    if DEBUG:
+        print "qUO: ",qUO
+        print "tUO: \n",tUO
+        print "TBO: \n",tBO
+        print "THB: \n",tHB
+        print "Oy:\n",Oy
+        print "Hy:\n",Hy
+        print "qHB: ",Q3
+
+    return Q3 
 
 
 def poseFromPosQuatLib(hdr,limb,baxter_pos,orientation):
@@ -208,7 +114,7 @@ def iksvcForLimb(limb):
     iksvc = rospy.ServiceProxy(ns, SolvePositionIK)
     return iksvc,ns
 
-def ProcessHand(iksvc,ns,timeout,handToBaxter, limb,limb_obj, data):
+def ProcessHand(lc,lcChannel,iksvc,ns,timeout,handToBaxter, limb,limb_obj, data):
     #http://sdk.rethinkrobotics.com/wiki/IK_Service_-_Code_Walkthrough 
     print "\n\nhand called for : ",limb
     position = [data.position.x,data.position.y,data.position.z]
@@ -223,6 +129,8 @@ def ProcessHand(iksvc,ns,timeout,handToBaxter, limb,limb_obj, data):
     hdr = Header(stamp=rospy.Time.now(), frame_id='base')
     pose  = poseFromPosQuatLib(hdr,limb,baxter_pos,orientation)
     ikreq.pose_stamp.append(pose[limb])
+    lcm_msg = trigger_t()
+
     try:
         print "\ntarget:", baxter_pos,"\n\t",orientation
         #print ikreq
@@ -232,10 +140,12 @@ def ProcessHand(iksvc,ns,timeout,handToBaxter, limb,limb_obj, data):
             print "SUCCESS - Valid Joint Solution Found:"
             # Format solution into Limb API-compatible dictionary
             limb_joints = dict(zip(resp.joints[0].name, resp.joints[0].position))
+            lcm_msg.trigger = True
             #print limb_joints
             limb_obj.move_to_joint_positions(limb_joints)
         else:
             print "ERROR - No valid Joint Solution:",limb
+            lcm_msg.trigger = False
             
             #print resp
         #if msg.position[0]>10: limb_obj.move_to_joint_positions(wave_1)
@@ -245,8 +155,10 @@ def ProcessHand(iksvc,ns,timeout,handToBaxter, limb,limb_obj, data):
 
     except (rospy.ServiceException, rospy.ROSException), e:
         print "except"
+        lcm_msg.trigger = False
         rospy.logerr("Service call failed: %s" % (e,))
     
+    lc.publish(lcChannel,lcm_msg.encode())
     
 def ProcessHead(Head,OculusToAngle,data):
     ang = OculusToAngle(data.orientation)
@@ -258,13 +170,13 @@ def ProcessTrigger(arduino,data):
 
 
 def ProcessRange(lc,lcChannel,data):
-    global cur_range_time
+    global curtime 
     #print "tick"
-    if time.time()-cur_range_time >0.1:
+    if time.time()-curtime  >0.1:
         msg = range_t()
         msg.range = data.range
         lc.publish(lcChannel,msg.encode())
-        cur_range_time = time.time()
+        curtime  = time.time()
 
 def ProcessImage(lc,lcChannel,rosmsg):
     global curtime
@@ -324,6 +236,8 @@ def main():
     msgType = None
 
     connection_list = []
+    lc = lcm.LCM("udpm://239.255.76.67:7667:?ttl=1")
+    ardPort = "/dev/ttyACM0"
 
     if part == 'left':
         channel = ROS_LEFT
@@ -331,7 +245,11 @@ def main():
         l = 'left'
         left_limb = Limb(l)
         iksvc_l,ns_l = iksvcForLimb(l)
-        sub_func = partial(ProcessHand,iksvc_l,ns_l,timeout,handToBaxter, l,left_limb)
+
+        lcChannel = LCM_LEFT_VALID
+        
+
+        sub_func = partial(ProcessHand,lc,lcChannel, iksvc_l,ns_l,timeout,handToBaxter, l,left_limb)
         msgType = Pose
         connection_list.append((channel,msgType,sub_func))   
          
@@ -341,7 +259,10 @@ def main():
         r = 'right'
         right_limb = Limb(r)
         iksvc_r,ns_r = iksvcForLimb(r)
-        sub_func = partial(ProcessHand,iksvc_r,ns_r,timeout,handToBaxter, r,right_limb)
+        
+        lcChannel = LCM_RIGHT_VALID
+
+        sub_func = partial(ProcessHand,lc,lcChannel,iksvc_r,ns_r,timeout,handToBaxter, r,right_limb)
         msgType = Pose   
         connection_list.append((channel,msgType,sub_func))  
          
@@ -359,7 +280,7 @@ def main():
 
     elif part == 'right_trigger':
         channel = ROS_R_TRIGGER
-        arduino = ArduinoInterface("/dev/ttyACM0")
+        arduino = ArduinoInterface(ardPort)
         sub_func = partial(ProcessTrigger,arduino)
         msgType = Bool
         connection_list.append((channel,msgType,sub_func))
@@ -389,7 +310,6 @@ def main():
         connection_list.append((channel,msgType,sub_func))
     elif part == 'left_range':
         lcChannel = LCM_L_RANGE
-        lc = lcm.LCM("udpm://239.255.76.67:7667:?ttl=1")
         channel = ROS_L_RANGE
         msgType = Range
         sub_func = partial(ProcessRange,lc,lcChannel)
@@ -397,7 +317,6 @@ def main():
 
     elif part == 'right_range':
         lcChannel = LCM_R_RANGE
-        lc = lcm.LCM("udpm://239.255.76.67:7667:?ttl=1")
         channel = ROS_R_RANGE
         msgType = Range
         sub_func = partial(ProcessRange,lc,lcChannel)
@@ -405,7 +324,6 @@ def main():
 
     elif part == 'right_camera':
         lcChannel = LCM_R_CAMERA
-        lc = lcm.LCM("udpm://239.255.76.67:7667:?ttl=1")
         channel = ROS_R_CAMERA
         msgType = Image
 
@@ -421,7 +339,7 @@ def main():
     elif part == 'left_camera':
 
         lcChannel = LCM_L_CAMERA
-        lc = lcm.LCM("udpm://239.255.76.67:7667:?ttl=1")
+        #lc = lcm.LCM("udpm://239.255.76.67:7667:?ttl=1")
         channel = ROS_L_CAMERA
         msgType = Image
         sub_func = lambda x : ProcessImage(lc,lcChannel,x)
