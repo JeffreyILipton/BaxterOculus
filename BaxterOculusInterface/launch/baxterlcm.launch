@@ -27,6 +27,9 @@
      <node pkg="baxter_lcm" name ="listener_l_cam" type = "BaxterInterface.py" output="screen">
         <param name="part" value="left_camera" />
      </node>
+     <node pkg="baxter_lcm" name ="listener_r_cam" type = "BaxterInterface.py" output="screen">
+        <param name="part" value="right_camera" />
+     </node>
      <node pkg="baxter_lcm" name ="listener_r_trig" type = "BaxterInterface.py" output="screen">
         <param name="part" value="right_trigger" />
      </node>

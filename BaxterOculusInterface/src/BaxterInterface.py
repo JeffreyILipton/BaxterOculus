@@ -33,6 +33,7 @@ import time
 import numpy as np
 
 curtime = time.time()
+cur_range_time = time.time()
 print "time:", curtime
 
 def minMax(min_val,max_val,val):
@@ -85,10 +86,10 @@ def qFromT(m):
 
     mag = magQ([w,x,y,z])
     if mag<0.9 or mag>1.1: print "Mag error:",mag
-    #w=w/mag
-    #x=x/mag
-    #y=y/mag
-    #z=z/mag
+    w=w/mag
+    x=x/mag
+    y=y/mag
+    z=z/mag
     return [w,x,y,z]
 def tFromQ(q):
     t = np.mat(np.zeros((3,3)))
@@ -115,18 +116,31 @@ def qMult(q,r):
     t[3] = r[0]*q[3]-r[1]*q[2]+r[2]*q[1]+r[3]*q[0]
     return t
 
+def mCross(k,i):
+    u1 = k[0,0]
+    u2 = k[1,0]
+    u3 = k[2,0]
+    v1 = i[0,0]
+    v2 = i[1,0]
+    v3 = i[2,0]
+
+    s1 = u2*v3 - u3*v2
+    s2 = u3*v1 - u1*v3
+    s3 = u1*v2 - u2*v1
+    return np.mat([[s1],[s2],[s3]])
+
 def QuatTransform(quat):
-    tBU = np.mat([ [0,0,1], [-1,0,0], [0,1,0] ])
+    tBU = np.mat([ [0,0,1], [1,0,0], [0,1,0] ])
     #quat= [1,0,0,0]#[cos(pi/4.0),0,cos(pi/4.0),0]
-    qUO = qInv(quat)
+    qUO = quat#qInv(quat)
     tUO = tFromQ(qUO)
     tBO = tBU.dot(tUO)
     Ox = tBO[:,0]
     Oy = tBO[:,1]
     Oz = tBO[:,2]
     Hz = Oz
-    Hx = -Oy
-    Hy = -Ox#-Ox
+    Hy = Oy
+    Hx = mCross(Oy,Oz) #-Ox
     tHB = np.concatenate((Hx,Hy,Hz), axis=1)
     ang = pi/2
     w90 = cos(ang/2)
@@ -138,6 +152,8 @@ def QuatTransform(quat):
     print "tUO: \n",tUO
     print "TBO: \n",tBO
     print "THB: \n",tHB
+    print "Oy:\n",Oy
+    print "Hy:\n",Hy
     #print "THPB \n",tHPB
     print "qHB: ",Q3
 
@@ -242,14 +258,18 @@ def ProcessTrigger(arduino,data):
 
 
 def ProcessRange(lc,lcChannel,data):
-    msg = range_t()
-    msg.range = data.range
-    lc.publish(lcChannel,msg.encode())
+    global cur_range_time
+    #print "tick"
+    if time.time()-cur_range_time >0.1:
+        msg = range_t()
+        msg.range = data.range
+        lc.publish(lcChannel,msg.encode())
+        cur_range_time = time.time()
 
 def ProcessImage(lc,lcChannel,rosmsg):
     global curtime
     #print "tick"
-    if time.time()-curtime >0.05:
+    if time.time()-curtime >0.5:
         #print "ros: %ix%i"%(rosmsg.height,rosmsg.width)
         lcm_msg = image_t()
         lcm_msg.height = rosmsg.height
@@ -298,7 +318,7 @@ def main():
     
 
 
-    timeout =0.5
+    timeout =0.05
     sub_func = None
     channel = ""
     msgType = None
