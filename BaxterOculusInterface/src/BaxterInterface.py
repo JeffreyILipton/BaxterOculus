@@ -34,6 +34,8 @@ import time
 import numpy as np
 
 DEBUG = False
+CAM_TIME = 0.1
+RANGE_TIME = 0.05
 curtime = time.time()
 if DEBUG: print "time:", curtime
 
@@ -48,7 +50,7 @@ def XYZRescale(scales, offsets, mins, maxs, xyz):
 
 
 def QuatTransform(quat):
-    tBU = np.mat([ [0,0,1], [1,0,0], [0,1,0] ])
+    tBU = np.mat([ [0,0,1], [-1,0,0], [0,1,0] ])
     #quat= [1,0,0,0]#[cos(pi/4.0),0,cos(pi/4.0),0]
     qUO = quat#qInv(quat)
     tUO = tFromQ(qUO)
@@ -57,8 +59,8 @@ def QuatTransform(quat):
     Oy = tBO[:,1]
     Oz = tBO[:,2]
     Hz = Oz
-    Hy = Oy
-    Hx = mCross(Oy,Oz) #-Ox
+    Hy = -Oy
+    Hx = mCross(Hy,Hz) #-Ox
     tHB = np.concatenate((Hx,Hy,Hz), axis=1)
 
     Q3 = qFromT(tHB)
@@ -119,9 +121,9 @@ def ProcessHand(lc,lcChannel,iksvc,ns,timeout,handToBaxter, limb,limb_obj, data)
     print "\n\nhand called for : ",limb
     position = [data.position.x,data.position.y,data.position.z]
     orientation = [data.orientation.w,data.orientation.x,data.orientation.y,data.orientation.z] 
-    print "  Old Q:",orientation
+    #print "  Old Q:",orientation
     orientation = QuatTransform(orientation)
-    print "  New Q:",orientation
+    #print "  New Q:",orientation
 
 
     baxter_pos = handToBaxter(position)
@@ -141,11 +143,13 @@ def ProcessHand(lc,lcChannel,iksvc,ns,timeout,handToBaxter, limb,limb_obj, data)
             # Format solution into Limb API-compatible dictionary
             limb_joints = dict(zip(resp.joints[0].name, resp.joints[0].position))
             lcm_msg.trigger = True
+            lc.publish(lcChannel,lcm_msg.encode())
             #print limb_joints
             limb_obj.move_to_joint_positions(limb_joints)
         else:
             print "ERROR - No valid Joint Solution:",limb
             lcm_msg.trigger = False
+            lc.publish(lcChannel,lcm_msg.encode())
             
             #print resp
         #if msg.position[0]>10: limb_obj.move_to_joint_positions(wave_1)
@@ -157,8 +161,9 @@ def ProcessHand(lc,lcChannel,iksvc,ns,timeout,handToBaxter, limb,limb_obj, data)
         print "except"
         lcm_msg.trigger = False
         rospy.logerr("Service call failed: %s" % (e,))
+        lc.publish(lcChannel,lcm_msg.encode())
     
-    lc.publish(lcChannel,lcm_msg.encode())
+    
     
 def ProcessHead(Head,OculusToAngle,data):
     ang = OculusToAngle(data.orientation)
@@ -171,8 +176,9 @@ def ProcessTrigger(arduino,data):
 
 def ProcessRange(lc,lcChannel,data):
     global curtime 
+    global RANGE_TIME
     #print "tick"
-    if time.time()-curtime  >0.1:
+    if time.time()-curtime  >RANGE_TIME:
         msg = range_t()
         msg.range = data.range
         lc.publish(lcChannel,msg.encode())
@@ -180,8 +186,9 @@ def ProcessRange(lc,lcChannel,data):
 
 def ProcessImage(lc,lcChannel,rosmsg):
     global curtime
+    global CAM_TIME
     #print "tick"
-    if time.time()-curtime >0.5:
+    if time.time()-curtime >CAM_TIME:
         #print "ros: %ix%i"%(rosmsg.height,rosmsg.width)
         lcm_msg = image_t()
         lcm_msg.height = rosmsg.height
