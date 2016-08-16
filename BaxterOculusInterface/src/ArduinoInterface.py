@@ -21,7 +21,7 @@ class ArduinoInterface(object):
            strings are passed through'''
         #cmd = str(chr(cmd))
         nb = len(cmd)
-        if self.port.is_open:
+        if self.port.isOpen():
             nb_written = self.port.write(cmd)
             if (nb != nb_written):print "Error only wrote %i not %i bytes"%(nb_written,nb)
         if DEBUG:
@@ -40,7 +40,7 @@ class ArduinoInterface(object):
 
 if __name__ == '__main__':
     AI = ArduinoInterface("/dev/ttyACM0")
-    print AI.port.is_open
+    print AI.port.isOpen()
     val = 0
     while val <2 and val>=0:
         val = input("val 1/0")

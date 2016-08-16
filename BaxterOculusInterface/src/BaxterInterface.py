@@ -231,26 +231,27 @@ def main():
 
 
     scales=[1.00,1.00,1.00]# m/mm
-    offsets = [0.5,00,0.0]
-    mins = [0.2,0,0]
-    maxs = [200,200,200]
+    offsets = [0,00,0.0]
+    mins = [-5,-5,-5]
+    maxs = [5,5,5]
     
 
 
-    timeout =0.05
+    timeout =0.1
     sub_func = None
     channel = ""
     msgType = None
 
     connection_list = []
     lc = lcm.LCM("udpm://239.255.76.67:7667:?ttl=1")
-    ardPort = "/dev/ttyACM0"
+    ardPort = "/dev/ttyACM1"
 
     if part == 'left':
         channel = ROS_LEFT
         handToBaxter = partial(XYZRescale,scales, offsets, mins, maxs)
         l = 'left'
         left_limb = Limb(l)
+
         iksvc_l,ns_l = iksvcForLimb(l)
 
         lcChannel = LCM_LEFT_VALID
@@ -265,6 +266,7 @@ def main():
         handToBaxter = partial(XYZRescale,scales, offsets, mins, maxs)
         r = 'right'
         right_limb = Limb(r)
+        #right_limb.set_position_speed(1)
         iksvc_r,ns_r = iksvcForLimb(r)
         
         lcChannel = LCM_RIGHT_VALID
