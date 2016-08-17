@@ -9,7 +9,7 @@ except ImportError:
     from io import BytesIO
 import struct
 
-class oculus_t(object):
+class pose_t(object):
     __slots__ = ["position", "orientation", "enabled"]
 
     def __init__(self):
@@ -19,7 +19,7 @@ class oculus_t(object):
 
     def encode(self):
         buf = BytesIO()
-        buf.write(oculus_t._get_packed_fingerprint())
+        buf.write(pose_t._get_packed_fingerprint())
         self._encode_one(buf)
         return buf.getvalue()
 
@@ -33,13 +33,13 @@ class oculus_t(object):
             buf = data
         else:
             buf = BytesIO(data)
-        if buf.read(8) != oculus_t._get_packed_fingerprint():
+        if buf.read(8) != pose_t._get_packed_fingerprint():
             raise ValueError("Decode error")
-        return oculus_t._decode_one(buf)
+        return pose_t._decode_one(buf)
     decode = staticmethod(decode)
 
     def _decode_one(buf):
-        self = oculus_t()
+        self = pose_t()
         self.position = struct.unpack('>3d', buf.read(24))
         self.orientation = struct.unpack('>4d', buf.read(32))
         self.enabled = bool(struct.unpack('b', buf.read(1))[0])
@@ -48,7 +48,7 @@ class oculus_t(object):
 
     _hash = None
     def _get_hash_recursive(parents):
-        if oculus_t in parents: return 0
+        if pose_t in parents: return 0
         tmphash = (0xea8a3a46f83c6991) & 0xffffffffffffffff
         tmphash  = (((tmphash<<1)&0xffffffffffffffff)  + (tmphash>>63)) & 0xffffffffffffffff
         return tmphash
@@ -56,8 +56,8 @@ class oculus_t(object):
     _packed_fingerprint = None
 
     def _get_packed_fingerprint():
-        if oculus_t._packed_fingerprint is None:
-            oculus_t._packed_fingerprint = struct.pack(">Q", oculus_t._get_hash_recursive([]))
-        return oculus_t._packed_fingerprint
+        if pose_t._packed_fingerprint is None:
+            pose_t._packed_fingerprint = struct.pack(">Q", pose_t._get_hash_recursive([]))
+        return pose_t._packed_fingerprint
     _get_packed_fingerprint = staticmethod(_get_packed_fingerprint)
 

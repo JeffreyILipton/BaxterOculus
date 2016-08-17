@@ -5,7 +5,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>db927b69-6e77-43ce-95c2-9fb90dfcd136</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>BaxterOculusInterface.py</StartupFile>
+    <StartupFile>BaxterInterface.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
@@ -25,14 +25,27 @@
     <Compile Include="ArduinoInterface.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="BaxterOculusInterface.py" />
-    <Compile Include="oculuslcm\hand_t.py" />
-    <Compile Include="oculuslcm\oculus_t.py" />
+    <Compile Include="BaxterInterface.py" />
+    <Compile Include="Comms.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="LCMToRos.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="oculuslcm\cmd_t.py" />
+    <Compile Include="oculuslcm\image_t.py" />
+    <Compile Include="oculuslcm\pose_t.py" />
+    <Compile Include="oculuslcm\range_t.py" />
+    <Compile Include="oculuslcm\trigger_t.py" />
+    <Compile Include="oculuslcm\velocity_t.py" />
     <Compile Include="oculuslcm\__init__.py" />
     <Compile Include="LCMTest.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Threadsys.py">
+    <Compile Include="Quaternion.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ServiceTimeout.py">
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>
