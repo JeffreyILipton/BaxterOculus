@@ -50,13 +50,17 @@ def XYZRescale(scales, offsets, mins, maxs, xyz):
 
 
 def QuatForInverse(quat):
-    tUB = np.mat([ [0,-1,0], [0,0,1], [1,0,0]])
-    qBH = quat
-    tBH = tFromQ(qBH)
-    tUH = tUB.dot(tBH)
-    Hx = tUH[:,0]
-    Hy = tUH[:,1]
-    Hz = tUH[:,2]
+    tBU = np.mat([ [0,-1,0], [0,0,1], [1,0,0]])
+    theta = pi
+    A = np.mat([ [cos(theta),0,-sin(theta)], [0,1,0], [sin(theta),0,cos(theta)]])
+    print "\nA:"
+    print A
+    qHB = quat
+    tHB = tFromQ(qHB)
+    tHU = tHB.dot(A).dot(tBU)
+    Hx = tHU[:,0]
+    Hy = tHU[:,1]
+    Hz = tHU[:,2]
     Oz = Hz
     Oy = -Hy
     Ox = mCross(Oy,Oz)
@@ -64,6 +68,20 @@ def QuatForInverse(quat):
 
     Q3 = qFromT(tOU)
     return Q3
+    # tUB = np.mat([ [0,-1,0], [0,0,1], [1,0,0]])
+    # qBH = quat
+    # tBH = tFromQ(qBH)
+    # tUH = tUB.dot(tBH)
+    # Hx = tUH[:,0]
+    # Hy = tUH[:,1]
+    # Hz = tUH[:,2]
+    # Oz = Hz
+    # Oy = -Hy
+    # Ox = mCross(Oy,Oz)
+    # tOU = np.concatenate((Ox,Oy,Oz), axis=1)
+
+    # Q3 = qFromT(tOU)
+    # return Q3
 
 def QuatTransform(quat):
     tBU = np.mat([ [0,0,1], [-1,0,0], [0,1,0] ])
