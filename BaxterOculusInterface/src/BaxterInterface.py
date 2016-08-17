@@ -49,6 +49,40 @@ def XYZRescale(scales, offsets, mins, maxs, xyz):
 
 
 
+def QuatForInverse(quat):
+    tBU = np.mat([ [0,-1,0], [0,0,1], [1,0,0]])
+    theta = pi
+    A = np.mat([ [cos(theta),0,-sin(theta)], [0,1,0], [sin(theta),0,cos(theta)]])
+    print "\nA:"
+    print A
+    qHB = quat
+    tHB = tFromQ(qHB)
+    tHU = tHB.dot(A).dot(tBU)
+    Hx = tHU[:,0]
+    Hy = tHU[:,1]
+    Hz = tHU[:,2]
+    Oz = Hz
+    Oy = -Hy
+    Ox = mCross(Oy,Oz)
+    tOU = np.concatenate((Ox,Oy,Oz), axis=1)
+
+    Q3 = qFromT(tOU)
+    return Q3
+    # tUB = np.mat([ [0,-1,0], [0,0,1], [1,0,0]])
+    # qBH = quat
+    # tBH = tFromQ(qBH)
+    # tUH = tUB.dot(tBH)
+    # Hx = tUH[:,0]
+    # Hy = tUH[:,1]
+    # Hz = tUH[:,2]
+    # Oz = Hz
+    # Oy = -Hy
+    # Ox = mCross(Oy,Oz)
+    # tOU = np.concatenate((Ox,Oy,Oz), axis=1)
+
+    # Q3 = qFromT(tOU)
+    # return Q3
+
 def QuatTransform(quat):
     tBU = np.mat([ [0,0,1], [-1,0,0], [0,1,0] ])
     #quat= [1,0,0,0]#[cos(pi/4.0),0,cos(pi/4.0),0]
@@ -116,7 +150,7 @@ def iksvcForLimb(limb):
     iksvc = rospy.ServiceProxy(ns, SolvePositionIK)
     return iksvc,ns
 
-def ProcessHand(lc,lcChannel,iksvc,ns,timeout,handToBaxter, limb,limb_obj, data):
+def ProcessHand(lc,lcChannel,lcPosChannel,iksvc,ns,timeout,handToBaxter, limb,limb_obj, data):
     #http://sdk.rethinkrobotics.com/wiki/IK_Service_-_Code_Walkthrough 
     print "\n\nhand called for : ",limb
     position = [data.position.x,data.position.y,data.position.z]
@@ -163,6 +197,16 @@ def ProcessHand(lc,lcChannel,iksvc,ns,timeout,handToBaxter, limb,limb_obj, data)
         rospy.logerr("Service call failed: %s" % (e,))
         lc.publish(lcChannel,lcm_msg.encode())
     
+    # return endpoint
+    newpose = limb_obj.endpoint_pose()
+    xyz = newpose['position']
+    orient = newpose['orientation']
+    quat = [orient[3],orient[0],orient[1],orient[2]]
+    quat = QuatForInverse(quat)
+    lcm_pos_msg = pose_t()
+    lcm_pos_msg.position = list(xyz)
+    lcm_pos_msg.orientation = quat
+    lc.publish(lcPosChannel,lcm_pos_msg.encode())
     
     
 def ProcessHead(Head,OculusToAngle,data):
@@ -257,7 +301,7 @@ def main():
         lcChannel = LCM_LEFT_VALID
         
 
-        sub_func = partial(ProcessHand,lc,lcChannel, iksvc_l,ns_l,timeout,handToBaxter, l,left_limb)
+        sub_func = partial(ProcessHand,lc,lcChannel,LCM_LEFT_CURRNEPOS, iksvc_l,ns_l,timeout,handToBaxter, l,left_limb)
         msgType = Pose
         connection_list.append((channel,msgType,sub_func))   
          
@@ -271,7 +315,7 @@ def main():
         
         lcChannel = LCM_RIGHT_VALID
 
-        sub_func = partial(ProcessHand,lc,lcChannel,iksvc_r,ns_r,timeout,handToBaxter, r,right_limb)
+        sub_func = partial(ProcessHand,lc,lcChannel,LCM_RIGHT_CURRNEPOS,iksvc_r,ns_r,timeout,handToBaxter, r,right_limb)
         msgType = Pose   
         connection_list.append((channel,msgType,sub_func))  
          
