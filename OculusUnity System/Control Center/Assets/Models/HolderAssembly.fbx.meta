@@ -1,0 +1,132 @@
+fileFormatVersion: 2
+guid: 4505a636caa31ab4591ed5301d84362f
+timeCreated: 1469716885
+licenseType: Free
+ModelImporter:
+  serializedVersion: 19
+  fileIDToRecycleName:
+    100000: Camera
+    100002: //RootNode
+    100004: Lamp
+    100006: SensorMountAssemblyCompact - HydraControllerHolder-3
+    100008: SensorMountAssemblyCompact - HydraControllerHolder-4
+    100010: SensorMountAssemblyCompact - HydraStand-1
+    100012: SensorMountAssemblyCompact - HydraStandBrace-1
+    100014: SensorMountAssemblyCompact - JackPort-1
+    100016: SensorMountAssemblyCompact - RiftHolder-1
+    100018: SensorMountAssemblyCompact - RiftHolder-2
+    100020: SensorMountAssemblyCompact - RiftSensorAssembly-1 AngleHolderRi
+    100022: SensorMountAssemblyCompact - RiftSensorAssembly-1 RiftSensorCam
+    100024: SensorMountAssemblyCompact - RiftSensorAssembly-1 RiftSensorSta
+    100026: SensorMountAssemblyCompact - SensorMountBase-1
+    400000: Camera
+    400002: //RootNode
+    400004: Lamp
+    400006: SensorMountAssemblyCompact - HydraControllerHolder-3
+    400008: SensorMountAssemblyCompact - HydraControllerHolder-4
+    400010: SensorMountAssemblyCompact - HydraStand-1
+    400012: SensorMountAssemblyCompact - HydraStandBrace-1
+    400014: SensorMountAssemblyCompact - JackPort-1
+    400016: SensorMountAssemblyCompact - RiftHolder-1
+    400018: SensorMountAssemblyCompact - RiftHolder-2
+    400020: SensorMountAssemblyCompact - RiftSensorAssembly-1 AngleHolderRi
+    400022: SensorMountAssemblyCompact - RiftSensorAssembly-1 RiftSensorCam
+    400024: SensorMountAssemblyCompact - RiftSensorAssembly-1 RiftSensorSta
+    400026: SensorMountAssemblyCompact - SensorMountBase-1
+    2300000: SensorMountAssemblyCompact - HydraControllerHolder-3
+    2300002: SensorMountAssemblyCompact - HydraControllerHolder-4
+    2300004: SensorMountAssemblyCompact - HydraStand-1
+    2300006: SensorMountAssemblyCompact - HydraStandBrace-1
+    2300008: SensorMountAssemblyCompact - JackPort-1
+    2300010: SensorMountAssemblyCompact - RiftHolder-1
+    2300012: SensorMountAssemblyCompact - RiftHolder-2
+    2300014: SensorMountAssemblyCompact - RiftSensorAssembly-1 AngleHolderRi
+    2300016: SensorMountAssemblyCompact - RiftSensorAssembly-1 RiftSensorCam
+    2300018: SensorMountAssemblyCompact - RiftSensorAssembly-1 RiftSensorSta
+    2300020: SensorMountAssemblyCompact - SensorMountBase-1
+    3300000: SensorMountAssemblyCompact - HydraControllerHolder-3
+    3300002: SensorMountAssemblyCompact - HydraControllerHolder-4
+    3300004: SensorMountAssemblyCompact - HydraStand-1
+    3300006: SensorMountAssemblyCompact - HydraStandBrace-1
+    3300008: SensorMountAssemblyCompact - JackPort-1
+    3300010: SensorMountAssemblyCompact - RiftHolder-1
+    3300012: SensorMountAssemblyCompact - RiftHolder-2
+    3300014: SensorMountAssemblyCompact - RiftSensorAssembly-1 AngleHolderRi
+    3300016: SensorMountAssemblyCompact - RiftSensorAssembly-1 RiftSensorCam
+    3300018: SensorMountAssemblyCompact - RiftSensorAssembly-1 RiftSensorSta
+    3300020: SensorMountAssemblyCompact - SensorMountBase-1
+    4300000: SensorMountAssemblyCompact - SensorMountBase-1
+    4300002: SensorMountAssemblyCompact - RiftSensorAssembly-1 RiftSensorSta
+    4300004: SensorMountAssemblyCompact - RiftSensorAssembly-1 RiftSensorCam
+    4300006: SensorMountAssemblyCompact - RiftSensorAssembly-1 AngleHolderRi
+    4300008: SensorMountAssemblyCompact - RiftHolder-2
+    4300010: SensorMountAssemblyCompact - RiftHolder-1
+    4300012: SensorMountAssemblyCompact - JackPort-1
+    4300014: SensorMountAssemblyCompact - HydraStandBrace-1
+    4300016: SensorMountAssemblyCompact - HydraStand-1
+    4300018: SensorMountAssemblyCompact - HydraControllerHolder-4
+    4300020: SensorMountAssemblyCompact - HydraControllerHolder-3
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleRotations: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    importBlendShapes: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    rootMotionBoneName: 
+    hasTranslationDoF: 0
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 0
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
