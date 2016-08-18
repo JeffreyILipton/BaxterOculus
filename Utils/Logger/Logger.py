@@ -1,6 +1,7 @@
 import sys
 import csv
 import time
+import datetime
 from PyQt4 import QtCore, QtGui, uic
  
 qtCreatorFile = "mainwindow.ui" # Enter file here.
@@ -8,7 +9,7 @@ qtCreatorFile = "mainwindow.ui" # Enter file here.
 Ui_MainWindow, QtBaseClass = uic.loadUiType(qtCreatorFile)
 
 class Datalog:
-    cols
+    headers =[ "test number","start","stop","success"]
     def __init__(self,n,start=0,stop=0,sucess=-1):
         self.n = n
         self.start = start
@@ -26,6 +27,16 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
         self.writer = None
         self.current_test = Datalog(0)
 
+        name = datetime.datetime.now().strftime("%I:%M%p on %B %d, %Y") + ".csv"
+        self.openLog(name)
+        if self.writer:
+            self.writer.writerows(Datalog.headers)
+
+        self.startButton.setEnabled(False)
+        self.stopButton.setEnabled(False)
+        self.sucessButton.setEnabled(False)
+        self.failButton.setEnabled(False)
+
         self.openButton.clicked.connect(self.openNewLog)
         self.closeButton.clicked.connect(self.closeLog)
         self.startButton.clicked.connect(self.start)
@@ -35,10 +46,11 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
         
 
     def openLog(self,filename):
-        with open(filename,"wb") as f:
-            self.file = f
-            self.fileEdit.setText(filename)
-            self.writer = csv.writer(f)
+        f = open(filename,"wb")
+        self.startButton.setEnabled(True)
+        self.file = f
+        self.fileEdit.setText(filename)
+        self.writer = csv.writer(f)
 
     def closeLog(self):
         if self.file:
@@ -52,18 +64,18 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
     def start(self):
         t = time.time()
         self.current_test.start=t
-        self.startButton.isEnabled(False)
-        self.stopButton.isEnabled(True)
-        self.sucessButton.isEnabled(True)
-        self.failButton.isEnabled(True)
+        self.startButton.setEnabled(False)
+        self.stopButton.setEnabled(True)
+        self.sucessButton.setEnabled(True)
+        self.failButton.setEnabled(True)
 
     def stop(self):
         t = time.time()
         self.current_test.start=t
-        self.startButton.isEnabled(True)
-        self.stopButton.isEnabled(False)
-        self.sucessButton.isEnabled(False)
-        self.failButton.isEnabled(False)
+        self.startButton.setEnabled(True)
+        self.stopButton.setEnabled(False)
+        self.sucessButton.setEnabled(False)
+        self.failButton.setEnabled(False)
 
     def sucess(self):
         self.current_test.success = 1
