@@ -26,6 +26,14 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
         self.writer = None
         self.current_test = Datalog(0)
 
+        self.openButton.clicked.connect(self.openNewLog)
+        self.closeButton.clicked.connect(self.closeLog)
+        self.startButton.clicked.connect(self.start)
+        self.stopButton.clicked.connect(self.stop)
+        self.sucessButton.clicked.connect(self.sucess)
+        self.failButton.clicked.connect(self.fail)
+        
+
     def openLog(self,filename):
         with open(filename,"wb") as f:
             self.file = f
@@ -46,13 +54,16 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
         self.current_test.start=t
         self.startButton.isEnabled(False)
         self.stopButton.isEnabled(True)
+        self.sucessButton.isEnabled(True)
+        self.failButton.isEnabled(True)
 
     def stop(self):
         t = time.time()
         self.current_test.start=t
         self.startButton.isEnabled(True)
         self.stopButton.isEnabled(False)
-
+        self.sucessButton.isEnabled(False)
+        self.failButton.isEnabled(False)
 
     def sucess(self):
         self.current_test.success = 1
@@ -61,6 +72,8 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
     def fail(self):
         self.current_test.success = 0
         self.log()
+
+    
 
     def log(self):
         self.writer.writerows(self.current_test.toList())

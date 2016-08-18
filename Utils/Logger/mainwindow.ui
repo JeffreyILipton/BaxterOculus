@@ -140,6 +140,9 @@
             <pointsize>18</pointsize>
            </font>
           </property>
+          <property name="readOnly">
+           <bool>true</bool>
+          </property>
           <property name="buttonSymbols">
            <enum>QAbstractSpinBox::NoButtons</enum>
           </property>
@@ -278,7 +281,7 @@
      <x>0</x>
      <y>0</y>
      <width>923</width>
-     <height>31</height>
+     <height>17</height>
     </rect>
    </property>
   </widget>
