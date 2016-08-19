@@ -5,6 +5,12 @@ VisualStudioVersion = 14.0.24720.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "Logger", "Logger.pyproj", "{713F82F1-441E-4FA4-BB8D-B381063BDA41}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{FB698244-B719-4EC7-986E-95D1F6895ECF}"
+	ProjectSection(SolutionItems) = preProject
+		mainwindow.ui = mainwindow.ui
+		ui_mainwindow.py = ui_mainwindow.py
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

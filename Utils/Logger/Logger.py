@@ -3,10 +3,11 @@ import csv
 import time
 import datetime
 from PyQt4 import QtCore, QtGui, uic
+from ui_mainwindow import *
  
-qtCreatorFile = "mainwindow.ui" # Enter file here.
+#qtCreatorFile = "mainwindow.ui" # Enter file here.
  
-Ui_MainWindow, QtBaseClass = uic.loadUiType(qtCreatorFile)
+#Ui_MainWindow, QtBaseClass = uic.loadUiType(qtCreatorFile)
 
 class Datalog:
     headers =[ "test number","start","stop","success"]
@@ -18,6 +19,9 @@ class Datalog:
     def toList(self):
         return [self.n,self.start,self.stop,self.success]
  
+
+
+
 class MyApp(QtGui.QMainWindow, Ui_MainWindow):
     def __init__(self):
         QtGui.QMainWindow.__init__(self)
