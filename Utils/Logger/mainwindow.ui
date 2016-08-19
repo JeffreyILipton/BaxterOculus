@@ -69,6 +69,9 @@
         <property name="text">
          <string>Close</string>
         </property>
+        <property name="shortcut">
+         <string>E</string>
+        </property>
        </widget>
       </item>
      </layout>
@@ -184,6 +187,9 @@
           <property name="text">
            <string>Start</string>
           </property>
+          <property name="shortcut">
+           <string>Q</string>
+          </property>
          </widget>
         </item>
         <item>
@@ -207,6 +213,9 @@
           </property>
           <property name="text">
            <string>Stop</string>
+          </property>
+          <property name="shortcut">
+           <string>W</string>
           </property>
          </widget>
         </item>
@@ -243,6 +252,9 @@
           <property name="text">
            <string>Sucess</string>
           </property>
+          <property name="shortcut">
+           <string>S</string>
+          </property>
          </widget>
         </item>
         <item>
@@ -267,6 +279,9 @@
           <property name="text">
            <string>Failed</string>
           </property>
+          <property name="shortcut">
+           <string>F</string>
+          </property>
          </widget>
         </item>
        </layout>
@@ -287,6 +302,16 @@
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
  </widget>
+ <tabstops>
+  <tabstop>startButton</tabstop>
+  <tabstop>openButton</tabstop>
+  <tabstop>closeButton</tabstop>
+  <tabstop>testSpinBox</tabstop>
+  <tabstop>fileEdit</tabstop>
+  <tabstop>stopButton</tabstop>
+  <tabstop>sucessButton</tabstop>
+  <tabstop>failButton</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>
