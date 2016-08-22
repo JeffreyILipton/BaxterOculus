@@ -136,6 +136,14 @@ def poseFromPosQuatLib(hdr,limb,baxter_pos,orientation):
 def ProcessGripperVel(gripper,data):
     gripper.set_velocity(data.data)
 
+
+def ProcessTriggerCMDAsGripper(gripper,data):
+    #print "gripper:",data.data
+    if data.data == True:
+        gripper.open()
+    else:
+        gripper.close()
+
 def ProcessGripperCMD(gripper,data):
     #print "gripper:",data.data
     if data.data <1:
@@ -337,6 +345,16 @@ def main():
         sub_func = partial(ProcessTrigger,arduino)
         msgType = Bool
         connection_list.append((channel,msgType,sub_func))
+
+    elif part == 'right_trigger_gripper':
+        gripper = Gripper('right', CHECK_VERSION)
+        gripper.calibrate()
+
+        channel = ROS_R_TRIGGER
+        msgType = Bool
+        sub_func = partial(ProcessTriggerCMDAsGripper,gripper)
+        connection_list.append((channel,msgType,sub_func))
+
     elif part == 'right_gripper':
         gripper = Gripper('right', CHECK_VERSION)
         gripper.calibrate()
