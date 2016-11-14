@@ -16,12 +16,12 @@ stop_cmd_msg = cmd_t()
 stop_cmd_msg.command = 0
 
 
-channel = LCM_R_CMD
+channel = LCM_L_CMD
 try:
     lc = lcm.LCM()
     notdone = True
     while notdone:
-        val = input('3 array: ')
+        val = input('Val: ')
         if val >3: 
             notdone = False
             lc.publish(channel,stop_cmd_msg.encode())
