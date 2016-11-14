@@ -1,0 +1,83 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{47BA3411-95AB-4DEB-AE2F-3A96288C38C0}</ProjectGuid>
+    <OutputType>Exe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>LCM_Viewer</RootNamespace>
+    <AssemblyName>LCM Viewer</AssemblyName>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+    <None Include="lcm\LCM.cs.meta" />
+    <None Include="lcm\LCMDataInputStream.cs.meta" />
+    <None Include="lcm\LCMDataOutputStream.cs.meta" />
+    <None Include="lcm\LCMEncodable.cs.meta" />
+    <None Include="lcm\LCMSubscriber.cs.meta" />
+    <None Include="lcm\MessageAggregator.cs.meta" />
+    <None Include="lcm\Provider.cs.meta" />
+    <None Include="lcm\TCPProvider.cs.meta" />
+    <None Include="lcm\TCPService.cs.meta" />
+    <None Include="lcm\UDPMulticastProvider.cs.meta" />
+    <None Include="lcm\URLParser.cs.meta" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Display.cs" />
+    <Compile Include="lcm\LCM.cs" />
+    <Compile Include="lcm\LCMDataInputStream.cs" />
+    <Compile Include="lcm\LCMDataOutputStream.cs" />
+    <Compile Include="lcm\LCMEncodable.cs" />
+    <Compile Include="lcm\LCMSubscriber.cs" />
+    <Compile Include="lcm\MessageAggregator.cs" />
+    <Compile Include="lcm\Provider.cs" />
+    <Compile Include="lcm\TCPProvider.cs" />
+    <Compile Include="lcm\TCPService.cs" />
+    <Compile Include="lcm\UDPMulticastProvider.cs" />
+    <Compile Include="lcm\URLParser.cs" />
+    <Compile Include="oculuslcm\cmd_t.cs" />
+    <Compile Include="oculuslcm\image_t.cs" />
+    <Compile Include="oculuslcm\pose_t.cs" />
+    <Compile Include="oculuslcm\range_t.cs" />
+    <Compile Include="oculuslcm\trigger_t.cs" />
+    <Compile Include="oculuslcm\velocity_t.cs" />
+    <Compile Include="RangeTransmit.cs" />
+    <Compile Include="util\BitConverter.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
