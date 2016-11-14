@@ -1,0 +1,8 @@
+<launch>
+  <group name='bax'>
+     <node pkg="baxter_lcm" name ="repeater" type = "LCMToRos.py" output="screen"/>
+     <node pkg="baxter_lcm" name ="listener" type = "BaxterInterface.py" output="screen">
+        <param name="part" value="right_gripper" />
+     </node>
+  </group>
+</launch>
