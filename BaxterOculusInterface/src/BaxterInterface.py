@@ -53,8 +53,10 @@ def QuatForInverse(quat):
     tBU = np.mat([ [0,-1,0], [0,0,1], [1,0,0]])
     theta = pi
     A = np.mat([ [cos(theta),0,-sin(theta)], [0,1,0], [sin(theta),0,cos(theta)]])
-    print "\nA:"
-    print A
+    global DEBUG
+    if DEBUG:
+        print "\nA:"
+        print A
     qHB = quat
     tHB = tFromQ(qHB)
     tHU = tHB.dot(A).dot(tBU)
@@ -138,7 +140,7 @@ def ProcessGripperVel(gripper,data):
 
 
 def ProcessTriggerCMDAsGripper(gripper,data):
-    #print "gripper:",data.data
+    print "gripper:",data.data
     if data.data == True:
         gripper.open()
     else:
@@ -174,9 +176,10 @@ def ProcessHand(lc,lcChannel,lcPosChannel,iksvc,ns,timeout,handToBaxter, limb,li
     pose  = poseFromPosQuatLib(hdr,limb,baxter_pos,orientation)
     ikreq.pose_stamp.append(pose[limb])
     lcm_msg = trigger_t()
-
+    global DEBUG
+    
     try:
-        print "\ntarget:", baxter_pos,"\n\t",orientation
+        if DEBUG: print "\ntarget:", baxter_pos,"\n\t",orientation
         #print ikreq
         #rospy.wait_for_service(ns, timeout)
         resp = ServiceTimeouter(timeout,iksvc, ikreq).call()
@@ -296,7 +299,7 @@ def main():
 
     connection_list = []
     lc = lcm.LCM("udpm://239.255.76.67:7667:?ttl=1")
-    ardPort = "/dev/ttyACM1"
+    ardPort = "/dev/ttyACM0"
 
     if part == 'left':
         channel = ROS_LEFT
