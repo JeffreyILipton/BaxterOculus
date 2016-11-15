@@ -1,12 +1,13 @@
 <launch>
-  <group name='bax'>
-     <node pkg="baxter_remote" name ="repeater" type = "LCMToRos.py" output="screen"/>
-    
-    <node pkg="baxter_remote" name ="listener_l" type = "RosToLCM.py" output="screen">
+    <arg name="host" default="wallarelvo-tower.csail.mit.edu" />
+    <arg name="port" default="8080"/>
+    <node pkg="baxter_remote" name ="repeater" type = "LCMToRos.py" output="screen"/>
+
+  <node pkg="baxter_remote" name ="listener_l" type = "RosToLCM.py" output="screen">
         <param name="part" value="left" />
      </node>
     
-    <node pkg="baxter_remote" name ="listener_l" type = "RosToLCM.py" output="screen">
+    <node pkg="baxter_remote" name ="listener_r" type = "RosToLCM.py" output="screen">
       <param name="part" value="right" />
     </node>
     
@@ -24,29 +25,15 @@
     
     <node pkg="baxter_remote" name ="listener_r_cam" type = "RosToLCM.py" output="screen">
       <param name="part" value="right_camera" />
-    </node> 
+    </node>  
     
-  </group>
-
-  <arg name="host" default="wallarelvo-tower.csail.mit.edu" />
-  <arg name="port" default="8080"/>
-
+  
   <node pkg="canopy_client" type="client_node.py" name="canopy_client" output="screen">
-    <param name="name" value="client"/>
+    <param name="name" value="Remote"/>
     <param name="host" value="$(arg host)"/>
     <param name="port" value="$(arg port)"/>
     <param name="private_key" value="4wsDxqdQpXygyj4t4" />
-    <param name="description" value="client" />
-    <!--
-                      [(ROS_LEFT,LCM_LEFT,Pose),
-                       (ROS_L_CMD,LCM_L_CMD,UInt16),
-                       (ROS_L_VEL,LCM_L_VEL,Float64),
-                       (ROS_L_TRIGGER,LCM_L_TRIGGER,Bool),
-                       (ROS_RIGHT,LCM_RIGHT,Pose),
-                       (ROS_R_CMD,LCM_R_CMD,UInt16),
-                       (ROS_R_VEL,LCM_R_VEL,Float64),
-                       (ROS_R_TRIGGER,LCM_R_TRIGGER,Bool)]
-    -->
+    <param name="description" value="remote bridge" />
     <rosparam>
       publishing:
       - /left_arm_cmd
@@ -67,8 +54,15 @@
       - std_msgs/UInt16
       - std_msgs/Float64
       - std_msgs/Bool
-      
+
       trusted:
+      - ".*"
+      - ".*"
+      - ".*"
+      - ".*"
+      - ".*"
+      - ".*"
+      - ".*"
       - ".*"
     </rosparam>
   </node>

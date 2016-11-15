@@ -4,7 +4,6 @@ import sys
 if os.name!='nt':
     import lcm
     import rospy
-    from baxter_interface import *
     from std_msgs.msg import *
     from geometry_msgs.msg import (
         Pose,

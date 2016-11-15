@@ -4,8 +4,8 @@ import sys
 if os.name!='nt':
     import lcm
     import rospy
-    from baxter_interface import *
     from std_msgs.msg import *
+    from sensor_msgs.msg import *
     from geometry_msgs.msg import (
         Pose,
         Point,
@@ -31,36 +31,30 @@ if DEBUG: print "time:", curtime
 def ProcessImage(lc,lcChannel,rosmsg):
     global curtime
     global CAM_TIME
-    #print "tick"
-    if time.time()-curtime >CAM_TIME:
-        #print "ros: %ix%i"%(rosmsg.height,rosmsg.width)
+
+    if( (time.time()-curtime >CAM_TIME) or True ):
         lcm_msg = image_t()
         lcm_msg.height = rosmsg.height
         lcm_msg.width = rosmsg.width
         lcm_msg.row_stride = rosmsg.step
         lcm_msg.data = rosmsg.data
         lcm_msg.size = len(rosmsg.data)
-        #print "pub on ",lcChannel
-        #print "ros data: ",len(rosmsg.data)
-        #print "lcm data: ", len(lcm_msg.encode())
-        #tm = trigger_t()
-        #tm.trigger = True
+
         lc.publish(lcChannel,lcm_msg.encode())
         curtime = time.time()
-    #lc.publish(LCM_L_CAMERA,tm.encode())
-    #lc.publish(LCM_L_TRIGGER,tm.encode())
 
 
 ### Runs on LCM take 
 def ProcessRange(lc,lcChannel,rosmsg):
     global curtime 
     global RANGE_TIME
-    #print "tick"
+
     if time.time()-curtime  >RANGE_TIME:
         msg = range_t()
         msg.range = rosmsg.range
         lc.publish(lcChannel,msg.encode())
         curtime  = time.time()
+
 
 def IsValid(lc,lcChannel,rosmsg):
     lcm_msg = trigger_t()
@@ -96,7 +90,7 @@ def main():
     full_param_name = rospy.search_param('part')
     param_value = rospy.get_param(full_param_name)
     part = param_value
-    #print "PART IS:",part
+    print "PART IS:",part
     
 
 
@@ -151,32 +145,24 @@ def main():
 
     elif part == 'right_camera':
         lcChannel = LCM_R_CAMERA
-        channel = ROS_R_CAMERA_REPEAT
+        channel = ROS_R_CAMERA
         msgType = Image
 
         sub_func = lambda x: ProcessImage(lc,lcChannel,x)
         #sub_func = partial(ProcessImage,lc,lcChannel)
         connection_list.append((channel,msgType,sub_func))
 
-        r_cam = CameraController('right_hand_camera')
-        r_cam.resolution=(320,200)#(1280, 800)
-        r_cam.open()
-
 
     elif part == 'left_camera':
 
         lcChannel = LCM_L_CAMERA
         #lc = lcm.LCM("udpm://239.255.76.67:7667:?ttl=1")
-        channel = ROS_L_CAMERA_REPEAT
+        channel = ROS_L_CAMERA
         msgType = Image
         sub_func = lambda x : ProcessImage(lc,lcChannel,x)
         #sub_func = partial(ProcessImage,lc,lcChannel)
         connection_list.append((channel,msgType,sub_func))
-        connection_list.append((channel,msgType,sub_func))
 
-        l_cam = CameraController('left_hand_camera')
-        l_cam.resolution=(320,200)#(1280, 800)
-        l_cam.open()
     else :
         print "unknown part:", part
         return 0

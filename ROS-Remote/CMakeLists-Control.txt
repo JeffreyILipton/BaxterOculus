@@ -1,10 +1,12 @@
 cmake_minimum_required(VERSION 2.8.3)
-project(baxter_remote)
+project(baxter_lcm)
 
 ## Find catkin macros and libraries
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
 find_package(catkin REQUIRED COMPONENTS
+  baxter_core_msgs
+  baxter_interface
   geometry_msgs
   roscpp
   rospy

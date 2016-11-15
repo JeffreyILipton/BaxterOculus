@@ -221,7 +221,11 @@ def main():
 
         sub_func = partial(ProcessHand,IsValidPub,PosePub, iksvc_l, ns_l, timeout, handToBaxter, l, left_limb)
         msgType = Pose
-        connection_list.append((channel,msgType,sub_func))   
+        connection_list.append((channel,msgType,sub_func)) 
+
+        l_cam = CameraController('left_hand_camera')
+        l_cam.resolution=(320,200)#(1280, 800)
+        l_cam.open()  
          
     elif part == 'right':
         channel = ROS_RIGHT
@@ -237,6 +241,10 @@ def main():
         sub_func = partial(ProcessHand,IsValidPub,PosePub,iksvc_r,ns_r,timeout,handToBaxter, r,right_limb)
         msgType = Pose   
         connection_list.append((channel,msgType,sub_func))  
+
+        l_cam = CameraController('right_hand_camera')
+        l_cam.resolution=(320,200)#(1280, 800)
+        l_cam.open()
          
     elif part == 'head':
         theta_max = pi
@@ -291,7 +299,6 @@ def main():
         msgType = Float64
         sub_func = partial(ProcessGripperVel,gripper)
         connection_list.append((channel,msgType,sub_func))
-
     else :
         print "unknown part:", part
         return 0
