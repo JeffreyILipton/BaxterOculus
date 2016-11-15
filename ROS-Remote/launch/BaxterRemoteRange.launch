@@ -1,0 +1,25 @@
+<launch>
+  <arg name="host" default="wallarelvo-tower.csail.mit.edu" />
+  <arg name="port" default="8080"/>
+  
+
+  <node pkg="canopy_client" type="client_node.py" name="canopy_client" output="screen">
+    <param name="name" value="baxter"/>
+    <param name="host" value="$(arg host)"/>
+    <param name="port" value="$(arg port)"/>
+    <param name="private_key" value="4wsDxqdQpXygyj4t4" />
+    <param name="description" value="Thebaxterbot" />
+    <rosparam>
+      publishing:
+      - /robot/range/right_hand_range/state
+
+      types:
+      - sensor_msgs/Range
+
+      trusted:
+      - ".*"
+    </rosparam> 
+  </node>
+
+
+</launch>

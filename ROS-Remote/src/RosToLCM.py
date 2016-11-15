@@ -51,7 +51,7 @@ def ProcessImage(lc,lcChannel,rosmsg):
     #lc.publish(LCM_L_TRIGGER,tm.encode())
 
 
-### Runs on LCM
+### Runs on LCM take 
 def ProcessRange(lc,lcChannel,rosmsg):
     global curtime 
     global RANGE_TIME
