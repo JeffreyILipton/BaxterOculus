@@ -112,10 +112,12 @@ def main():
         lcChannel = LCM_LEFT_VALID
         msgType = Bool
         sub_func = partial(IsValid,lc,lcChannel)
+        channel = ROS_LEFT_VALID
         connection_list.append((channel,msgType,sub_func)) 
 
-        lcChannel = ROS_LEFT_CURRENTPOS
+        lcChannel = LCM_LEFT_CURRENTPOS
         msgType = Pose
+        channel = ROS_LEFT_CURRENTPOS
         sub_func = partial(CurrentPos, lc, lcChannel)
         connection_list.append((channel,msgType,sub_func)) 
 
@@ -124,11 +126,13 @@ def main():
         lcChannel = LCM_RIGHT_VALID
         msgType = Bool
         sub_func = partial(IsValid,lc,lcChannel)
+        channel = ROS_RIGHT_VALID
         connection_list.append((channel,msgType,sub_func)) 
 
-        lcChannel = ROS_RIGHT_CURRENTPOS
+        lcChannel = LCM_RIGHT_CURRENTPOS
         msgType = Pose
         sub_func = partial(CurrentPos, lc, lcChannel)
+        channel = ROS_RIGHT_CURRENTPOS
         connection_list.append((channel,msgType,sub_func)) 
 
     elif part == 'left_range':
@@ -147,7 +151,7 @@ def main():
 
     elif part == 'right_camera':
         lcChannel = LCM_R_CAMERA
-        channel = ROS_R_CAMERA
+        channel = ROS_R_CAMERA_REPEAT
         msgType = Image
 
         sub_func = lambda x: ProcessImage(lc,lcChannel,x)
@@ -163,7 +167,7 @@ def main():
 
         lcChannel = LCM_L_CAMERA
         #lc = lcm.LCM("udpm://239.255.76.67:7667:?ttl=1")
-        channel = ROS_L_CAMERA
+        channel = ROS_L_CAMERA_REPEAT
         msgType = Image
         sub_func = lambda x : ProcessImage(lc,lcChannel,x)
         #sub_func = partial(ProcessImage,lc,lcChannel)
