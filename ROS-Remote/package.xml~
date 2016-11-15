@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <package>
-  <name>baxter_remote</name>
+  <name>baxter_lcm</name>
   <version>0.0.0</version>
   <description>The baxter_lcm package converts LCM messages into ROS messages and uses them to command baxter</description>
 
@@ -52,7 +52,6 @@
   <run_depend>roscpp</run_depend>
   <run_depend>rospy</run_depend>
   <run_depend>std_msgs</run_depend>
-  <run_depend>canopy_client</run_depend>
 
 
   <!-- The export tag contains other, unspecified, tags -->
