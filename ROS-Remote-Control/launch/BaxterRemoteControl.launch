@@ -29,7 +29,14 @@
   <node pkg="baxter_remote_control" name ="echo_rp" type = "stateecho.py" output="screen">
     <param name="part" value="right_ros_currentpos" />
   </node>
-  
+
+  <node pkg="baxter_remote_control" name ="echo_rc" type = "stateecho.py" output="screen">
+    <param name="part" value="right_cam" />
+  </node>
+  <node pkg="baxter_remote_control" name ="echo_lc" type = "stateecho.py" output="screen">
+    <param name="part" value="left_cam" />
+  </node>
+
   <node pkg="canopy_client" type="client_node.py" name="canopy_client" output="screen">
     <param name="name" value="Baxter"/>
     <param name="host" value="$(arg host)"/>
@@ -41,11 +48,11 @@
       - /left_ros_currentpos
       - /left_ros_valid
       - /robot/range/left_hand_range/state
-      - /cameras/left_hand_camera/image
+      - /echo/cameras/left_hand_camera/image
       - /right_ros_currentpos
       - /right_ros_valid
       - /robot/range/right_hand_range/state
-      - /cameras/right_hand_camera/image
+      - /echo/cameras/right_hand_camera/image
 
       types:
       - geometry_msgs/Pose

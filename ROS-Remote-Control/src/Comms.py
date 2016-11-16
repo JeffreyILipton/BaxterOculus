@@ -14,6 +14,13 @@ ROS_RIGHT_CURRENTPOS = "left_ros_currentpos"
 ROS_RIGHT_CURRENTPOS_STATE = ROS_RIGHT_CURRENTPOS + STATE
 
 
+
+ROS_RIGHT_CAM = "/cameras/right_hand_camera/image"
+ROS_RIGHT_CAM_ECHO = "/echo/cameras/right_hand_camera/image"
+
+ROS_LEFT_CAM = "/cameras/left_hand_camera/image"
+ROS_LEFT_CAM_ECHO = "/echo/cameras/left_hand_camera/image"
+
 # listening
 ROS_RIGHT   = NAME+"right_arm_cmd"
 ROS_LEFT    = NAME+"left_arm_cmd"

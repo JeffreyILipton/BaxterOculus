@@ -47,7 +47,7 @@ class Echo(object):
     def run(self,rate=10):
         r = rospy.Rate(rate)
         while not rospy.is_shutdown():
-            self.pub.publish(self.msg)
+            if self.msg != None: self.pub.publish(self.msg)
             r.sleep()
 
 
@@ -60,32 +60,49 @@ def main():
     outchannel = ""
     inchannel = ""
     channeltype = Bool
-    channelDefault = Bool(False)
+    channelDefault = None
+    rate = 10
 
     if part == 'left_valid':
         outchannel = ROS_LEFT_VALID
         inchannel = ROS_LEFT_VALID_STATE
-         
+        channelDefault = Bool(False)
     elif part == 'right_valid':
         outchannel = ROS_RIGHT_VALID
         inchannel = ROS_RIGHT_VALID_STATE
+        channelDefault = Bool(False)
 
     elif part == "left_ros_currentpos":
         outchannel = ROS_LEFT_CURRENTPOS
         inchannel  = ROS_LEFT_CURRENTPOS_STATE
         channeltype = Pose
-        channelDefault = Pose()
+        channelDefault = None
 
     elif part == "right_ros_currentpos":
         outchannel = ROS_RIGHT_CURRENTPOS
         inchannel  = ROS_RIGHT_CURRENTPOS_STATE
         channeltype = Pose
-        channelDefault = Pose()
+        channelDefault = None
+
+    elif part == "left_cam":
+        inchannel  = ROS_LEFT_CAM
+        outchannel = ROS_LEFT_CAM_ECHO
+        channeltype = Image
+        channelDefault = None
+        rate = 5
+
+    elif part == "right_cam":
+        inchannel  = ROS_RIGHT_CAM
+        outchannel = ROS_RIGHT_CAM_ECHO
+        channeltype = Image
+        channelDefault = None
+        rate = 5
+
     else:
         print "dont know part "+ part
 
     e = Echo(inchannel,outchannel,channeltype,channelDefault)
-    e.run()
+    e.run(rate)
 
 if __name__ == "__main__":
     sys.exit(int(main() or 0))
