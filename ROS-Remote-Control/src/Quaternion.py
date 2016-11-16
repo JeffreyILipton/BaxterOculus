@@ -14,16 +14,16 @@ def magQ(q):
 def qFromT(m):
     tr = m[0,0]+m[1,1]+m[2,2]
     if(tr>0):
-        print "c1"
+        #print "c1"
         s = 2*sqrt(tr+1.0)
-        print "s:",s
+        #print "s:",s
         w = 0.25*s
         x = (m[2,1] - m[1,2] )/s
         y = (m[0,2] - m[2,0] )/s
         z = (m[1,0] - m[0,1] )/s
 
     elif ( (m[0,0]>m[1,1]) and ( m[0,0]>m[2,2])):
-        print "c2"
+        #print "c2"
         s = sqrt(1+m[0,0]-m[1,1]-m[2,2])*2
         w = ( m[2,1] - m[1,2] )/s
         x = 0.25*s
@@ -31,7 +31,7 @@ def qFromT(m):
         z = ( m[0,2] + m[2,0] )/s
 
     elif ( m[1,1]>m[2,2] ):
-        print "c3"
+        #print "c3"
         s = sqrt(1+m[1,1]-m[0,0]-m[2,2])*2
         w = ( m[0,2] - m[2,0] )/s
         x = ( m[0,1] + m[1,0] )/s
@@ -39,7 +39,7 @@ def qFromT(m):
         z = ( m[1,2] + m[2,1] )/s
 
     else:
-        print "c4"
+        #print "c4"
         s = sqrt(1.0 + m[2,2] - m[0,0] - m[1,1])*2
         w = (m[1,0] - m[0,1])/s
         x = (m[0,2] + m[2,0])/s
@@ -97,8 +97,8 @@ def QuatForInverse(quat):
     tBU = np.mat([ [0,-1,0], [0,0,1], [1,0,0]])
     theta = pi
     A = np.mat([ [cos(theta),0,-sin(theta)], [0,1,0], [sin(theta),0,cos(theta)]])
-    print "\nA:"
-    print A
+    #print "\nA:"
+    #print A
     qHB = quat
     tHB = tFromQ(qHB)
     tHU = tHB.dot(A).dot(tBU)

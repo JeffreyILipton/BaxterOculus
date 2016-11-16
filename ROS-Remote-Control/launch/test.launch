@@ -29,26 +29,20 @@
       - /left_ros_currentpos
       - /left_ros_valid
       - /robot/range/left_hand_range/state
-      - /cameras/left_hand_camera/image
       - /right_ros_currentpos
       - /right_ros_valid
       - /robot/range/right_hand_range/state
-      - /cameras/right_hand_camera/image
 
       types:
       - geometry_msgs/Pose
       - std_msgs/Bool
       - sensor_msgs/Range
-      - sensor_msgs/Image
       - geometry_msgs/Pose
       - std_msgs/Bool
       - sensor_msgs/Range
-      - sensor_msgs/Image
 
 
       trusted:
-      - ".*"
-      - ".*"
       - ".*"
       - ".*"
       - ".*"

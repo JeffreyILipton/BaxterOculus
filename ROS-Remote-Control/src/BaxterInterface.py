@@ -45,7 +45,17 @@ def minMax(min_val,max_val,val):
 def XYZRescale(scales, offsets, mins, maxs, xyz):
     return [ minMax(mins[i],maxs[i], scales[i]*(xyz[i]+offsets[i])) for i in range(0,3)]
 
-
+def posFromPointAndList(Point,orientation):
+    pose=Pose(
+                position=Point,
+                orientation=Quaternion(
+                    x=orientation[1],
+                    y=orientation[2],
+                    z=orientation[3],
+                    w=orientation[0],
+                ),
+            )
+    return pose
 
 def poseFromPosQuatLib(hdr,limb,baxter_pos,orientation):
     poses = {
@@ -122,7 +132,7 @@ def ProcessHand(IsValidPub,PosePub,iksvc,ns,timeout,handToBaxter, limb,limb_obj,
     pose  = poseFromPosQuatLib(hdr,limb,baxter_pos,orientation)
     ikreq.pose_stamp.append(pose[limb])
     isvalid_msg = Bool()
-
+    isvalid_msg.data = False
     try:
         print "\ntarget:", baxter_pos,"\n\t",orientation
         #print ikreq
@@ -133,13 +143,13 @@ def ProcessHand(IsValidPub,PosePub,iksvc,ns,timeout,handToBaxter, limb,limb_obj,
             # Format solution into Limb API-compatible dictionary
             limb_joints = dict(zip(resp.joints[0].name, resp.joints[0].position))
             isvalid_msg.data = True
-            IsValidPub.publish(isvalid_msg)
+            #IsValidPub.publish(isvalid_msg)
             #print limb_joints
             limb_obj.move_to_joint_positions(limb_joints)
         else:
             print "ERROR - No valid Joint Solution:",limb
-            isvalid_msg.data = False
-            IsValidPub.publish(isvalid_msg)
+            #isvalid_msg.data = False
+            #IsValidPub.publish(isvalid_msg)
             
             #print resp
         #if msg.position[0]>10: limb_obj.move_to_joint_positions(wave_1)
@@ -149,18 +159,22 @@ def ProcessHand(IsValidPub,PosePub,iksvc,ns,timeout,handToBaxter, limb,limb_obj,
 
     except (rospy.ServiceException, rospy.ROSException), e:
         print "except"
-        isvalid_msg.data = False
+        #isvalid_msg.data = False
         rospy.logerr("Service call failed: %s" % (e,))
-        IsValidPub.publish(isvalid_msg)
+        #IsValidPub.publish(isvalid_msg)
     
+    IsValidPub.publish(isvalid_msg)
     # return endpoint
     newpose = limb_obj.endpoint_pose()
-    #xyz = newpose['position']
+    #print newpose
+    xyz = newpose['position']
     orient = newpose['orientation']
     quat = [orient[3],orient[0],orient[1],orient[2]]
     quat = QuatForInverse(quat)
-    newpose['orientation'] = quat
-    PosePub.publish(newpose)
+    hdr = Header(stamp=rospy.Time.now(), frame_id='base')
+    
+    posemsg = posFromPointAndList(xyz,quat)
+    PosePub.publish(posemsg)
 
     
 
@@ -238,7 +252,7 @@ def main():
         IsValidPub = rospy.Publisher(ROS_RIGHT_VALID, Bool, queue_size=1)
         PosePub  = rospy.Publisher(ROS_RIGHT_CURRENTPOS, Pose, queue_size=1)
 
-        sub_func = partial(ProcessHand,IsValidPub,PosePub,iksvc_r,ns_r,timeout,handToBaxter, r,right_limb)
+        sub_func = partial(ProcessHand,IsValidPub,PosePub, iksvc_r,ns_r,timeout,handToBaxter, r,right_limb)
         msgType = Pose   
         connection_list.append((channel,msgType,sub_func))  
 
