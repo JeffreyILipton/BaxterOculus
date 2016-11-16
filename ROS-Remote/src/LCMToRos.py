@@ -15,6 +15,7 @@ from oculuslcm import *
 from functools import *
 from Comms import *
 
+DEBUG = False
 
 def PointQuatToPose(baxter_pos,orientation):
     p = Pose()
@@ -44,6 +45,8 @@ def LCMGripperVelToRos(RosPub,LcmChannel,lcmData):
 
 def LCMPoseToRos(RosPub,LcmChannel,lcmData):
     lcm_msg = pose_t.decode(lcmData)
+    global DEBUG
+    if DEBUG: print "New Pose on :" + LcmChannel
     p = PointQuatToPose(lcm_msg.position, lcm_msg.orientation)
     #print "lcm pose:",lcm_msg.position,lcm_msg.orientation
     #print "ROS pose:",p
@@ -51,6 +54,8 @@ def LCMPoseToRos(RosPub,LcmChannel,lcmData):
     
 def LCMBoolToRos(RosPub,lcmChannel, lcmData):
     lcm_msg = trigger_t.decode(lcmData)
+    global DEBUG
+    if DEBUG: print "Channel:" + lcmChannel + ": "+ lcm_msg.trigger
     RosPub.publish(lcm_msg.trigger)
 
 class LCMInterface():
@@ -71,7 +76,7 @@ class LCMInterface():
 
         for connection in connections:
             ros_channnel,lcm_channel,ros_msg_type = connection
-            pub = rospy.Publisher(ros_channnel, ros_msg_type, queue_size=1)
+            pub = rospy.Publisher(ros_channnel, ros_msg_type, queue_size=10,latch=True)
             if ros_msg_type == Pose:
                 subscriber = partial(LCMPoseToRos,pub)
             elif ros_msg_type == Bool:

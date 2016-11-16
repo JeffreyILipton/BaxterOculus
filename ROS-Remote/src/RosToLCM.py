@@ -57,15 +57,20 @@ def ProcessRange(lc,lcChannel,rosmsg):
 
 
 def IsValid(lc,lcChannel,rosmsg):
+    global DEBUG
+    if DEBUG: print "Channel:" + lcChannel + ": " + str(rosmsg.data)
     lcm_msg = trigger_t()
     lcm_msg.trigger = rosmsg.data
     lc.publish(lcChannel,lcm_msg.encode())
 
 def CurrentPos(lc,lcChannel,rosmsg):
     lcm_pos_msg = pose_t()
-    lcm_pos_msg.position = list(rosmsg.position)
-    lcm_pos_msg.orientation = list(rosmsg.orientation)
-    lc.publish(lcPosChannel,lcm_pos_msg.encode())
+    global DEBUG
+    if DEBUG: print "Channel:" + lcChannel + "received pose"
+    #print "Pose: " + rosmsg.position.x + "," + rosmsg.position.y + "," + rosmsg.position.z
+    lcm_pos_msg.position = [rosmsg.position.x,rosmsg.position.y,rosmsg.position.z]
+    lcm_pos_msg.orientation = [rosmsg.orientation.x,rosmsg.orientation.y,rosmsg.orientation.z,rosmsg.orientation.w]
+    lc.publish(lcChannel,lcm_pos_msg.encode())
 
 
 

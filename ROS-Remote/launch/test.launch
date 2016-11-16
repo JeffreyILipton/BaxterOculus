@@ -1,0 +1,70 @@
+<launch>
+    <arg name="host" default="wallarelvo-tower.csail.mit.edu" />
+    <arg name="port" default="8080"/>
+    <node pkg="baxter_remote" name ="repeater" type = "LCMToRos.py" output="screen"/>
+
+  <node pkg="baxter_remote" name ="listener_l" type = "RosToLCM.py" output="screen">
+        <param name="part" value="left" />
+     </node>
+    
+    <node pkg="baxter_remote" name ="listener_r" type = "RosToLCM.py" output="screen">
+      <param name="part" value="right" />
+    </node>
+    
+    <node pkg="baxter_remote" name ="listener_r_r" type = "RosToLCM.py" output="screen">
+      <param name="part" value="right_range" />
+    </node>
+    
+    <node pkg="baxter_remote" name ="listener_l_r" type = "RosToLCM.py" output="screen">
+      <param name="part" value="left_range" />
+    </node>
+    
+    <node pkg="baxter_remote" name ="listener_l_cam" type = "RosToLCM.py" output="screen">
+      <param name="part" value="left_camera" />
+    </node>
+    
+    <node pkg="baxter_remote" name ="listener_r_cam" type = "RosToLCM.py" output="screen">
+      <param name="part" value="right_camera" />
+    </node>  
+    
+  
+  <node pkg="canopy_client" type="client_node.py" name="canopy_client" output="screen">
+    <param name="name" value="Remote7"/>
+    <param name="host" value="$(arg host)"/>
+    <param name="port" value="$(arg port)"/>
+    <param name="private_key" value="4wsDxqdQpXygyj4t4" />
+    <param name="description" value="remote bridge" />
+    <rosparam>
+      publishing:
+      - /left_arm_cmd
+      - /left_cmd
+      - /left_vel
+      - /left_trigger_cmd
+      - /right_arm_cmd
+      - /right_cmd
+      - /right_vel
+      - /right_trigger_cmd
+
+      types:
+      - geometry_msgs/Pose
+      - std_msgs/UInt16
+      - std_msgs/Float64
+      - std_msgs/Bool
+      - geometry_msgs/Pose
+      - std_msgs/UInt16
+      - std_msgs/Float64
+      - std_msgs/Bool
+
+      trusted:
+      - ".*"
+      - ".*"
+      - ".*"
+      - ".*"
+      - ".*"
+      - ".*"
+      - ".*"
+      - ".*"
+    </rosparam>
+  </node>
+
+</launch>
