@@ -10,7 +10,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		CMakeLists.txt = CMakeLists.txt
 		..\Messaging\oculus_t.lcm = ..\Messaging\oculus_t.lcm
 		package.xml = package.xml
-		launch\ROS_LCM_bridge.launch = launch\ROS_LCM_bridge.launch
 	EndProjectSection
 EndProject
 Global

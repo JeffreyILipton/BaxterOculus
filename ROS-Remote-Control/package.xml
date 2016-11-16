@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <package>
-  <name>baxter_remote</name>
+  <name>baxter_remote_control</name>
   <version>0.0.0</version>
-  <description>The baxter_lcm package converts LCM messages into ROS messages and uses them to command baxter</description>
+  <description>Connects baxter to canopy and runs local control of baxter</description>
 
   <!-- One maintainer tag required, multiple allowed, one person per tag --> 
   <!-- Example:  -->
