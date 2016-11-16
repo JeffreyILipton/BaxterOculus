@@ -14,9 +14,7 @@
   <node pkg="baxter_remote_control" name ="control_l_g" type = "BaxterInterface.py" output="screen">
     <param name="part" value="left_gripper" />
   </node>
-  <!--<node pkg="baxter_remote_control" name ="control_r_g" type = "BaxterInterface.py" output="screen">
-    <param name="part" value="right_trigger" />
-  </node> -->
+
   <node pkg="baxter_remote_control" name ="echo_lv" type = "stateecho.py" output="screen">
     <param name="part" value="left_valid" />
   </node>
@@ -29,7 +27,11 @@
   <node pkg="baxter_remote_control" name ="echo_rp" type = "stateecho.py" output="screen">
     <param name="part" value="right_ros_currentpos" />
   </node>
-  
+
+  <!--<node pkg="baxter_remote_control" name ="control_r_g" type = "BaxterInterface.py" output="screen">
+    <param name="part" value="right_trigger" />
+  </node> -->
+
   <node pkg="canopy_client" type="client_node.py" name="canopy_client" output="screen">
     <param name="name" value="Baxter"/>
     <param name="host" value="$(arg host)"/>
@@ -41,26 +43,20 @@
       - /left_ros_currentpos
       - /left_ros_valid
       - /robot/range/left_hand_range/state
-      - /cameras/left_hand_camera/image
       - /right_ros_currentpos
       - /right_ros_valid
       - /robot/range/right_hand_range/state
-      - /cameras/right_hand_camera/image
 
       types:
       - geometry_msgs/Pose
       - std_msgs/Bool
       - sensor_msgs/Range
-      - sensor_msgs/Image
       - geometry_msgs/Pose
       - std_msgs/Bool
       - sensor_msgs/Range
-      - sensor_msgs/Image
 
 
       trusted:
-      - ".*"
-      - ".*"
       - ".*"
       - ".*"
       - ".*"

@@ -230,8 +230,8 @@ def main():
 
         iksvc_l,ns_l = iksvcForLimb(l)
         
-        IsValidPub = rospy.Publisher(ROS_LEFT_VALID, Bool, queue_size=1)
-        PosePub  = rospy.Publisher(ROS_LEFT_CURRENTPOS, Pose, queue_size=1)
+        IsValidPub = rospy.Publisher(ROS_LEFT_VALID_STATE, Bool, queue_size=10,latch=True)
+        PosePub  = rospy.Publisher(ROS_LEFT_CURRENTPOS_STATE, Pose, queue_size=10,latch=True)
 
         sub_func = partial(ProcessHand,IsValidPub,PosePub, iksvc_l, ns_l, timeout, handToBaxter, l, left_limb)
         msgType = Pose
@@ -249,8 +249,8 @@ def main():
 
         iksvc_r,ns_r = iksvcForLimb(r)
         
-        IsValidPub = rospy.Publisher(ROS_RIGHT_VALID, Bool, queue_size=1)
-        PosePub  = rospy.Publisher(ROS_RIGHT_CURRENTPOS, Pose, queue_size=1)
+        IsValidPub = rospy.Publisher(ROS_RIGHT_VALID_STATE, Bool, queue_size=10,latch=True)
+        PosePub  = rospy.Publisher(ROS_RIGHT_CURRENTPOS_STATE, Pose, queue_size=10,latch=True)
 
         sub_func = partial(ProcessHand,IsValidPub,PosePub, iksvc_r,ns_r,timeout,handToBaxter, r,right_limb)
         msgType = Pose   
