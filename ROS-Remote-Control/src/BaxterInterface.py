@@ -115,8 +115,25 @@ def iksvcForLimb(limb):
     iksvc = rospy.ServiceProxy(ns, SolvePositionIK)
     return iksvc,ns
 
+
+def ProcessLimbCommands(PosePub,limb_obj,resp):
+    limb_joints = dict(zip(resp.joints[0].name, resp.joints[0].position))
+    limb_obj.move_to_joint_positions(limb_joints)
+
+    newpose = limb_obj.endpoint_pose()
+    #print newpose
+    xyz = newpose['position']
+    orient = newpose['orientation']
+    quat = [orient[3],orient[0],orient[1],orient[2]]
+    quat = QuatForInverse(quat)
+    hdr = Header(stamp=rospy.Time.now(), frame_id='base')
+    
+    posemsg = posFromPointAndList(xyz,quat)
+    PosePub.publish(posemsg)
+
+
 ##### Uses Pose
-def ProcessHand(IsValidPub,PosePub,iksvc,ns,timeout,handToBaxter, limb,limb_obj, data):
+def ProcessHand(IsValidPub,ResPub,iksvc,ns,timeout,handToBaxter, limb,limb_obj, data):
     #http://sdk.rethinkrobotics.com/wiki/IK_Service_-_Code_Walkthrough 
     print "\n\nhand called for : ",limb
     position = [data.position.x,data.position.y,data.position.z]
@@ -133,6 +150,7 @@ def ProcessHand(IsValidPub,PosePub,iksvc,ns,timeout,handToBaxter, limb,limb_obj,
     ikreq.pose_stamp.append(pose[limb])
     isvalid_msg = Bool()
     isvalid_msg.data = False
+    
     try:
         print "\ntarget:", baxter_pos,"\n\t",orientation
         #print ikreq
@@ -141,11 +159,13 @@ def ProcessHand(IsValidPub,PosePub,iksvc,ns,timeout,handToBaxter, limb,limb_obj,
         if (resp is not None and resp.isValid[0]):
             print "SUCCESS - Valid Joint Solution Found:"
             # Format solution into Limb API-compatible dictionary
-            limb_joints = dict(zip(resp.joints[0].name, resp.joints[0].position))
+            ##limb_joints = dict(zip(resp.joints[0].name, resp.joints[0].position))
             isvalid_msg.data = True
             #IsValidPub.publish(isvalid_msg)
             #print limb_joints
-            limb_obj.move_to_joint_positions(limb_joints)
+            ##limb_obj.move_to_joint_positions(limb_joints)
+            ResPub.publish(resp)
+
         else:
             print "ERROR - No valid Joint Solution:",limb
             #isvalid_msg.data = False
@@ -164,17 +184,9 @@ def ProcessHand(IsValidPub,PosePub,iksvc,ns,timeout,handToBaxter, limb,limb_obj,
         #IsValidPub.publish(isvalid_msg)
     
     IsValidPub.publish(isvalid_msg)
-    # return endpoint
-    newpose = limb_obj.endpoint_pose()
-    #print newpose
-    xyz = newpose['position']
-    orient = newpose['orientation']
-    quat = [orient[3],orient[0],orient[1],orient[2]]
-    quat = QuatForInverse(quat)
-    hdr = Header(stamp=rospy.Time.now(), frame_id='base')
     
-    posemsg = posFromPointAndList(xyz,quat)
-    PosePub.publish(posemsg)
+    # return endpoint
+
 
     
 
@@ -232,9 +244,16 @@ def main():
         
         IsValidPub = rospy.Publisher(ROS_LEFT_VALID_STATE, Bool, queue_size=10,latch=True)
         PosePub  = rospy.Publisher(ROS_LEFT_CURRENTPOS_STATE, Pose, queue_size=10,latch=True)
+        ResPub   = rospy.Publisher(ROS_LEFT_CMD_STATE, SolvePositionIKRequest, queue_size=2,latch=True)
 
-        sub_func = partial(ProcessHand,IsValidPub,PosePub, iksvc_l, ns_l, timeout, handToBaxter, l, left_limb)
+
+
+        sub_func = partial(ProcessHand,IsValidPub,ResPub, iksvc_l, ns_l, timeout, handToBaxter, l, left_limb)
         msgType = Pose
+        connection_list.append((channel,msgType,sub_func)) 
+
+        sub_func = partial(ProcessLimbCommands,PosePub,left_limb)
+        msgType = SolvePositionIKRequest
         connection_list.append((channel,msgType,sub_func)) 
 
         l_cam = CameraController('left_hand_camera')
@@ -251,14 +270,20 @@ def main():
         
         IsValidPub = rospy.Publisher(ROS_RIGHT_VALID_STATE, Bool, queue_size=10,latch=True)
         PosePub  = rospy.Publisher(ROS_RIGHT_CURRENTPOS_STATE, Pose, queue_size=10,latch=True)
+        ResPub   = rospy.Publisher(ROS_RIGHT_CMD_STATE, SolvePositionIKRequest, queue_size=2,latch=True)
 
-        sub_func = partial(ProcessHand,IsValidPub,PosePub, iksvc_r,ns_r,timeout,handToBaxter, r,right_limb)
+        sub_func = partial(ProcessHand,IsValidPub,ResPub, iksvc_r,ns_r,timeout,handToBaxter, r,right_limb)
         msgType = Pose   
         connection_list.append((channel,msgType,sub_func))  
 
-        l_cam = CameraController('right_hand_camera')
-        l_cam.resolution=(320,200)#(1280, 800)
-        l_cam.open()
+        sub_func = partial(ProcessLimbCommands,PosePub,right_limb)
+        msgType = SolvePositionIKRequest
+        connection_list.append((channel,msgType,sub_func)) 
+
+
+        r_cam = CameraController('right_hand_camera')
+        r_cam.resolution=(320,200)#(1280, 800)
+        r_cam.open()
          
     elif part == 'head':
         theta_max = pi
