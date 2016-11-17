@@ -39,7 +39,7 @@ ROS_R_RANGE = ROBOT + "robot/range/right_hand_range/state"
 LCM_R_RANGE = "right_lcm_range"
 
 LCM_L_CAMERA = "left_lcm_camera"
-ROS_L_CAMERA = ROBOT + "cameras/left_hand_camera/image"
+ROS_L_CAMERA = ROBOT + "echo/cameras/left_hand_camera/image"
 
 LCM_R_CAMERA = "right_lcm_camera"
-ROS_R_CAMERA = ROBOT + "cameras/right_hand_camera/image"
+ROS_R_CAMERA = ROBOT + "echo/cameras/right_hand_camera/image"
