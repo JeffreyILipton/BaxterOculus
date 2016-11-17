@@ -14,7 +14,7 @@ if os.name!='nt':
     )
     from std_msgs.msg import Header
     from std_msgs.msg import *
-    from sensor_msgs.msg import Range, Image
+    from sensor_msgs.msg import Range, Image, JointState
     from baxter_core_msgs.srv import (
         SolvePositionIK,
         SolvePositionIKRequest,
@@ -117,7 +117,7 @@ def iksvcForLimb(limb):
 
 
 def ProcessLimbCommands(PosePub,limb_obj,resp):
-    limb_joints = dict(zip(resp.joints[0].name, resp.joints[0].position))
+    limb_joints = dict(zip(resp.name, resp.position))
     limb_obj.move_to_joint_positions(limb_joints)
 
     newpose = limb_obj.endpoint_pose()
@@ -164,7 +164,11 @@ def ProcessHand(IsValidPub,ResPub,iksvc,ns,timeout,handToBaxter, limb,limb_obj, 
             #IsValidPub.publish(isvalid_msg)
             #print limb_joints
             ##limb_obj.move_to_joint_positions(limb_joints)
-            ResPub.publish(resp)
+            ##print "response"
+            #print type(resp)
+            #print resp
+
+            ResPub.publish(resp.joints[0])
 
         else:
             print "ERROR - No valid Joint Solution:",limb
@@ -244,7 +248,7 @@ def main():
         
         IsValidPub = rospy.Publisher(ROS_LEFT_VALID_STATE, Bool, queue_size=10,latch=True)
         PosePub  = rospy.Publisher(ROS_LEFT_CURRENTPOS_STATE, Pose, queue_size=10,latch=True)
-        ResPub   = rospy.Publisher(ROS_LEFT_CMD_STATE, SolvePositionIKRequest, queue_size=2,latch=True)
+        ResPub   = rospy.Publisher(ROS_LEFT_CMD_STATE, JointState, queue_size=2,latch=True)
 
 
 
@@ -252,8 +256,11 @@ def main():
         msgType = Pose
         connection_list.append((channel,msgType,sub_func)) 
 
+
+
+        channel = ROS_LEFT_CMD_STATE
         sub_func = partial(ProcessLimbCommands,PosePub,left_limb)
-        msgType = SolvePositionIKRequest
+        msgType = JointState
         connection_list.append((channel,msgType,sub_func)) 
 
         l_cam = CameraController('left_hand_camera')
@@ -270,14 +277,15 @@ def main():
         
         IsValidPub = rospy.Publisher(ROS_RIGHT_VALID_STATE, Bool, queue_size=10,latch=True)
         PosePub  = rospy.Publisher(ROS_RIGHT_CURRENTPOS_STATE, Pose, queue_size=10,latch=True)
-        ResPub   = rospy.Publisher(ROS_RIGHT_CMD_STATE, SolvePositionIKRequest, queue_size=2,latch=True)
+        ResPub   = rospy.Publisher(ROS_RIGHT_CMD_STATE, JointState, queue_size=2,latch=True)
 
         sub_func = partial(ProcessHand,IsValidPub,ResPub, iksvc_r,ns_r,timeout,handToBaxter, r,right_limb)
         msgType = Pose   
         connection_list.append((channel,msgType,sub_func))  
 
+        channel = ROS_RIGHT_CMD_STATE
         sub_func = partial(ProcessLimbCommands,PosePub,right_limb)
-        msgType = SolvePositionIKRequest
+        msgType = JointState
         connection_list.append((channel,msgType,sub_func)) 
 
 
