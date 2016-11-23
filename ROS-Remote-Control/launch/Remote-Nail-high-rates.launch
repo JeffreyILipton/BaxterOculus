@@ -14,27 +14,34 @@
   <node pkg="baxter_remote_control" name ="control_l_g" type = "BaxterInterface.py" output="screen">
     <param name="part" value="left_gripper" />
   </node>
-  <!--<node pkg="baxter_remote_control" name ="control_r_g" type = "BaxterInterface.py" output="screen">
+  <node pkg="baxter_remote_control" name ="control_r_t" type = "BaxterInterface.py" output="screen">
     <param name="part" value="right_trigger" />
-  </node> -->
+
+  </node>
   <node pkg="baxter_remote_control" name ="echo_lv" type = "stateecho.py" output="screen">
     <param name="part" value="left_valid" />
+    <param name="rate" value="5" />
   </node>
   <node pkg="baxter_remote_control" name ="echo_lp" type = "stateecho.py" output="screen">
     <param name="part" value="left_ros_currentpos" />
+    <param name="rate" value="5" />
   </node>
   <node pkg="baxter_remote_control" name ="echo_rv" type = "stateecho.py" output="screen">
     <param name="part" value="right_valid" />
+    <param name="rate" value="5" />
   </node>
   <node pkg="baxter_remote_control" name ="echo_rp" type = "stateecho.py" output="screen">
     <param name="part" value="right_ros_currentpos" />
+    <param name="rate" value="5" />
   </node>
 
   <node pkg="baxter_remote_control" name ="echo_rc" type = "stateecho.py" output="screen">
     <param name="part" value="right_cam" />
+    <param name="rate" value="10" />
   </node>
   <node pkg="baxter_remote_control" name ="echo_lc" type = "stateecho.py" output="screen">
     <param name="part" value="left_cam" />
+    <param name="rate" value="10" />
   </node>
 
   <node pkg="canopy_client" type="client_node.py" name="canopy_client" output="screen">

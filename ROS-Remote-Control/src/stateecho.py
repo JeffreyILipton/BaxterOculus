@@ -57,11 +57,16 @@ def main():
     param_value = rospy.get_param(full_param_name)
     part = param_value
 
+    rate_param_name = rospy.search_param('rate')
+    rate_value = rospy.get_param(rate_param_name)
+    rate = float(rate_value)
+
+
     outchannel = ""
     inchannel = ""
     channeltype = Bool
     channelDefault = None
-    rate = 10
+    #rate = 10
 
     if part == 'left_valid':
         outchannel = ROS_LEFT_VALID
@@ -89,14 +94,14 @@ def main():
         outchannel = ROS_LEFT_CAM_ECHO
         channeltype = Image
         channelDefault = None
-        rate = 5
+        #rate = 5
 
     elif part == "right_cam":
         inchannel  = ROS_RIGHT_CAM
         outchannel = ROS_RIGHT_CAM_ECHO
         channeltype = Image
         channelDefault = None
-        rate = 5
+        #rate = 5
 
     else:
         print "dont know part "+ part

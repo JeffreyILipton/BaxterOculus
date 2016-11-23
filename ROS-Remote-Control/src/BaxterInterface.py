@@ -236,7 +236,7 @@ def main():
 
     connection_list = []
 
-    ardPort = "/dev/ttyACM1"
+    ardPort = "/dev/ttyACM0"
 
     if part == 'left':
         channel = ROS_LEFT
