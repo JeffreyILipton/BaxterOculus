@@ -27,6 +27,9 @@
     <Compile Include="Comms.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="LCMListen.py" />
+    <Compile Include="LCMTest.py" />
+    <Compile Include="LCMToRos.py" />
     <Compile Include="oculuslcm\cmd_t.py" />
     <Compile Include="oculuslcm\image_t.py" />
     <Compile Include="oculuslcm\pose_t.py" />
@@ -37,9 +40,11 @@
     <Compile Include="Quaternion.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="RosToLCM.py" />
     <Compile Include="ServiceTimeout.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="StateEcho.py" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="oculuslcm\" />

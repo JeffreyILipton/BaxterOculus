@@ -3,33 +3,39 @@
     <arg name="port" default="8080"/>
     <node pkg="baxter_remote" name ="repeater" type = "LCMToRos.py" output="screen"/>
 
-  <node pkg="baxter_remote" name ="listener_l" type = "RosToLCM.py" output="screen">
-        <param name="part" value="left" />
+  <node pkg="baxter_remote_control" name ="listener_l" type = "RosToLCM.py" output="screen">
+      <param name="part" value="left" />
+      <param name ="prefix" value ="/Baxter/Echo/"/>
      </node>
     
-    <node pkg="baxter_remote" name ="listener_r" type = "RosToLCM.py" output="screen">
+    <node pkg="baxter_remote_control" name ="listener_r" type = "RosToLCM.py" output="screen">
       <param name="part" value="right" />
+      <param name ="prefix" value ="/Baxter/Echo/"/>
     </node>
     
-    <node pkg="baxter_remote" name ="listener_r_r" type = "RosToLCM.py" output="screen">
+    <node pkg="baxter_remote_control" name ="listener_r_r" type = "RosToLCM.py" output="screen">
       <param name="part" value="right_range" />
+      <param name ="prefix" value ="/Baxter/Echo/"/>
     </node>
     
-    <node pkg="baxter_remote" name ="listener_l_r" type = "RosToLCM.py" output="screen">
+    <node pkg="baxter_remote_control" name ="listener_l_r" type = "RosToLCM.py" output="screen">
       <param name="part" value="left_range" />
+      <param name ="prefix" value ="/Baxter/Echo/"/>
     </node>
     
-    <node pkg="baxter_remote" name ="listener_l_cam" type = "RosToLCM.py" output="screen">
+    <node pkg="baxter_remote_control" name ="listener_l_cam" type = "RosToLCM.py" output="screen">
       <param name="part" value="left_camera" />
+      <param name ="prefix" value ="/Baxter/Echo/"/>
     </node>
     
-    <node pkg="baxter_remote" name ="listener_r_cam" type = "RosToLCM.py" output="screen">
+    <node pkg="baxter_remote_control" name ="listener_r_cam" type = "RosToLCM.py" output="screen">
       <param name="part" value="right_camera" />
+      <param name ="prefix" value ="/Baxter/Echo/"/>
     </node>  
     
   
   <node pkg="canopy_client" type="client_node.py" name="canopy_client" output="screen">
-    <param name="name" value="Remote7"/>
+    <param name="name" value="Remote"/>
     <param name="host" value="$(arg host)"/>
     <param name="port" value="$(arg port)"/>
     <param name="private_key" value="4wsDxqdQpXygyj4t4" />

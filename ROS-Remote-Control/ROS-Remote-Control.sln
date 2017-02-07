@@ -8,8 +8,18 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{E6E7345D-9396-4FA4-B114-3CF054E154CD}"
 	ProjectSection(SolutionItems) = preProject
 		CMakeLists.txt = CMakeLists.txt
+		launch\Local-Nail-high-rates.launch = launch\Local-Nail-high-rates.launch
+		launch\Local-TGrip-high-rates.launch = launch\Local-TGrip-high-rates.launch
 		..\Messaging\oculus_t.lcm = ..\Messaging\oculus_t.lcm
 		package.xml = package.xml
+		launch\Remote-Nail-high-rates.launch = launch\Remote-Nail-high-rates.launch
+		launch\Remote-Nail-low-rates.launch = launch\Remote-Nail-low-rates.launch
+		launch\Remote-TGrip-low-rates.launch = launch\Remote-TGrip-low-rates.launch
+		launch\ROS_LCM_bridge.launch = launch\ROS_LCM_bridge.launch
+		launch\test-CanopyDebug.launch = launch\test-CanopyDebug.launch
+		launch\test-echo.launch = launch\test-echo.launch
+		launch\test-RemoteRange.launch = launch\test-RemoteRange.launch
+		launch\test-system.launch = launch\test-system.launch
 	EndProjectSection
 EndProject
 Global

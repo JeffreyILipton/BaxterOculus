@@ -4,15 +4,19 @@
   
   <node pkg="baxter_remote_control" name ="control_h" type = "BaxterInterface.py" output="screen">
     <param name="part" value="head" />
+    <param name ="prefix" value ="Remote/"/>
   </node>
   <node pkg="baxter_remote_control" name ="control_r" type = "BaxterInterface.py" output="screen">
     <param name="part" value="right" />
+    <param name ="prefix" value ="Remote/"/>
   </node>
   <node pkg="baxter_remote_control" name ="control_l" type = "BaxterInterface.py" output="screen">
     <param name="part" value="left" />
+    <param name ="prefix" value ="Remote/"/>
   </node>
   <node pkg="baxter_remote_control" name ="control_l_g" type = "BaxterInterface.py" output="screen">
     <param name="part" value="left_gripper" />
+    <param name ="prefix" value ="Remote/"/>
   </node>
 
   <node pkg="baxter_remote_control" name ="echo_lv" type = "stateecho.py" output="screen">

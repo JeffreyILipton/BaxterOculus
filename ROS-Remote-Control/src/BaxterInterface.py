@@ -153,49 +153,25 @@ def ProcessHand(IsValidPub,ResPub,iksvc,ns,timeout,handToBaxter, limb,limb_obj, 
     
     try:
         print "\ntarget:", baxter_pos,"\n\t",orientation
-        #print ikreq
-        #rospy.wait_for_service(ns, timeout)
         resp = ServiceTimeouter(timeout,iksvc, ikreq).call()
         if (resp is not None and resp.isValid[0]):
             print "SUCCESS - Valid Joint Solution Found:"
-            # Format solution into Limb API-compatible dictionary
-            ##limb_joints = dict(zip(resp.joints[0].name, resp.joints[0].position))
             isvalid_msg.data = True
-            #IsValidPub.publish(isvalid_msg)
-            #print limb_joints
-            ##limb_obj.move_to_joint_positions(limb_joints)
-            ##print "response"
-            #print type(resp)
-            #print resp
 
             ResPub.publish(resp.joints[0])
 
         else:
             print "ERROR - No valid Joint Solution:",limb
-            #isvalid_msg.data = False
-            #IsValidPub.publish(isvalid_msg)
-            
-            #print resp
-        #if msg.position[0]>10: limb_obj.move_to_joint_positions(wave_1)
-        #else: limb_obj.move_to_joint_positions(wave_2)
 
             
 
     except (rospy.ServiceException, rospy.ROSException), e:
         print "except"
-        #isvalid_msg.data = False
         rospy.logerr("Service call failed: %s" % (e,))
-        #IsValidPub.publish(isvalid_msg)
     
     IsValidPub.publish(isvalid_msg)
     
     # return endpoint
-
-
-    
-
-
-
 
 
 
@@ -219,6 +195,13 @@ def main():
     full_param_name = rospy.search_param('part')
     param_value = rospy.get_param(full_param_name)
     part = param_value
+
+    full_prefix_name = rospy.search_param('prefix')
+    prefix_value = rospy.get_param(full_prefix_name)
+    prefix = ""
+    if prefix_value: prefix = prefix_value
+
+
     #print "PART IS:",part
 
 
@@ -236,19 +219,19 @@ def main():
 
     connection_list = []
 
-    ardPort = "/dev/ttyACM0"
+
 
     if part == 'left':
-        channel = ROS_LEFT
+        channel = prefix+ROS_L
         handToBaxter = partial(XYZRescale,scales, offsets, mins, maxs)
         l = 'left'
         left_limb = Limb(l)
 
         iksvc_l,ns_l = iksvcForLimb(l)
         
-        IsValidPub = rospy.Publisher(ROS_LEFT_VALID_STATE, Bool, queue_size=10,latch=True)
-        PosePub  = rospy.Publisher(ROS_LEFT_CURRENTPOS_STATE, Pose, queue_size=10,latch=True)
-        ResPub   = rospy.Publisher(ROS_LEFT_CMD_STATE, JointState, queue_size=2,latch=True)
+        IsValidPub = rospy.Publisher(ROS_L_VALID_STATE, Bool, queue_size=10,latch=True)
+        PosePub  = rospy.Publisher(ROS_L_CURRENTPOS_STATE, Pose, queue_size=10,latch=True)
+        ResPub   = rospy.Publisher(ROS_L_CMD_STATE, JointState, queue_size=2,latch=True)
 
 
 
@@ -258,7 +241,7 @@ def main():
 
 
 
-        channel = ROS_LEFT_CMD_STATE
+        channel = ROS_L_CMD_STATE
         sub_func = partial(ProcessLimbCommands,PosePub,left_limb)
         msgType = JointState
         connection_list.append((channel,msgType,sub_func)) 
@@ -268,16 +251,16 @@ def main():
         l_cam.open()  
          
     elif part == 'right':
-        channel = ROS_RIGHT
+        channel = prefix+ROS_R
         handToBaxter = partial(XYZRescale,scales, offsets, mins, maxs)
         r = 'right'
         right_limb = Limb(r)
 
         iksvc_r,ns_r = iksvcForLimb(r)
         
-        IsValidPub = rospy.Publisher(ROS_RIGHT_VALID_STATE, Bool, queue_size=10,latch=True)
-        PosePub  = rospy.Publisher(ROS_RIGHT_CURRENTPOS_STATE, Pose, queue_size=10,latch=True)
-        ResPub   = rospy.Publisher(ROS_RIGHT_CMD_STATE, JointState, queue_size=2,latch=True)
+        IsValidPub = rospy.Publisher(ROS_R_VALID_STATE, Bool, queue_size=10,latch=True)
+        PosePub  = rospy.Publisher(ROS_R_CURRENTPOS_STATE, Pose, queue_size=10,latch=True)
+        ResPub   = rospy.Publisher(ROS_R_CMD_STATE, JointState, queue_size=2,latch=True)
 
         sub_func = partial(ProcessHand,IsValidPub,ResPub, iksvc_r,ns_r,timeout,handToBaxter, r,right_limb)
         msgType = Pose   
@@ -300,23 +283,28 @@ def main():
         OculusToAngle = partial(YawFromQuat,theta_min,theta_max)
 
         head = Head()
-        channel = ROS_HEAD
+        channel = prefix+ROS_HEAD
         sub_func = partial(ProcessHead,head,OculusToAngle)
         msgType = Pose  
         connection_list.append((channel,msgType,sub_func))
 
     elif part == 'right_trigger':
-        channel = ROS_R_TRIGGER
-        arduino = ArduinoInterface(ardPort)
-        sub_func = partial(ProcessTrigger,arduino)
-        msgType = Bool
-        connection_list.append((channel,msgType,sub_func))
+        channel = prefix+ROS_R_TRIGGER
+
+        full_port_name = rospy.search_param('port')
+        port_value = rospy.get_param(full_param_name)
+        if port_value:
+            #"/dev/ttyACM0"
+            arduino = ArduinoInterface(port_value)
+            sub_func = partial(ProcessTrigger,arduino)
+            msgType = Bool
+            connection_list.append((channel,msgType,sub_func))
 
     elif part == 'right_trigger_gripper':
         gripper = Gripper('right', CHECK_VERSION)
         gripper.calibrate()
 
-        channel = ROS_R_TRIGGER
+        channel = prefix+ROS_R_TRIGGER
         msgType = Bool
         sub_func = partial(ProcessTriggerCMDAsGripper,gripper)
         connection_list.append((channel,msgType,sub_func))
@@ -324,12 +312,12 @@ def main():
     elif part == 'right_gripper':
         gripper = Gripper('right', CHECK_VERSION)
         gripper.calibrate()
-        channel = ROS_R_CMD
+        channel = prefix+ROS_R_CMD
         msgType = UInt16
         sub_func = partial(ProcessGripperCMD,gripper)
         connection_list.append((channel,msgType,sub_func))
 
-        channel = ROS_R_VEL
+        channel = prefix+ROS_R_VEL
         msgType = Float64
         sub_func = partial(ProcessGripperVel,gripper)
         connection_list.append((channel,msgType,sub_func))
@@ -337,12 +325,12 @@ def main():
     elif part == 'left_gripper':
         gripper = Gripper('left', CHECK_VERSION)
         gripper.calibrate()
-        channel = ROS_L_CMD
+        channel = prefix+ROS_L_CMD
         msgType = UInt16
         sub_func = partial(ProcessGripperCMD,gripper)
         connection_list.append((channel,msgType,sub_func))
 
-        channel = ROS_L_VEL
+        channel = prefix+ROS_L_VEL
         msgType = Float64
         sub_func = partial(ProcessGripperVel,gripper)
         connection_list.append((channel,msgType,sub_func))

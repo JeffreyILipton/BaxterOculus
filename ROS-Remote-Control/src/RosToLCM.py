@@ -97,6 +97,16 @@ def main():
     part = param_value
     print "PART IS:",part
     
+    full_prefix_name = rospy.search_param('prefix')
+    prefix_value = rospy.get_param(full_prefix_name)
+    prefix = ""
+    if prefix_value: prefix = prefix_value
+    print "PREFIX is:",prefix
+
+
+    full_rate_name = rospy.search_param('rate')
+    rate_value = rospy.get_param(full_rate_name)
+    print "rate_value:",rate_value
 
 
     timeout =0.1
@@ -111,12 +121,12 @@ def main():
         lcChannel = LCM_LEFT_VALID
         msgType = Bool
         sub_func = partial(IsValid,lc,lcChannel)
-        channel = ROS_LEFT_VALID
+        channel = prefix+ROS_LEFT_VALID
         connection_list.append((channel,msgType,sub_func)) 
 
         lcChannel = LCM_LEFT_CURRENTPOS
         msgType = Pose
-        channel = ROS_LEFT_CURRENTPOS
+        channel = prefix+ROS_LEFT_CURRENTPOS
         sub_func = partial(CurrentPos, lc, lcChannel)
         connection_list.append((channel,msgType,sub_func)) 
 
@@ -125,32 +135,40 @@ def main():
         lcChannel = LCM_RIGHT_VALID
         msgType = Bool
         sub_func = partial(IsValid,lc,lcChannel)
-        channel = ROS_RIGHT_VALID
+        channel = prefix+ROS_RIGHT_VALID
         connection_list.append((channel,msgType,sub_func)) 
 
         lcChannel = LCM_RIGHT_CURRENTPOS
         msgType = Pose
         sub_func = partial(CurrentPos, lc, lcChannel)
-        channel = ROS_RIGHT_CURRENTPOS
+        channel = prefix+ROS_RIGHT_CURRENTPOS
         connection_list.append((channel,msgType,sub_func)) 
 
     elif part == 'left_range':
+
+        if rate_value: RANGE_TIME = 1.0/rate_value
+
         lcChannel = LCM_L_RANGE
-        channel = ROS_L_RANGE
+        channel = prefix+ROS_L_RANGE
         msgType = Range
         sub_func = partial(ProcessRange,lc,lcChannel)
         connection_list.append((channel,msgType,sub_func))
 
     elif part == 'right_range':
+        if rate_value: RANGE_TIME = 1.0/rate_value
+
         lcChannel = LCM_R_RANGE
-        channel = ROS_R_RANGE
+        channel = prefix+ROS_R_RANGE
         msgType = Range
         sub_func = partial(ProcessRange,lc,lcChannel)
         connection_list.append((channel,msgType,sub_func))
 
     elif part == 'right_camera':
+
+        if rate_value: CAM_TIME = 1.0/rate_value
+
         lcChannel = LCM_R_CAMERA
-        channel = ROS_R_CAMERA
+        channel = prefix+ROS_R_CAMERA
         msgType = Image
 
         sub_func = lambda x: ProcessImage(lc,lcChannel,x)
@@ -160,9 +178,11 @@ def main():
 
     elif part == 'left_camera':
 
+        if rate_value: CAM_TIME = 1.0/rate_value
+
         lcChannel = LCM_L_CAMERA
         #lc = lcm.LCM("udpm://239.255.76.67:7667:?ttl=1")
-        channel = ROS_L_CAMERA
+        channel = prefix+ROS_L_CAMERA
         msgType = Image
         sub_func = lambda x : ProcessImage(lc,lcChannel,x)
         #sub_func = partial(ProcessImage,lc,lcChannel)

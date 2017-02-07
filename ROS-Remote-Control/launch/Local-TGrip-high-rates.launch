@@ -1,0 +1,63 @@
+<launch>
+ 
+  <node pkg="baxter_remote_control" name ="control_h" type = "BaxterInterface.py" output="screen">
+    <param name="part" value="head" />
+    <param name ="prefix" value =""/>
+  </node>
+  
+  <node pkg="baxter_remote_control" name ="control_r" type = "BaxterInterface.py" output="screen">
+    <param name="part" value="right" />
+    <param name ="prefix" value =""/>
+  </node>
+  
+  <node pkg="baxter_remote_control" name ="control_l" type = "BaxterInterface.py" output="screen">
+    <param name="part" value="left" />
+    <param name ="prefix" value =""/>
+  </node>
+  
+  <node pkg="baxter_remote_control" name ="control_l_g" type = "BaxterInterface.py" output="screen">
+    <param name="part" value="left_gripper" />
+    <param name ="prefix" value =""/>
+  </node>
+  
+  <node pkg="baxter_remote_control" name ="control_r_g" type = "BaxterInterface.py" output="screen">
+    <param name="part" value="right_trigger_gripper" />
+    <param name ="prefix" value =""/>
+  </node>
+
+
+  <node pkg="baxter_remote_control" name ="repeater" type = "LCMToRos.py" output="screen"/>
+
+  
+  <node pkg="baxter_remote_control" name ="listener_l" type = "RosToLCM.py" output="screen">
+    <param name="part" value="left" />
+    <param name ="prefix" value =""/>
+  </node>
+
+  <node pkg="baxter_remote_control" name ="listener_r" type = "RosToLCM.py" output="screen">
+    <param name="part" value="right" />
+    <param name ="prefix" value =""/>
+  </node>
+
+  <node pkg="baxter_remote_control" name ="listener_r_r" type = "RosToLCM.py" output="screen">
+    <param name="part" value="right_range" />
+    <param name ="prefix" value =""/>
+  </node>
+
+  <node pkg="baxter_remote_control" name ="listener_l_r" type = "RosToLCM.py" output="screen">
+    <param name="part" value="left_range" />
+    <param name ="prefix" value =""/>
+  </node>
+
+  <node pkg="baxter_remote_control" name ="listener_l_cam" type = "RosToLCM.py" output="screen">
+    <param name="part" value="left_camera" />
+    <param name ="prefix" value =""/>
+  </node>
+
+  <node pkg="baxter_remote_control" name ="listener_r_cam" type = "RosToLCM.py" output="screen">
+    <param name="part" value="right_camera" />
+    <param name ="prefix" value =""/>
+  </node>
+
+
+</launch>

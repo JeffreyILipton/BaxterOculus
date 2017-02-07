@@ -69,36 +69,44 @@ def main():
     #rate = 10
 
     if part == 'left_valid':
-        outchannel = ROS_LEFT_VALID
-        inchannel = ROS_LEFT_VALID_STATE
+
+        inchannel = ROS_LEFT_VALID
+        outchannel = ECHO + ROS_LEFT_VALID
         channelDefault = Bool(False)
+
     elif part == 'right_valid':
-        outchannel = ROS_RIGHT_VALID
-        inchannel = ROS_RIGHT_VALID_STATE
+
+        inchannel =  ROS_RIGHT_VALID
+        outchannel = ECHO + ROS_RIGHT_VALID
         channelDefault = Bool(False)
 
     elif part == "left_ros_currentpos":
-        outchannel = ROS_LEFT_CURRENTPOS
-        inchannel  = ROS_LEFT_CURRENTPOS_STATE
+
+        inchannel  = ROS_LEFT_CURRENTPOS
+        outchannel = ECHO + ROS_LEFT_CURRENTPOS
         channeltype = Pose
         channelDefault = None
 
     elif part == "right_ros_currentpos":
-        outchannel = ROS_RIGHT_CURRENTPOS
-        inchannel  = ROS_RIGHT_CURRENTPOS_STATE
+
+        inchannel  = ROS_RIGHT_CURRENTPOS
+        outchannel = ECHO + ROS_RIGHT_CURRENTPOS
+
         channeltype = Pose
         channelDefault = None
 
     elif part == "left_cam":
+
         inchannel  = ROS_LEFT_CAM
-        outchannel = ROS_LEFT_CAM_ECHO
+        outchannel = ECHO + ROS_LEFT_CAM
         channeltype = Image
         channelDefault = None
         #rate = 5
 
     elif part == "right_cam":
+
         inchannel  = ROS_RIGHT_CAM
-        outchannel = ROS_RIGHT_CAM_ECHO
+        outchannel = ECHO + ROS_RIGHT_CAM
         channeltype = Image
         channelDefault = None
         #rate = 5
