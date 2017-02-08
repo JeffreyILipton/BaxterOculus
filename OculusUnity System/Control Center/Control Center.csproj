@@ -202,6 +202,8 @@
     <Compile Include="Assets\Scripts\NDI\NDItoTexture.cs" />
     <Compile Include="Assets\Scripts\NDI\Toggle.cs" />
     <Compile Include="Assets\Scripts\OculusHand.cs" />
+    <Compile Include="Assets\Scripts\OculusHandOrbGrabManager.cs" />
+    <Compile Include="Assets\Scripts\OculusHandsController.cs" />
     <Compile Include="Assets\Scripts\OrbMain.cs" />
     <Compile Include="Assets\Scripts\RaiseLower.cs" />
     <Compile Include="Assets\Scripts\ResetRiftOrientation.cs" />
