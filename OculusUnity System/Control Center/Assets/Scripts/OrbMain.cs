@@ -91,11 +91,19 @@ public class OrbMain : MonoBehaviour, LCM.LCM.LCMSubscriber
         {
             rend.material.SetColor("_EmissionColor", new Color((float).4, (float).875, (float).875));
             rend.material.color = Color.blue;
-        } else // Otherwise the ball is red and invalid
+        }
+        //else // Otherwise the ball is red and invalid
+        //{
+        //    rend.material.SetColor("_EmissionColor", new Color((float).3, (float).05, (float).05));
+        //    rend.material.color = Color.red;
+        //}
+
+        if(OVRInput.Get(OVRInput.RawButton.X)) // Otherwise the ball is red and invalid
         {
             rend.material.SetColor("_EmissionColor", new Color((float).3, (float).05, (float).05));
-            rend.material.color = Color.red;
+            rend.material.color = Color.green;
         }
+
 
         gameObject.transform.position = position; // applying our changes
         gameObject.transform.rotation = rotation; // applying our changes

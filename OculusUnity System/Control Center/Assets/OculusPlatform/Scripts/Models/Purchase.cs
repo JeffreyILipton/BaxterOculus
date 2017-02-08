@@ -10,16 +10,18 @@ namespace Oculus.Platform.Models
 
   public class Purchase
   {
-    public readonly string Sku;
+    public readonly DateTime ExpirationTime;
     public readonly DateTime GrantTime;
     public readonly UInt64 ID;
+    public readonly string Sku;
 
 
     public Purchase(IntPtr o)
     {
-      Sku = CAPI.ovr_Purchase_GetSKU(o);
+      ExpirationTime = CAPI.ovr_Purchase_GetExpirationTime(o);
       GrantTime = CAPI.ovr_Purchase_GetGrantTime(o);
       ID = CAPI.ovr_Purchase_GetPurchaseID(o);
+      Sku = CAPI.ovr_Purchase_GetSKU(o);
     }
   }
 
@@ -31,9 +33,8 @@ namespace Oculus.Platform.Models
         _Data.Add(new Purchase(CAPI.ovr_PurchaseArray_GetElement(a, (UIntPtr)i)));
       }
 
-      HasNextPage = CAPI.ovr_PurchaseArray_HasNextPage(a);
+      _NextUrl = CAPI.ovr_PurchaseArray_GetNextUrl(a);
     }
 
-    new public readonly bool HasNextPage;
   }
 }

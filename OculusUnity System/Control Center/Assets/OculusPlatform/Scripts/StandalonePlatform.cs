@@ -19,7 +19,7 @@ namespace Oculus.Platform
     {
       if (String.IsNullOrEmpty(StandalonePlatformSettings.OculusPlatformAccessToken))
       {
-        throw new UnityException("Update your access token by selecting 'Oculus Platform' -> 'Platform Settings'");
+        throw new UnityException("Update your access token by selecting 'Oculus Platform' -> 'Edit Settings'");
       }
       return Initialize(StandalonePlatformSettings.OculusPlatformAccessToken);
     }

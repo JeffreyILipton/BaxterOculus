@@ -31,9 +31,8 @@ namespace Oculus.Platform.Models
         _Data.Add(new RoomInviteNotification(CAPI.ovr_RoomInviteNotificationArray_GetElement(a, (UIntPtr)i)));
       }
 
-      HasNextPage = CAPI.ovr_RoomInviteNotificationArray_HasNextPage(a);
+      _NextUrl = CAPI.ovr_RoomInviteNotificationArray_GetNextUrl(a);
     }
 
-    new public readonly bool HasNextPage;
   }
 }

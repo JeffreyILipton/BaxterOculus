@@ -15,7 +15,7 @@ public class BufferedAudioStream {
   const float bufferLengthSeconds = 0.25f;
   const int sampleRate = 48000;
   const int bufferSize = (int)(sampleRate * bufferLengthSeconds);
-  const float playbackDelayTimeSeconds = 0.025f;
+  const float playbackDelayTimeSeconds = 0.05f;
 
   float playbackDelayRemaining;
   float remainingBufferTime;

@@ -17,6 +17,11 @@ namespace Oculus.Platform
 
     public bool Initialize(string appId)
     {
+      if(String.IsNullOrEmpty(appId))
+      {
+        throw new UnityException("AppID must not be null or empty");
+      }
+
       //UnityLogDelegate callback_delegate = new UnityLogDelegate(CPPLogCallback);
       //IntPtr intptr_delegate = Marshal.GetFunctionPointerForDelegate(callback_delegate);
 

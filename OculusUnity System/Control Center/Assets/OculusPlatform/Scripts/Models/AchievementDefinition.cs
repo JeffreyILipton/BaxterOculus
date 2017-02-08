@@ -1,51 +1,40 @@
+// This file was @generated with LibOVRPlatform/codegen/main. Do not modify it!
+
 namespace Oculus.Platform.Models
 {
-  using UnityEngine;
   using System;
   using System.Collections;
+  using Oculus.Platform.Models;
   using System.Collections.Generic;
-  using System.Runtime.Serialization;
-  using Newtonsoft.Json;
+  using UnityEngine;
 
-  [JsonObject(MemberSerialization.OptIn)]
   public class AchievementDefinition
   {
-    //Public interface
-    public string Name { get {return _Name;} }
-    public ulong Target { get {return _Target;} }
-	  public uint BitfieldLength { get {return _BitfieldLength;} }
-    public AchievementType Type { get { return _Type; } }
-
-	  //Internal
-    [JsonProperty("api_name")]
-    private string _Name;
-
-    [JsonProperty("achievement_type")]
-    private string _TypeRaw;
-    private AchievementType _Type;
+    public readonly AchievementType Type;
+    public readonly string Name;
+    public readonly uint BitfieldLength;
+    public readonly ulong Target;
 
 
-    [JsonProperty("target")]
-    private ulong _Target;
-
-    [JsonProperty("bitfield_length")]
-    private uint _BitfieldLength;
-
-    [OnDeserialized]
-    private void OnDeserializedMethod(StreamingContext context)
+    public AchievementDefinition(IntPtr o)
     {
-      if ("SIMPLE".Equals(_TypeRaw)) {
-        _Type = AchievementType.Simple;
-      } else if ("BITFIELD".Equals(_TypeRaw)) {
-        _Type = AchievementType.Bitfield;
-      } else if ("COUNT".Equals(_TypeRaw)){
-        _Type = AchievementType.Count;
-      } else {
-        _Type = AchievementType.Unknown;
-      }
-      _TypeRaw = null;
+      Type = CAPI.ovr_AchievementDefinition_GetType(o);
+      Name = CAPI.ovr_AchievementDefinition_GetName(o);
+      BitfieldLength = CAPI.ovr_AchievementDefinition_GetBitfieldLength(o);
+      Target = CAPI.ovr_AchievementDefinition_GetTarget(o);
     }
   }
 
-  public class AchievementDefinitionList : DeserializableList<AchievementDefinition> {}
+  public class AchievementDefinitionList : DeserializableList<AchievementDefinition> {
+    public AchievementDefinitionList(IntPtr a) {
+      var count = (int)CAPI.ovr_AchievementDefinitionArray_GetSize(a);
+      _Data = new List<AchievementDefinition>(count);
+      for (int i = 0; i < count; i++) {
+        _Data.Add(new AchievementDefinition(CAPI.ovr_AchievementDefinitionArray_GetElement(a, (UIntPtr)i)));
+      }
+
+      _NextUrl = CAPI.ovr_AchievementDefinitionArray_GetNextUrl(a);
+    }
+
+  }
 }

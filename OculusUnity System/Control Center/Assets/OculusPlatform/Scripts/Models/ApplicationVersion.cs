@@ -1,34 +1,28 @@
+// This file was @generated with LibOVRPlatform/codegen/main. Do not modify it!
+
 namespace Oculus.Platform.Models
 {
-  using UnityEngine;
   using System;
   using System.Collections;
+  using Oculus.Platform.Models;
   using System.Collections.Generic;
-  using System.Runtime.Serialization;
-  using Newtonsoft.Json;
+  using UnityEngine;
 
-  [JsonObject(MemberSerialization.OptIn)]
   public class ApplicationVersion
   {
-    public string CurrentName { get { return _CurrentName; } }
-    public int CurrentCode { get { return _CurrentCode; } }
-    public string LatestName { get { return _LatestName; } }
-    public int LatestCode { get { return _LatestCode; } }
+    public readonly int CurrentCode;
+    public readonly string CurrentName;
+    public readonly int LatestCode;
+    public readonly string LatestName;
 
-    private ApplicationVersion()
+
+    public ApplicationVersion(IntPtr o)
     {
+      CurrentCode = CAPI.ovr_ApplicationVersion_GetCurrentCode(o);
+      CurrentName = CAPI.ovr_ApplicationVersion_GetCurrentName(o);
+      LatestCode = CAPI.ovr_ApplicationVersion_GetLatestCode(o);
+      LatestName = CAPI.ovr_ApplicationVersion_GetLatestName(o);
     }
-
-    [JsonProperty("currentVersion")]
-    private string _CurrentName;
-
-    [JsonProperty("currentVersionCode")]
-    private int _CurrentCode;
-
-    [JsonProperty("latestVersion")]
-    private string _LatestName;
-
-    [JsonProperty("latestVersionCode")]
-    private int _LatestCode;
   }
+
 }

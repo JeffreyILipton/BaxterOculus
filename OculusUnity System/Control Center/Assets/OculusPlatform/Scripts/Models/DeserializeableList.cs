@@ -4,9 +4,7 @@ namespace Oculus.Platform.Models
   using System.Collections;
   using System.Collections.Generic;
   using Oculus.Platform.Models;
-  using Newtonsoft.Json;
 
-  [JsonObject(MemberSerialization.OptIn)]
   public class DeserializableList<T> : IList<T>
   {
 
@@ -44,51 +42,13 @@ namespace Oculus.Platform.Models
       get {return _Data;}
     }
 
-    [JsonProperty("data")]
     protected List<T> _Data;
+    protected string  _NextUrl;
+    protected string  _PreviousUrl;
 
-    public string NextUrl
-    {
-      get
-      {
-        return (paging != null) ? paging.Next : null;
-      }
-    }
-
-    public bool HasNextPage
-    {
-      get
-      {
-        return (paging != null && !System.String.IsNullOrEmpty(paging.Next));
-      }
-    }
-
-    public string PreviousUrl
-    {
-      get
-      {
-        return (paging != null) ? paging.Previous : null;
-      }
-    }
-
-    public bool HasPreviousPage
-    {
-      get
-      {
-        return (paging != null && !System.String.IsNullOrEmpty(paging.Previous));
-      }
-    }
-
-    [JsonProperty("paging")]
-    private Paging paging;
-
-    private class Paging
-    {
-      [JsonProperty("next")]
-      public string Next;
-
-      [JsonProperty("previous")]
-      public string Previous;
-    }
+    public bool   HasNextPage     { get { return !System.String.IsNullOrEmpty(NextUrl);     } }
+    public bool   HasPreviousPage { get { return !System.String.IsNullOrEmpty(PreviousUrl); } }
+    public string NextUrl         { get { return _NextUrl;                                  } }
+    public string PreviousUrl     { get { return _PreviousUrl;                              } }
   }
 }

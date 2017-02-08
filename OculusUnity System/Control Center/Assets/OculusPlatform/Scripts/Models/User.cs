@@ -1,58 +1,46 @@
+// This file was @generated with LibOVRPlatform/codegen/main. Do not modify it!
+
 namespace Oculus.Platform.Models
 {
-  using UnityEngine;
   using System;
   using System.Collections;
+  using Oculus.Platform.Models;
   using System.Collections.Generic;
-  using Newtonsoft.Json;
-  using System.Runtime.Serialization;
+  using UnityEngine;
 
-  [JsonObject(MemberSerialization.OptIn)]
   public class User
   {
-    //Public interface
-    public string OculusID { get {return _OculusID;} }
-    public UInt64 ID { get {return _ID;} }
-	  public string InviteToken { get {return _InviteToken;} }
-	  public string Presence { get {return _Presence;} }
-    public UserPresenceStatus PresenceStatus { get {return _PresenceStatus;} }
-    public string ImageURL { get {return _ProfileURL;} }
-
-    //Internal
-    [JsonProperty("alias")]
-    private string _OculusID;
-
-    [JsonProperty("id")]
-    private UInt64 _ID;
-
-    [JsonProperty("token")]
-    private string _InviteToken;
-
-    [JsonProperty("presence")]
-    private string _Presence;
-
-    [JsonProperty("presence_status")]
-    private string _PresenceStatusRaw;
-    private UserPresenceStatus _PresenceStatus;
-
-    [JsonProperty("profile_url")]
-    private string _ProfileURL;
+    public readonly UInt64 ID;
+    public readonly string ImageURL;
+    public readonly string InviteToken;
+    public readonly string OculusID;
+    public readonly string Presence;
+    public readonly UserPresenceStatus PresenceStatus;
+    public readonly string SmallImageUrl;
 
 
-    [OnDeserialized]
-    private void OnDeserializedMethod(StreamingContext context)
+    public User(IntPtr o)
     {
-      //Handle PresenceStatus
-      if ("ONLINE".Equals(_PresenceStatusRaw)) {
-        _PresenceStatus = UserPresenceStatus.Online;
-      } else if ("OFFLINE".Equals(_PresenceStatusRaw)) {
-        _PresenceStatus = UserPresenceStatus.Offline;
-      } else {
-        _PresenceStatus = UserPresenceStatus.Unknown;
-      }
-      _PresenceStatusRaw = null;
+      ID = CAPI.ovr_User_GetID(o);
+      ImageURL = CAPI.ovr_User_GetImageUrl(o);
+      InviteToken = CAPI.ovr_User_GetInviteToken(o);
+      OculusID = CAPI.ovr_User_GetOculusID(o);
+      Presence = CAPI.ovr_User_GetPresence(o);
+      PresenceStatus = CAPI.ovr_User_GetPresenceStatus(o);
+      SmallImageUrl = CAPI.ovr_User_GetSmallImageUrl(o);
     }
   }
 
-  public class UserList : DeserializableList<User> {}
+  public class UserList : DeserializableList<User> {
+    public UserList(IntPtr a) {
+      var count = (int)CAPI.ovr_UserArray_GetSize(a);
+      _Data = new List<User>(count);
+      for (int i = 0; i < count; i++) {
+        _Data.Add(new User(CAPI.ovr_UserArray_GetElement(a, (UIntPtr)i)));
+      }
+
+      _NextUrl = CAPI.ovr_UserArray_GetNextUrl(a);
+    }
+
+  }
 }

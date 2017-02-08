@@ -1,19 +1,22 @@
+// This file was @generated with LibOVRPlatform/codegen/main. Do not modify it!
+
 namespace Oculus.Platform.Models
 {
-  using UnityEngine;
   using System;
   using System.Collections;
+  using Oculus.Platform.Models;
   using System.Collections.Generic;
-  using Newtonsoft.Json;
+  using UnityEngine;
 
-  [JsonObject(MemberSerialization.OptIn)]
   public class UserProof
   {
-    //Public interface
-    public string Value { get {return _Nonce;} }
+    public readonly string Value;
 
-    //Internal
-    [JsonProperty("nonce")]
-    private string _Nonce;
+
+    public UserProof(IntPtr o)
+    {
+      Value = CAPI.ovr_UserProof_GetNonce(o);
+    }
   }
+
 }
