@@ -7,7 +7,7 @@ public class OrbMain : MonoBehaviour, LCM.LCM.LCMSubscriber
 {
     
     public GameObject holderObject; // the object for the hand holding us. Set in the Unity drag n drop interface. WILL NOT RUN WITHOUT
-    private HandOrbGrabManager holderScript;// the main script for comunicaiting with our hand
+    private OculusHandOrbGrabManager holderScript;// the main script for comunicaiting with our hand
 
     private bool held; // are we being held by the hand?
     private bool prevHeld; // was the orb held in the previous frame?
@@ -30,7 +30,7 @@ public class OrbMain : MonoBehaviour, LCM.LCM.LCMSubscriber
 
     // Use this for initialization
     void Start () {
-        holderScript = (HandOrbGrabManager)(holderObject.GetComponent(typeof(HandOrbGrabManager))); // We search for the HandOrbGrabManager script and assugn it to the holderScript
+        holderScript = (OculusHandOrbGrabManager)(holderObject.GetComponent(typeof(OculusHandOrbGrabManager))); // We search for the HandOrbGrabManager script and assugn it to the holderScript
         alphaManager = gameObject.GetComponentInChildren<AlphaManager>(); // Finds the AlphaManager within the gameObject and assignes it to the alphaManager object
         position = gameObject.transform.position; // Initializes the position variable to that of the object
         rotation = gameObject.transform.rotation; // Initializes the rotation variable to that of the object
@@ -53,7 +53,7 @@ public class OrbMain : MonoBehaviour, LCM.LCM.LCMSubscriber
         if (!initializedLCM && LCM.LCMManager.isInitialized())
         {
             myLCM = LCM.LCMManager.getLCM();
-            myLCM.Subscribe(holderScript.hand.m_hand.ToString().ToLower() + "_lcm_valid", this);
+            //myLCM.Subscribe(holderScript.hand.m_hand.ToString().ToLower() + "_lcm_valid", this);
             initializedLCM = true;
         }
 

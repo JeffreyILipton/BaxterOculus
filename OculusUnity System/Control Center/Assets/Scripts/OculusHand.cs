@@ -64,7 +64,7 @@ public class OculusHand : MonoBehaviour {
         }
 
         // Grip Ball
-        if (OVRInput.Get(OVRInput.Touch.PrimaryIndexTrigger, m_controller) && OVRInput.Get(OVRInput.Button.PrimaryHandTrigger, m_controller) )
+        if ( (OVRInput.Get(OVRInput.Touch.PrimaryIndexTrigger, m_controller) || OVRInput.Get(OVRInput.Button.PrimaryIndexTrigger, m_controller)) && !OVRInput.Get(OVRInput.Button.PrimaryHandTrigger, m_controller) )
         {
             m_animator.SetBool("GripBall", true);
         }
@@ -74,7 +74,7 @@ public class OculusHand : MonoBehaviour {
         }
 
         // Hold Book
-        if (OVRInput.Get(OVRInput.Button.One, m_controller))
+        if (OVRInput.Get(OVRInput.Button.Two, m_controller))
         {
             m_animator.SetBool("HoldBook", true);
         }
@@ -88,7 +88,8 @@ public class OculusHand : MonoBehaviour {
         fTriggerVal = Mathf.Lerp(m_fLastTriggerVal, fTriggerVal, 0.1f);
         m_fLastTriggerVal = fTriggerVal;
 
-        if (fTriggerVal > 0.01f)
+        //if (fTriggerVal > 0.01f)
+        if ((OVRInput.Get(OVRInput.Touch.PrimaryIndexTrigger, m_controller) || OVRInput.Get(OVRInput.Button.PrimaryIndexTrigger, m_controller)) && OVRInput.Get(OVRInput.Button.PrimaryHandTrigger, m_controller))
         {
             m_animator.SetBool("Fist", true);
         }
