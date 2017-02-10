@@ -2,7 +2,7 @@
 using System.Collections;
 
 public class ConsoleManager : MonoBehaviour {
-    public SixenseHand hand; // The hand objet handed to us through Unity's drag n drop editor, WILL NOT WORK IF NULL
+    public OculusHand hand; // The hand objet handed to us through Unity's drag n drop editor, WILL NOT WORK IF NULL
     private AlphaManager alphaManager; // the script that we will call to change transperencty
     private bool state = true; //Are we trying to be visible or invisible
 
@@ -13,21 +13,20 @@ public class ConsoleManager : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        if (hand.m_controller != null) //If the hands have been initialized (so they know which is left or right, code will work if this line is removed, but will throw errors
+
+        if (OVRInput.Get(OVRInput.Button.PrimaryThumbstick,hand.m_controller)) // If the four button on the designated hand is down
         {
-            if (hand.m_controller.GetButtonDown(SixenseButtons.JOYSTICK) ) // If the four button on the designated hand is down
-            {
-                state = !state; //If up, then down, if down then up. Changes the target location
-            }
-            if (state) //If we want to be visible
-            {
-                alphaManager.fade(.1); // amount more visible per frame
-            }
-            else
-            if (!state) //If we want to be invisible
-            {
-                alphaManager.fade(-.1); // amount less visible per frame
-            }
+            state = !state; //If up, then down, if down then up. Changes the target location
         }
+
+        if (state) //If we want to be visible
+        {
+            alphaManager.fade(.1); // amount more visible per frame
+        }
+        else if (!state) //If we want to be invisible
+        {
+            alphaManager.fade(-.1); // amount less visible per frame
+        }
+        
     }
 }

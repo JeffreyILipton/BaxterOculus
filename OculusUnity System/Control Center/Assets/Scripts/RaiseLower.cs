@@ -5,7 +5,7 @@ using System.Collections;
 /// Will raise or lower the blast door when the button of the hand object is triggered
 /// </summary>
 public class RaiseLower : MonoBehaviour {
-    public SixenseHand hand; // The hand objet handed to us through Unity's drag n drop editor, WILL NOT WORK IF NULL
+    public OculusHand hand; // The hand objet handed to us through Unity's drag n drop editor, WILL NOT WORK IF NULL
     public bool state; //Are we trying to go up or down
     public double roof = 4; //Max elevation for center of object
     public double floor = 0.2; //Min elevation of the center of the object
@@ -21,21 +21,28 @@ public class RaiseLower : MonoBehaviour {
     /// Will raise or lower the blast door when the button of the hand object is triggered
     /// </summary>
     void Update () {
-        if (hand.m_controller != null) //If the hands have been initialized (so they know which is left or right, code will work if this line is removed, but will throw errors
+
+        //if (hand.m_controller.GetButtonDown(SixenseButtons.JOYSTICK)) // If the four button on the designated hand is down
+        //{
+        //    state = !state; //If up, then down, if down then up. Changes the target location
+        //}
+        //if (state && gameObject.transform.position.y > floor) // If we are above the floor and trying to go down
+        //{
+        //    gameObject.transform.Translate(0, (float)speed * -1, 0); //go down
+        //}
+        //else
+        //if (!state && gameObject.transform.position.y < roof)// If we are below the roof and trying to go up
+        //{
+        //    gameObject.transform.Translate(0, (float)speed * 1, 0); //go up
+        //}
+        if (OVRInput.Get(OVRInput.Button.PrimaryThumbstickDown,hand.m_controller) && gameObject.transform.position.y > floor) // If we are above the floor and trying to go down
         {
-            if (hand.m_controller.GetButtonDown(SixenseButtons.JOYSTICK)) // If the four button on the designated hand is down
-            {
-                state = !state; //If up, then down, if down then up. Changes the target location
-            }
-            if (state && gameObject.transform.position.y > floor) // If we are above the floor and trying to go down
-            {
-                gameObject.transform.Translate(0, (float)speed * -1, 0); //go down
-            }
-            else
-            if (!state && gameObject.transform.position.y < roof)// If we are below the roof and trying to go up
-            {
-                gameObject.transform.Translate(0, (float)speed * 1, 0); //go up
-            }
+            gameObject.transform.Translate(0, (float)speed * -1, 0); //go down
         }
-	}
+        else
+        if (OVRInput.Get(OVRInput.Button.PrimaryThumbstickUp, hand.m_controller) && gameObject.transform.position.y < roof)// If we are below the roof and trying to go up
+        {
+            gameObject.transform.Translate(0, (float)speed * 1, 0); //go up
+        }
+    }
 }
