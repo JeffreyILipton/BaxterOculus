@@ -6,7 +6,7 @@ using System.Collections;
 /// </summary>
 public class Shrink : MonoBehaviour
 {
-    public SixenseHand hand; // The hand objet handed to us through Unity's drag n drop editor, WILL NOT WORK IF NULL
+    public OculusHand hand; // The hand objet handed to us through Unity's drag n drop editor, WILL NOT WORK IF NULL
     private Vector3 initVector;
 
     // Use this for initialization
@@ -21,10 +21,14 @@ public class Shrink : MonoBehaviour
     /// </summary>
     void Update()
     {
-        if (hand.m_controller != null) //if the hands have been initialized (so they know which is left or right, code will work if this line is removed, but will throw errors
-        {
-            float scaleFactor = (hand.m_controller.JoystickY * (float).3) * (Mathf.Abs(hand.m_controller.JoystickY) * (float).3) + 1; // No point in having it go extreme, lets do some math to make it seem smooth
+        Vector2 vals = OVRInput.Get(OVRInput.Axis2D.PrimaryThumbstick, hand.m_controller);
+        float yval = vals[1];
+        //float scaleFactor = (hand.m_controller.JoystickY * (float).3) * (Mathf.Abs(hand.m_controller.JoystickY) * (float).3) + 1; // No point in having it go extreme, lets do some math to make it seem smooth
+        float scaleFactor = (yval * (float).3) * (Mathf.Abs(yval) * (float).3) + 1; // No point in having it go extreme, lets do some math to make it seem smooth
+        if (Mathf.Abs(vals[0]) < 0.2){
             gameObject.transform.localScale = new Vector3(scaleFactor * initVector.x, scaleFactor * initVector.y, scaleFactor * initVector.z); //scale
         }
+        
+        
     }
 }

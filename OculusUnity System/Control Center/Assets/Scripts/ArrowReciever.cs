@@ -7,7 +7,8 @@ using System;
 public class ArrowReciever : MonoBehaviour, LCM.LCM.LCMSubscriber
 {
 
-    public SelectedHand hand; //Hand given through Unity's drag n drop system
+    public string channel;
+    //public SelectedHand hand; //Hand given through Unity's drag n drop system
     bool initialized; //Has LCM warmed up?
     private bool newData;
     private Quaternion orientation;
@@ -31,7 +32,7 @@ public class ArrowReciever : MonoBehaviour, LCM.LCM.LCMSubscriber
 	void Update () {
         if (!initialized && LCM.LCMManager.isInitialized())
         {
-            LCMManager.getLCM().Subscribe(hand.ToString().ToLower() + "_lcm_currentpos", this);
+            LCMManager.getLCM().Subscribe(channel, this);
             initialized = true;
         }
          if (newData) //We do this so that it gets called in the main thread

@@ -8,12 +8,14 @@ using System;
 
 public class LCMtoTexture : MonoBehaviour, LCMSubscriber
 {
+    public string channel;
+
     private image_t imageRAW; // the message recieved from LCM containing the raw texture data
     private LCM.LCM.LCM myLCM; //the LCM object
     private bool runTexture; // true when there is a fresh image recieved
     private Texture2D texture; // the texture object to be applied to the monitors 
 
-    public SixenseHands hand;
+    
 
     /// <summary>
     /// Updates image raw and sets runTexture to true
@@ -30,7 +32,7 @@ public class LCMtoTexture : MonoBehaviour, LCMSubscriber
     void Start()
     {
         myLCM = LCM.LCMManager.getLCM(); //Sets the LCM object to the global LCM object
-        myLCM.Subscribe(hand.ToString().ToLower() + "_lcm_camera", this); // Subscribe to to "hand"_lcm_camera
+        myLCM.Subscribe(channel, this); // Subscribe to to "hand"_lcm_camera
         imageRAW = new oculuslcm.image_t(); // Initializes imageRaw
 
         GetComponent<Renderer>().material.EnableKeyword("_EmissionMap"); // The _EmmisionMap keyword is enabled so that the texture can be applied to Emission

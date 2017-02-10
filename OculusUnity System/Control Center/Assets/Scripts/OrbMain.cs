@@ -5,7 +5,9 @@ using LCM.LCM;
 
 public class OrbMain : MonoBehaviour, LCM.LCM.LCMSubscriber
 {
-    
+
+    public string ValidChannel;
+    public string MoveChannel;
     public GameObject holderObject; // the object for the hand holding us. Set in the Unity drag n drop interface. WILL NOT RUN WITHOUT
     private OculusHandOrbGrabManager holderScript;// the main script for comunicaiting with our hand
 
@@ -53,7 +55,7 @@ public class OrbMain : MonoBehaviour, LCM.LCM.LCMSubscriber
         if (!initializedLCM && LCM.LCMManager.isInitialized())
         {
             myLCM = LCM.LCMManager.getLCM();
-            //myLCM.Subscribe(holderScript.hand.m_hand.ToString().ToLower() + "_lcm_valid", this);
+            myLCM.Subscribe(ValidChannel, this);
             initializedLCM = true;
         }
 
@@ -120,7 +122,7 @@ public class OrbMain : MonoBehaviour, LCM.LCM.LCMSubscriber
         if (!held && prevHeld) // If ball is being released at a new location
         {
             prevTimeStamp = System.DateTime.Now.Ticks; // left in case message passing is done by time, not by release
-            myLCM.Publish(holderScript.hand.m_hand.ToString().ToLower() + "_lcm", msg); //publish the message!
+            myLCM.Publish(MoveChannel, msg); //publish the message!
             
         }
         prevHeld = held;
