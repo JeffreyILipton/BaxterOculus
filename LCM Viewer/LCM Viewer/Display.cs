@@ -37,10 +37,11 @@ namespace LCM.LCM_Viewer
         {
             public void MessageReceived(LCM.LCM lcm, string channel, LCM.LCMDataInputStream dins)
             {
+                Console.WriteLine("recv: " + channel);
                 //if (channel != "acrobot_y")
-                {
+                //{
                     //Console.WriteLine("recv: " + channel);
-                }
+                //}
 
                 //if ( channel == "left_lcm_camera")
                 //{
@@ -56,11 +57,11 @@ namespace LCM.LCM_Viewer
                     Console.WriteLine("0: " + pose.orientation[0] + " 1: "
                         + pose.orientation[1] + " 2: " + pose.orientation[2] + " 3: " + pose.orientation[3]);
                 }
-                //if (channel == "right_lcm_range")
-                //{
-                //    oculuslcm.range_t range = new oculuslcm.range_t(dins);
-                //    Console.WriteLine(channel + ": " + range.range);
-                //}
+                if (channel == "right_lcm_range")
+                {
+                    oculuslcm.range_t range = new oculuslcm.range_t(dins);
+                    Console.WriteLine(channel + ": " + range.range);
+                }
                 //if (channel == "right_lcm_valid")
                 //{
                 //    oculuslcm.trigger_t cmd = new oculuslcm.trigger_t(dins);

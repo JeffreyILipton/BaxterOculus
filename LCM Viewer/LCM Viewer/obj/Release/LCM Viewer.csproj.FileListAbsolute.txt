@@ -1,0 +1,5 @@
+C:\Users\jil26\Documents\GitHub\MIT\BaxterOculus\LCM Viewer\LCM Viewer\bin\Release\LCM Viewer.exe.config
+C:\Users\jil26\Documents\GitHub\MIT\BaxterOculus\LCM Viewer\LCM Viewer\bin\Release\LCM Viewer.exe
+C:\Users\jil26\Documents\GitHub\MIT\BaxterOculus\LCM Viewer\LCM Viewer\bin\Release\LCM Viewer.pdb
+C:\Users\jil26\Documents\GitHub\MIT\BaxterOculus\LCM Viewer\LCM Viewer\obj\Release\LCM Viewer.exe
+C:\Users\jil26\Documents\GitHub\MIT\BaxterOculus\LCM Viewer\LCM Viewer\obj\Release\LCM Viewer.pdb

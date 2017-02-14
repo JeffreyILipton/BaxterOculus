@@ -1,0 +1,6 @@
+C:\Users\jil26\Documents\GitHub\MIT\BaxterOculus\LCM Viewer\LCM Viewer\bin\Debug\LCM Viewer.exe.config
+C:\Users\jil26\Documents\GitHub\MIT\BaxterOculus\LCM Viewer\LCM Viewer\bin\Debug\LCM Viewer.exe
+C:\Users\jil26\Documents\GitHub\MIT\BaxterOculus\LCM Viewer\LCM Viewer\bin\Debug\LCM Viewer.pdb
+C:\Users\jil26\Documents\GitHub\MIT\BaxterOculus\LCM Viewer\LCM Viewer\obj\Debug\LCM Viewer.csprojResolveAssemblyReference.cache
+C:\Users\jil26\Documents\GitHub\MIT\BaxterOculus\LCM Viewer\LCM Viewer\obj\Debug\LCM Viewer.exe
+C:\Users\jil26\Documents\GitHub\MIT\BaxterOculus\LCM Viewer\LCM Viewer\obj\Debug\LCM Viewer.pdb
