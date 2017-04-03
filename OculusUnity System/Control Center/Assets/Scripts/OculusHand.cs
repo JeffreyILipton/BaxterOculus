@@ -54,7 +54,7 @@ public class OculusHand : MonoBehaviour {
     protected void UpdateHandAnimation()
     {
         // Point
-        if (!OVRInput.Get(OVRInput.Touch.PrimaryIndexTrigger,m_controller) && OVRInput.Get(OVRInput.Button.PrimaryHandTrigger, m_controller))
+        if (!OVRInput.Get(OVRInput.Touch.PrimaryIndexTrigger,m_controller))
         {
             m_animator.SetBool("Point", true);
         }
