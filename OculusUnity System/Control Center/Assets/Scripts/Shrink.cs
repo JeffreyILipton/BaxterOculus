@@ -22,10 +22,10 @@ public class Shrink : MonoBehaviour
     void Update()
     {
         Vector2 vals = OVRInput.Get(OVRInput.Axis2D.PrimaryThumbstick, hand.m_controller);
-        float yval = vals[1];
+        float yval = vals[0];
         //float scaleFactor = (hand.m_controller.JoystickY * (float).3) * (Mathf.Abs(hand.m_controller.JoystickY) * (float).3) + 1; // No point in having it go extreme, lets do some math to make it seem smooth
         float scaleFactor = (yval * (float).3) * (Mathf.Abs(yval) * (float).3) + 1; // No point in having it go extreme, lets do some math to make it seem smooth
-        if (Mathf.Abs(vals[0]) < 0.2){
+        if (Mathf.Abs(vals[1]) < 0.2){
             gameObject.transform.localScale = new Vector3(scaleFactor * initVector.x, scaleFactor * initVector.y, scaleFactor * initVector.z); //scale
         }
         
