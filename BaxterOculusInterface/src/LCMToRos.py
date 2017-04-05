@@ -35,7 +35,7 @@ def PointQuatToPose(baxter_pos,orientation):
 
 def LCMGripperCMDToRos(RosPub,LcmChannel,lcmData):
     lcm_msg = cmd_t.decode(lcmData)
-    #print "published: ",lcm_msg.command
+    #print "LCM Gripper published: ",lcm_msg.command
     RosPub.publish(lcm_msg.command)
 
 def LCMGripperVelToRos(RosPub,LcmChannel,lcmData):

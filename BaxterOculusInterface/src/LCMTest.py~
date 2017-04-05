@@ -15,7 +15,7 @@ message2.orientation = [0.0490787797075,-0.386342787948,0.920786840126,0.0219572
 
 channel = LCM_RIGHT
 try:
-    lc = lcm.LCM("udpm://239.255.76.67:7667:?ttl=1")
+    lc = lcm.LCM()
     notdone = True
     while notdone:
         ang = input('ang in degrees: ')
