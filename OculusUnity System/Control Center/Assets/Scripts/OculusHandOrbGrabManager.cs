@@ -25,6 +25,7 @@ public class OculusHandOrbGrabManager : MonoBehaviour {
         myLCM = LCM.LCMManager.getLCM(); //Gets the LCM object
         command = new oculuslcm.cmd_t(); //Initializes the command message
         trigger = new oculuslcm.trigger_t(); //Initializes the trigger message
+        prevCommand = -1;
     }
 
     // Update is called once per frame
@@ -35,10 +36,10 @@ public class OculusHandOrbGrabManager : MonoBehaviour {
         grabbing = OVRInput.Get(OVRInput.Button.PrimaryHandTrigger, hand.m_controller);
 
 
-        if (hand.m_hand == OculusHands.LEFT)
+        if (hand.m_controller == OVRInput.Controller.LTouch)
         {
             // If the user is pressing the bumper, determine wether command.command is 1 or 0, only for left
-            if (OVRInput.Get(OVRInput.Button.One))
+            if (OVRInput.Get(OVRInput.RawButton.X))
             {
                 command.command = 0;
             }
@@ -75,6 +76,28 @@ public class OculusHandOrbGrabManager : MonoBehaviour {
             }
 
             prevTrigger = trigger.trigger; //Updating the previous trigger
+
+
+
+            if (OVRInput.Get(OVRInput.RawButton.A))
+            {
+                command.command = 0;
+            }
+            else
+            {
+                command.command = 1;
+            }
+
+
+            if (prevCommand != command.command) // Only send the message if the message is diffrent from the previous
+            {
+                myLCM.Publish(hand.m_hand.ToString().ToLower() + "_lcm_cmd", command);
+            }
+
+            prevCommand = command.command; //Updating the previous command
+
+
+
         }
 
 
