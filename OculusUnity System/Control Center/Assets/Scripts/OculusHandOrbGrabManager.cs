@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+
 public class OculusHandOrbGrabManager : MonoBehaviour {
     private bool grabbing = false; //Are we trying to grab an object?
     public OculusHand hand; //The hand object we are passed through Unity's drag n drop interface
@@ -135,7 +136,23 @@ public class OculusHandOrbGrabManager : MonoBehaviour {
     {
         if (OVRInput.Get(OVRInput.Button.PrimaryIndexTrigger, hand.m_controller))
         {
-            return new Quaternion((float).5, (float).5, (float)-.5, (float).5);
+            Quaternion Q = OVRInput.GetLocalControllerRotation(hand.m_controller);
+            double w = Q[0];
+            double x = Q[1];
+            double y = Q[2];
+            double z = Q[3];
+            double yaw = System.Math.Atan2(2 * (y * z + w * x), w * w - x * x - y * y + z * z);
+            double pitch = System.Math.Asin(-2 * (x * z - w * z));
+            double roll = System.Math.Atan2(2 * (x * y + w * z), w * w + x * x - y * y - z * z);
+            Quaternion P = new Quaternion();
+            P.w = (float)System.Math.Cos(roll / 2.0);
+            P.x = 0;
+            P.y = 0;
+            P.z = (float)System.Math.Sin(roll / 2.0);
+            Quaternion R = new Quaternion((float).5, (float).5, (float)-.5, (float).5);
+
+            return R*P ;
+//            return new Quaternion((float).5, (float).5, (float)-.5, (float).5);
         }
         return gameObject.transform.rotation;
     }
