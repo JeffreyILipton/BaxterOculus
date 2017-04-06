@@ -80,5 +80,13 @@ namespace WPFCSharpWebCam
             encoder.Save(memoryStream);
             return memoryStream.GetBuffer();
         }
+
+        public static byte[] BitmapToArray(System.Drawing.Bitmap image) {
+            using (MemoryStream ms = new MemoryStream())
+            {
+                image.Save(ms, System.Drawing.Imaging.ImageFormat.Bmp);
+                return ms.ToArray();
+            }
+        }
     }
 }
