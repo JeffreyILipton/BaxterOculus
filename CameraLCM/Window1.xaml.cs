@@ -11,8 +11,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Windows.Forms;
 
-using LCM.LCM;
 
 
 namespace WPFCSharpWebCam
@@ -31,39 +31,34 @@ namespace WPFCSharpWebCam
         }
 
         WebCam webcam;
-        private String channel;
-        private System.Timers.Timer aTimer = new System.Timers.Timer();
-        private bool started = false;
+
 
         private void mainWindow_Loaded(object sender, System.Windows.RoutedEventArgs e)
         {
         	// TODO: Add event handler implementation here.
             webcam = new WebCam();
             webcam.InitializeWebCam(ref imgVideo);
-            myLCM = new LCM.LCM.LCM("udpm://239.255.76.67:7667:?ttl=1");
-            channel = "defaulImage";
-            aTimer.Elapsed += new System.Timers.ElapsedEventHandler(publish);
-            aTimer.Interval = 100;
-            aTimer.Enabled = true;
+            comboBox.Items.Add("Right_Wrist_Img");
+            comboBox.Items.Add("Left_Wrist_Img");
         }
 
         private void bntStart_Click(object sender, RoutedEventArgs e)
         {
             
             webcam.Start();
-            started = true;
+            webcam.channel = comboBox.Text;
+
         }
 
         private void bntStop_Click(object sender, RoutedEventArgs e)
         {
             webcam.Stop();
-            started = false;
+
         }
 
         private void bntContinue_Click(object sender, RoutedEventArgs e)
         {
             webcam.Continue();
-            started = true;
         }
 
         private void bntCapture_Click(object sender, RoutedEventArgs e)
@@ -86,28 +81,14 @@ namespace WPFCSharpWebCam
             webcam.AdvanceSetting();
         }
 
-        private void publish(object sender, System.Timers.ElapsedEventArgs e)
-        {
-            publish();
-        }
-        private void publish() { 
-            if (started == true && channel != "")
-            {
-                oculuslcm.image_t frame = new oculuslcm.image_t();
-                imgCapture.Source = imgVideo.Source;
-                BitmapSource BS = (BitmapSource)imgCapture.Source;
 
-                frame.width = BS.PixelWidth;
-                frame.height = BS.PixelHeight;
-                frame.data = Helper.ReadImageMemory(BS);
-                myLCM.Publish(channel, frame);
-            }
 
-        }
 
         private void comboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            channel = comboBox.Text;
+            //ComboBox cmb = (ComboBox)sender;
+            //cmb
+            
         }
 
     }

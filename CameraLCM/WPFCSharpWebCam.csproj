@@ -105,6 +105,7 @@
     <Compile Include="oculuslcm\range_t.cs" />
     <Compile Include="oculuslcm\trigger_t.cs" />
     <Compile Include="oculuslcm\velocity_t.cs" />
+    <Compile Include="util\BitConverter.cs" />
     <Compile Include="Window1.xaml.cs">
       <DependentUpon>Window1.xaml</DependentUpon>
       <SubType>Code</SubType>
@@ -143,7 +144,9 @@
       <Install>true</Install>
     </BootstrapperPackage>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="lcm\util\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

@@ -37,7 +37,7 @@ namespace LCM.LCM_Viewer
         {
             public void MessageReceived(LCM.LCM lcm, string channel, LCM.LCMDataInputStream dins)
             {
-                //Console.WriteLine("recv: " + channel);
+                Console.WriteLine("recv: " + channel);
                 //if (channel != "acrobot_y")
                 //{
                 //Console.WriteLine("recv: " + channel);
