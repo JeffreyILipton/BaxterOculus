@@ -145,10 +145,10 @@ public class OculusHandOrbGrabManager : MonoBehaviour {
             double pitch = System.Math.Asin(-2 * (x * z - w * z));
             double roll = System.Math.Atan2(2 * (x * y + w * z), w * w + x * x - y * y - z * z);
             Quaternion P = new Quaternion();
-            P.w = (float)System.Math.Cos(roll / 2.0);
+            P.w = (float)System.Math.Cos(yaw / 2.0);
             P.x = 0;
             P.y = 0;
-            P.z = (float)System.Math.Sin(roll / 2.0);
+            P.z = (float)System.Math.Sin(yaw / 2.0);
             Quaternion R = new Quaternion((float).5, (float).5, (float)-.5, (float).5);
 
             return R*P ;
