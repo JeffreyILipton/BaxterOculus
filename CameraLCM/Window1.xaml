@@ -55,9 +55,7 @@
             <Button x:Name="bntStop" Content="Stop" Margin="10,0,0,0" Click="bntStop_Click" />
             <Button x:Name="bntContinue" Content="Continue" Margin="10,0,0,0" Click="bntContinue_Click" />
         </StackPanel>
-        <ComboBox x:Name="comboBox" Grid.Column="4" HorizontalAlignment="Left" Margin="42.419,0,0,0" Grid.Row="3" VerticalAlignment="Top" Width="125.573" Height="31.959" SelectionChanged="comboBox_SelectionChanged" IsReadOnly="True">
-            <ComboBoxItem x:Name="RightComboBoxItem" Content="Right_Wrist_Img"/>
-            <ComboBoxItem x:Name="LeftComboBoxItem" Content="Left_Wrist_Img"/>
+        <ComboBox x:Name="comboBox" Grid.Column="4" HorizontalAlignment="Center" Margin="36.167,0.659,25.16,0" Grid.Row="3" VerticalAlignment="Center" Width="125.573" Height="31.959" SelectionChanged="comboBox_SelectionChanged" IsSynchronizedWithCurrentItem="True" IsEditable="True">
         </ComboBox>
     </Grid>
 </Window>

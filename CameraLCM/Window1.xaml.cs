@@ -11,7 +11,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-
+using System.Windows.Forms;
 
 
 
@@ -38,12 +38,15 @@ namespace WPFCSharpWebCam
         	// TODO: Add event handler implementation here.
             webcam = new WebCam();
             webcam.InitializeWebCam(ref imgVideo);
+            comboBox.Items.Add("Right_Wrist_Img");
+            comboBox.Items.Add("Left_Wrist_Img");
         }
 
         private void bntStart_Click(object sender, RoutedEventArgs e)
         {
             
             webcam.Start();
+            webcam.channel = comboBox.Text;
 
         }
 
@@ -83,7 +86,9 @@ namespace WPFCSharpWebCam
 
         private void comboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            webcam.channel = comboBox.Text;
+            //ComboBox cmb = (ComboBox)sender;
+            //cmb
+            
         }
 
     }
