@@ -193,6 +193,7 @@
     <Compile Include="Assets\ProgressBar\Script\Utils.cs" />
     <Compile Include="Assets\Scripts\AlphaManager.cs" />
     <Compile Include="Assets\Scripts\ArrowReciever.cs" />
+    <Compile Include="Assets\Scripts\CameraRotator.cs" />
     <Compile Include="Assets\Scripts\ConsoleManager.cs" />
     <Compile Include="Assets\Scripts\HandOrbGrabManager.cs" />
     <Compile Include="Assets\Scripts\LCMManager.cs" />
