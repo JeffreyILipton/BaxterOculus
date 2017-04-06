@@ -94,42 +94,42 @@ namespace LCM.LCM
 		{
 			NeedInput(2);
             pos += 2;
-			return BitConverter.ToInt16(buf, pos - 2);
+			return Util.BitConverter.ToInt16(buf, pos - 2);
 		}
 		
 		public override ushort ReadUInt16()
 		{
             NeedInput(2);
             pos += 2;
-            return BitConverter.ToUInt16(buf, pos - 2);
+            return Util.BitConverter.ToUInt16(buf, pos - 2);
 		}
 		
 		public override int ReadInt32()
 		{
             NeedInput(4);
             pos += 4;
-            return BitConverter.ToInt32(buf, pos - 4);
+            return Util.BitConverter.ToInt32(buf, pos - 4);
 		}
 		
 		public override long ReadInt64()
 		{
             NeedInput(8);
             pos += 8;
-            return BitConverter.ToInt64(buf, pos - 8);
+            return Util.BitConverter.ToInt64(buf, pos - 8);
 		}
 		
 		public override float ReadSingle()
 		{
 			NeedInput(4);
             pos += 4;
-            return BitConverter.ToSingle(buf, pos - 4);
+            return Util.BitConverter.ToSingle(buf, pos - 4);
 		}
 		
 		public override double ReadDouble()
         {
             NeedInput(8);
             pos += 8;
-            return BitConverter.ToDouble(buf, pos - 8);
+            return Util.BitConverter.ToDouble(buf, pos - 8);
 		}
 		
 		public void ReadFully(byte[] b)

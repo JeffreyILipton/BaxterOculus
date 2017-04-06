@@ -130,30 +130,30 @@ namespace LCM.LCM
 		
 		public override void Write(double v)
 		{
-			Write(BitConverter.GetBytes(v));
+			Write(Util.BitConverter.GetBytes(v));
 		}
 		
 		public override void Write(float v)
         {
-            Write(BitConverter.GetBytes(v));
+            Write(Util.BitConverter.GetBytes(v));
 		}
 		
 		public override void Write(int v)
 		{
             EnsureSpace(4);
-            Write(BitConverter.GetBytes(v));
+            Write(Util.BitConverter.GetBytes(v));
 		}
 		
 		public override void Write(long v)
 		{
             EnsureSpace(8);
-            Write(BitConverter.GetBytes(v));
+            Write(Util.BitConverter.GetBytes(v));
 		}
 		
 		public override void Write(short v)
 		{
             EnsureSpace(2);
-            Write(BitConverter.GetBytes(v));
+            Write(Util.BitConverter.GetBytes(v));
 		}
 		
 		public void WriteUTF(string s)
