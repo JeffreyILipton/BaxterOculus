@@ -1,0 +1,15 @@
+C:\Users\jil26\Documents\GitHub\MIT\BaxterOculus\AforgeCam\bin\Debug\AforgeCam.exe.config
+C:\Users\jil26\Documents\GitHub\MIT\BaxterOculus\AforgeCam\bin\Debug\AforgeCam.exe
+C:\Users\jil26\Documents\GitHub\MIT\BaxterOculus\AforgeCam\bin\Debug\AforgeCam.pdb
+C:\Users\jil26\Documents\GitHub\MIT\BaxterOculus\AforgeCam\bin\Debug\AForge.dll
+C:\Users\jil26\Documents\GitHub\MIT\BaxterOculus\AforgeCam\bin\Debug\AForge.Video.DirectShow.dll
+C:\Users\jil26\Documents\GitHub\MIT\BaxterOculus\AforgeCam\bin\Debug\AForge.Video.dll
+C:\Users\jil26\Documents\GitHub\MIT\BaxterOculus\AforgeCam\bin\Debug\AForge.xml
+C:\Users\jil26\Documents\GitHub\MIT\BaxterOculus\AforgeCam\bin\Debug\AForge.Video.xml
+C:\Users\jil26\Documents\GitHub\MIT\BaxterOculus\AforgeCam\bin\Debug\AForge.Video.DirectShow.xml
+C:\Users\jil26\Documents\GitHub\MIT\BaxterOculus\AforgeCam\obj\Debug\AforgeCam.csprojResolveAssemblyReference.cache
+C:\Users\jil26\Documents\GitHub\MIT\BaxterOculus\AforgeCam\obj\Debug\AforgeCam.Form1.resources
+C:\Users\jil26\Documents\GitHub\MIT\BaxterOculus\AforgeCam\obj\Debug\AforgeCam.Properties.Resources.resources
+C:\Users\jil26\Documents\GitHub\MIT\BaxterOculus\AforgeCam\obj\Debug\AforgeCam.csproj.GenerateResource.Cache
+C:\Users\jil26\Documents\GitHub\MIT\BaxterOculus\AforgeCam\obj\Debug\AforgeCam.exe
+C:\Users\jil26\Documents\GitHub\MIT\BaxterOculus\AforgeCam\obj\Debug\AforgeCam.pdb
