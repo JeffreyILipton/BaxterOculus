@@ -30,7 +30,7 @@ namespace WPFCSharpWebCam
             webcam.TimeToCapture_milliseconds = FrameNumber;
             webcam.ImageCaptured += new WebCamCapture.WebCamEventHandler(webcam_ImageCaptured);
             _FrameImage = ImageControl;
-            myLCM = new LCM.LCM.LCM("udpm://239.255.76.67:7667:?ttl=1");
+            myLCM = new LCM.LCM.LCM("udpm://239.255.76.67:7667:?ttl=2");
             channel = "";
             aTimer.Elapsed += new System.Timers.ElapsedEventHandler(publish);
             aTimer.Interval = 1000;
