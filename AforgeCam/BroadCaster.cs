@@ -13,7 +13,8 @@ namespace AforgeCam
     {
         static public LCM.LCM.LCM myLCM;
         public string channel { get; set; }
-        public Bitmap lastframe { get; set; }
+        private Bitmap lastframe;
+        bool locked = false;
 
         private System.Timers.Timer aTimer = new System.Timers.Timer();
         
@@ -29,6 +30,15 @@ namespace AforgeCam
             //aTimer.Enabled = true;
         }
 
+        public void setImage(Bitmap imframe)
+        {
+            if (!locked)
+            {
+                //if (lastframe != null) { lastframe.Dispose(); }
+                lastframe = (Bitmap)imframe.Clone();
+            }
+        }
+
 
         public void start()
         {
@@ -42,17 +52,18 @@ namespace AforgeCam
 
         private void publish(object sender, System.Timers.ElapsedEventArgs e)
         {
-
+            locked = true;
             if (channel != "" && lastframe != null)
             {
                 oculuslcm.image_t frame = new oculuslcm.image_t();
                 frame.width = width;
                 frame.height = height;
-                Bitmap safed = (Bitmap)lastframe.Clone();
                 frame.data = BitmapToArray(lastframe);
-                safed.Dispose();
+                frame.size = frame.data.Length;
                 myLCM.Publish(channel, frame);
                 Console.WriteLine("frame");
+                
+                Console.WriteLine(".");
             }
             else
             {
@@ -60,6 +71,7 @@ namespace AforgeCam
                 Console.Write(channel);
                 Console.Write("\n");
             }
+            locked = false;
         }
 
         public static byte[] BitmapToArray(System.Drawing.Bitmap image)

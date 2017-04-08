@@ -69,7 +69,7 @@ namespace AforgeCam
             pictureBox1.Image = (Bitmap)eventArgs.Frame.Clone();
             lastframe = new Bitmap(eventArgs.Frame, new Size(300, 200));
             pictureBox2.Image = (Bitmap)lastframe.Clone();
-            bc.lastframe = lastframe;//(Bitmap)lastframe.Clone();
+            bc.setImage(lastframe);//(Bitmap)lastframe.Clone();
 
         }
 
