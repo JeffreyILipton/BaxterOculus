@@ -61,6 +61,7 @@ namespace AforgeCam
                 oculuslcm.image_t frame = new oculuslcm.image_t();
                 frame.width = width;
                 frame.height = height;
+                frame.row_stride = width * ((PixelFormats.Bgra32.BitsPerPixel + 7) / 8);
                 frame.data = BitmapToArray(new Bitmap(lastframe));
                 frame.size = frame.data.Length;
                 myLCM.Publish(channel, frame);
@@ -81,11 +82,11 @@ namespace AforgeCam
         {
             var bmp = ConvertBitmap(image);
             bmp = new FormatConvertedBitmap(bmp, PixelFormats.Bgra32, null, 0);
-            int width = bmp.PixelWidth;
-            int height = bmp.PixelHeight;
-            int stride = width * ((bmp.Format.BitsPerPixel + 7) / 8);
+            int pwidth = bmp.PixelWidth;
+            int pheight = bmp.PixelHeight;
+            int stride = pwidth * ((bmp.Format.BitsPerPixel + 7) / 8);
 
-            byte[] pixels = new byte[height * stride];
+            byte[] pixels = new byte[pheight * stride];
 
             bmp.CopyPixels(pixels, stride, 0);
             return pixels;
