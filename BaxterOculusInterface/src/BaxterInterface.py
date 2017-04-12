@@ -145,7 +145,7 @@ def ProcessTriggerCMDAsGripper(gripper,data):
         gripper.close()
 
 def ProcessGripperCMD(gripper,data):
-    #print "gripper:",data.data
+    print "gripper:",data.data
     if data.data <1:
         gripper.open()
     elif data.data<2:

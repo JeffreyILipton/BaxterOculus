@@ -1,4 +1,4 @@
-NAME = "Remote/"
+NAME = "Remote4/"
 STATE = "_state"
 
 ROS_LEFT_VALID = "left_ros_valid"
