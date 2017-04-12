@@ -42,7 +42,7 @@ namespace AforgeCam
             if (!locked)
             {
                 //if (lastframe != null) { lastframe.Dispose(); }
-                lastframe = new Bitmap(eventArgs.Frame, new System.Drawing.Size(300, 200));
+                lastframe = new Bitmap(eventArgs.Frame, new System.Drawing.Size(200, 300));
             }
         }
 

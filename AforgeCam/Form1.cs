@@ -68,7 +68,7 @@ namespace AforgeCam
             if (pictureBox2.Image != null) { pictureBox2.Image.Dispose(); }
             if (lastframe != null) { lastframe.Dispose(); }
             pictureBox1.Image = (Bitmap)eventArgs.Frame.Clone();
-            lastframe = new Bitmap(eventArgs.Frame, new Size(300, 200));
+            lastframe = new Bitmap(eventArgs.Frame, new Size(200, 300));
             pictureBox2.Image = (Bitmap)lastframe.Clone();
 
         }
