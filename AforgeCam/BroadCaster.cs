@@ -9,6 +9,9 @@ using System.Drawing;
 using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using AForge;
+using AForge.Video;
+using AForge.Video.DirectShow;
 
 namespace AforgeCam
 {
@@ -33,14 +36,16 @@ namespace AforgeCam
             //aTimer.Enabled = true;
         }
 
-        public void setImage(Bitmap imframe)
+
+        public void NewFrame(object sender, NewFrameEventArgs eventArgs)
         {
             if (!locked)
             {
                 //if (lastframe != null) { lastframe.Dispose(); }
-                lastframe = new Bitmap(imframe);
+                lastframe = new Bitmap(eventArgs.Frame, new System.Drawing.Size(300, 200));
             }
         }
+
 
 
         public void start()

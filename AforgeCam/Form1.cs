@@ -52,6 +52,7 @@ namespace AforgeCam
             //FinalFrame.VideoResolution = new VideoCapabilities();
             FinalFrame.DisplayPropertyPage(IntPtr.Zero);
             FinalFrame.NewFrame += new NewFrameEventHandler(FinalFrame_NewFrame);
+            FinalFrame.NewFrame += new NewFrameEventHandler(bc.NewFrame);
             bc.channel = channelComboBox.Text;
             channelComboBox.Enabled = false;
             //aTimer.Enabled = true;
@@ -69,7 +70,6 @@ namespace AforgeCam
             pictureBox1.Image = (Bitmap)eventArgs.Frame.Clone();
             lastframe = new Bitmap(eventArgs.Frame, new Size(300, 200));
             pictureBox2.Image = (Bitmap)lastframe.Clone();
-            bc.setImage(lastframe);//(Bitmap)lastframe.Clone();
 
         }
 
