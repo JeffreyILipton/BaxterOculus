@@ -1,5 +1,9 @@
-#ROS Basses
+
 ROS_HEAD    = "head_cmd"
+
+NAME = "Remote4/"
+STATE = "_state"
+
 
 ROS_R   = "right_arm_cmd"
 ROS_R_VALID = "right_ros_valid"

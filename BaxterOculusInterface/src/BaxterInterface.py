@@ -145,13 +145,13 @@ def ProcessTriggerCMDAsGripper(gripper,data):
         gripper.close()
 
 def ProcessGripperCMD(gripper,data):
-    #print "gripper:",data.data
+    print "gripper:",data.data
     if data.data <1:
-        gripper.stop()
-    elif data.data<2:
         gripper.open()
-    elif data.data<3:
+    elif data.data<2:
         gripper.close()
+    elif data.data<3:
+        gripper.stop()
 
 def iksvcForLimb(limb):
     ns = "ExternalTools/" + limb + "/PositionKinematicsNode/IKService"
@@ -296,7 +296,7 @@ def main():
 
     connection_list = []
     lc = lcm.LCM("udpm://239.255.76.67:7667:?ttl=1")
-    ardPort = "/dev/ttyACM1"
+    ardPort = "/dev/ttyACM2"
 
     if part == 'left':
         channel = ROS_LEFT
