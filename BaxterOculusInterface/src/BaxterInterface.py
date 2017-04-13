@@ -148,7 +148,7 @@ def ProcessTriggerCMDAsGripper(gripper,data):
     else:
         gripper.close()
 
-def ProcessSoftGripperCmd(handobj,l,cmd):
+def ProcessSoftGripperCmd(handobj,l,data):
     if data.data<1:
         if l==True:
             handobj.LeftOpen()
@@ -161,6 +161,7 @@ def ProcessSoftGripperCmd(handobj,l,cmd):
             handobj.RightClose()
     else:
         print "unknown cmd"
+    print "Hand:",l,"cmd",data.data
 
 def ProcessGripperCMD(gripper,data):
     #print "gripper:",data.data
@@ -453,7 +454,7 @@ def main():
         gripper = SoftHand()
         gripper.close_value = 1.0 # good for any object grasping
 
-        channel = ROS_R_CMD
+        channel = ROS_L_CMD
         msgType = UInt16
         sub_func = partial(ProcessSoftGripperCmd,gripper,True)
         connection_list.append((channel,msgType,sub_func))

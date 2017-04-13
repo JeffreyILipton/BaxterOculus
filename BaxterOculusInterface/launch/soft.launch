@@ -35,7 +35,7 @@
      </node>
 
 
-     <node name="Motor_Controller_Node" pkg="baxter_soft_hand" type="motor_controller_node"  output="log">
+     <!--node name="Motor_Controller_Node" pkg="baxter_soft_hand" type="motor_controller_node"  output="log">
         <param name="~finger_1_port" value="/dev/ttyACM1"/>
         <param name="~finger_2_port" value="/dev/ttyACM3"/>
         <param name="~finger_3_port" value="/dev/ttyACM5"/>
@@ -48,6 +48,21 @@
         <param name="~finger_2_max_value" value="2800"/>
         <param name="~finger_3_max_value" value="2800"/>
         <param name="~finger_4_max_value" value="2800"/>
-    </node>
+    </node-->
+    
+  <node name="Motor_Controller_Node" pkg="baxter_soft_hand" type="motor_controller_node"  output="log">
+    <param name="~finger_1_port" value="/dev/serial/by-id/usb-Pololu_Corporation_Pololu_Jrk_12v12_Motor_Controller_00097078-if00"/>
+    <param name="~finger_2_port" value="/dev/serial/by-id/usb-Pololu_Corporation_Pololu_Jrk_12v12_Motor_Controller_00115355-if00"/>
+    <param name="~finger_3_port" value="/dev/serial/by-id/usb-Pololu_Corporation_Pololu_Jrk_12v12_Motor_Controller_00097133-if00"/>
+    <param name="~finger_4_port" value="/dev/serial/by-id/usb-Pololu_Corporation_Pololu_Jrk_12v12_Motor_Controller_00097106-if00"/>
+    <param name="~finger_1_min_value" value="0"/>
+    <param name="~finger_2_min_value" value="0"/>
+    <param name="~finger_3_min_value" value="0"/>
+    <param name="~finger_4_min_value" value="0"/>
+    <param name="~finger_1_max_value" value="2800"/>
+    <param name="~finger_2_max_value" value="2800"/>
+    <param name="~finger_3_max_value" value="2800"/>
+    <param name="~finger_4_max_value" value="2800"/>
+  </node>
   </group>
 </launch>
