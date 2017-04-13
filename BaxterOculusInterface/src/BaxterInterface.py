@@ -33,6 +33,10 @@ from Quaternion import *
 import time
 import numpy as np
 
+sys.path.insert(0, '/home/drl/ros_ws/src/baxter-soft-hand/scripts/softhandpy')
+from softhandpy.SoftHand import * # SoftHand, HandType
+
+
 DEBUG = False
 CAM_TIME = 0.1
 RANGE_TIME = 0.05
@@ -144,14 +148,28 @@ def ProcessTriggerCMDAsGripper(gripper,data):
     else:
         gripper.close()
 
+def ProcessSoftGripperCmd(handobj,l,cmd):
+    if data.data<1:
+        if l==True:
+            handobj.LeftOpen()
+        else:
+            handobj.RightOpen()
+    elif data.data<2:
+        if l==True:
+            handobj.LeftClose()
+        else:
+            handobj.RightClose()
+    else:
+        print "unknown cmd"
+
 def ProcessGripperCMD(gripper,data):
     #print "gripper:",data.data
-    if data.data <1:
-        gripper.stop()
-    elif data.data<2:
+    if data.data<1:
         gripper.open()
-    elif data.data<3:
+    elif data.data<2:
         gripper.close()
+    elif data.data <3:
+        gripper.stop()
 
 def iksvcForLimb(limb):
     ns = "ExternalTools/" + limb + "/PositionKinematicsNode/IKService"
@@ -421,6 +439,25 @@ def main():
         l_cam = CameraController('left_hand_camera')
         l_cam.resolution=(320,200)#(1280, 800)
         l_cam.open()
+
+    elif part == 'right_soft_gripper':
+        gripper = SoftHand()
+        gripper.close_value = 1.0 # good for any object grasping
+
+        channel = ROS_R_CMD
+        msgType = UInt16
+        sub_func = partial(ProcessSoftGripperCmd,gripper,False)
+        connection_list.append((channel,msgType,sub_func))
+
+    elif part == 'left_soft_gripper':
+        gripper = SoftHand()
+        gripper.close_value = 1.0 # good for any object grasping
+
+        channel = ROS_R_CMD
+        msgType = UInt16
+        sub_func = partial(ProcessSoftGripperCmd,gripper,True)
+        connection_list.append((channel,msgType,sub_func))
+
     else :
         print "unknown part:", part
         return 0
