@@ -1,32 +1,33 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using LCM.LCM;
 
-
-public class OculusHandOrbGrabManager : MonoBehaviour {
+public class OculusHandOrbGrabManager : MonoBehaviour{
     private bool grabbing = false; //Are we trying to grab an object?
     public OculusHand hand; //The hand object we are passed through Unity's drag n drop interface
+    public string MoveChannel;
 
-    private Material normalMat; //The material that looks like an actual hand
-    private Material glowMat; //The material that looks like it is are part of the radiacive blue man group
-    private Renderer rend; // the render object of the game object, this controls the way things are rendered and is where we can change materials
     private LCM.LCM.LCM myLCM; //The LCM object
     private oculuslcm.cmd_t command; //Used to send close and open grippers over LCM
     private oculuslcm.trigger_t trigger; //Used to shoot things of LCM
     private short prevCommand; // The previous command message sent
     private bool prevTrigger; // The previous trigger message
 
+    private oculuslcm.pose_t msg; // the LCM message we will pass that describes the target hand location for baxter 
+    private long prevTimeStamp; //time of the last frame
+    public long minTimeStep;
+
     // Use this for initialization
     void Start()
     {
-        hand = gameObject.GetComponent(typeof(OculusHand)) as OculusHand; //Fetches he SixenseHand object within the gameObject
-        rend = gameObject.GetComponentInChildren<Renderer>(); //Fetches the render object
-        normalMat = rend.material; //Sets the normalMat as what the object is set to in Unity's enviornment (this should be the fleshy meterial
-        glowMat = (Material)Resources.Load("Hands_Glow") as Material; // This loads the glow material, which MUST be located inside the resource folder
         myLCM = LCM.LCMManager.getLCM(); //Gets the LCM object
         command = new oculuslcm.cmd_t(); //Initializes the command message
         trigger = new oculuslcm.trigger_t(); //Initializes the trigger message
         prevCommand = -1;
+
+        msg = new oculuslcm.pose_t(); //Initializes the message we will be sending through LCM 
+        prevTimeStamp = System.DateTime.Now.Ticks; //Initializes the prevTimeStamp to the current time
     }
 
     // Update is called once per frame
@@ -101,8 +102,24 @@ public class OculusHandOrbGrabManager : MonoBehaviour {
 
         }
 
+        //mapping of position coordinates to baxter done on unity side
+        msg.position[0] = gameObject.transform.localPosition.z; //position.z;
+        msg.position[1] = -gameObject.transform.localPosition.x; //-position.x;
+        msg.position[2] = gameObject.transform.localPosition.y; //position.y;
 
+        //mapping of quaternian coordinates to baxter done on baxter side
+        msg.orientation[0] = gameObject.transform.rotation.w;
+        msg.orientation[1] = gameObject.transform.rotation.x;
+        msg.orientation[2] = gameObject.transform.rotation.y;
+        msg.orientation[3] = gameObject.transform.rotation.z;
 
+        
+        if ((System.DateTime.Now.Ticks- prevTimeStamp) < minTimeStep)
+        {
+            prevTimeStamp = System.DateTime.Now.Ticks; // left in case message passing is done by time, not by release
+            myLCM.Publish(MoveChannel, msg); //publish the message!
+        }
+        
 
 
 
@@ -167,13 +184,5 @@ public class OculusHandOrbGrabManager : MonoBehaviour {
     /// <param name="glowing"></param>
     public void setGlow(bool glowing)
     {
-        if (glowing)
-        {
-            rend.material = glowMat;
-        }
-        else
-        {
-            rend.material = normalMat;
-        }
     }
 }
