@@ -122,7 +122,7 @@ public class OrbMain : MonoBehaviour, LCM.LCM.LCMSubscriber
         if (!held && prevHeld) // If ball is being released at a new location
         {
             prevTimeStamp = System.DateTime.Now.Ticks; // left in case message passing is done by time, not by release
-            myLCM.Publish(MoveChannel, msg); //publish the message!
+            //myLCM.Publish(MoveChannel, msg); //publish the message!
             
         }
         prevHeld = held;
