@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using LCM.LCM;
@@ -105,7 +106,7 @@ public class OculusHandOrbGrabManager : MonoBehaviour{
         //mapping of position coordinates to baxter done on unity side
         msg.position[0] = gameObject.transform.localPosition.z; //position.z;
         msg.position[1] = -gameObject.transform.localPosition.x; //-position.x;
-        msg.position[2] = gameObject.transform.localPosition.y; //position.y;
+        msg.position[2] = gameObject.transform.localPosition.y+0.4; //position.y;
 
         //mapping of quaternian coordinates to baxter done on baxter side
         msg.orientation[0] = gameObject.transform.rotation.w;
@@ -114,12 +115,12 @@ public class OculusHandOrbGrabManager : MonoBehaviour{
         msg.orientation[3] = gameObject.transform.rotation.z;
 
         
-        if ((System.DateTime.Now.Ticks- prevTimeStamp) < minTimeStep)
+        if ((System.DateTime.Now.Ticks- prevTimeStamp) > minTimeStep)
         {
             prevTimeStamp = System.DateTime.Now.Ticks; // left in case message passing is done by time, not by release
             myLCM.Publish(MoveChannel, msg); //publish the message!
+            Console.WriteLine("position: " + msg.position);
         }
-        
 
 
 
