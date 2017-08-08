@@ -211,6 +211,10 @@ namespace Oculus.Platform
       /// functions at any time to get the current state directly.
       Notification_Voip_SystemVoipState = 0x58D254A5,
 
+
+      Platform_InitializeStandaloneOculus = 0x51F8CE0C,
+      Platform_InitializeAndroidAsynchronous = 0x1AD307B4,
+      Platform_InitializeWindowsAsynchronous = 0x6DA7BA8F,
     };
 
     public MessageType Type { get { return type; } }
@@ -226,6 +230,8 @@ namespace Oculus.Platform
     public virtual NetworkingPeer GetNetworkingPeer() { return null; }
     public virtual HttpTransferUpdate GetHttpTransferUpdate() { return null; }
 
+    public virtual PlatformInitialize GetPlatformInitialize() { return null; }
+
     public virtual AchievementDefinitionList GetAchievementDefinitions() { return null; }
     public virtual AchievementProgressList GetAchievementProgressList() { return null; }
     public virtual AchievementUpdate GetAchievementUpdate() { return null; }
@@ -238,7 +244,10 @@ namespace Oculus.Platform
     public virtual InstalledApplicationList GetInstalledApplicationList() { return null; }
     public virtual bool GetLeaderboardDidUpdate() { return false; }
     public virtual LeaderboardEntryList GetLeaderboardEntryList() { return null; }
+    public virtual LivestreamingApplicationStatus GetLivestreamingApplicationStatus() { return null; }
+    public virtual LivestreamingStartResult GetLivestreamingStartResult() { return null; }
     public virtual LivestreamingStatus GetLivestreamingStatus() { return null; }
+    public virtual LivestreamingVideoStats GetLivestreamingVideoStats() { return null; }
     public virtual MatchmakingAdminSnapshot GetMatchmakingAdminSnapshot() { return null; }
     public virtual MatchmakingBrowseResult GetMatchmakingBrowseResult() { return null; }
     public virtual MatchmakingEnqueueResult GetMatchmakingEnqueueResult() { return null; }
@@ -246,6 +255,7 @@ namespace Oculus.Platform
     public virtual MatchmakingStats GetMatchmakingStats() { return null; }
     public virtual OrgScopedID GetOrgScopedID() { return null; }
     public virtual Party GetParty() { return null; }
+    public virtual PartyID GetPartyID() { return null; }
     public virtual PidList GetPidList() { return null; }
     public virtual ProductList GetProductList() { return null; }
     public virtual Purchase GetPurchase() { return null; }
@@ -254,6 +264,7 @@ namespace Oculus.Platform
     public virtual RoomInviteNotificationList GetRoomInviteNotificationList() { return null; }
     public virtual RoomList GetRoomList() { return null; }
     public virtual string GetString() { return null; }
+    public virtual SystemPermission GetSystemPermission() { return null; }
     public virtual SystemVoipState GetSystemVoipState() { return null; }
     public virtual User GetUser() { return null; }
     public virtual UserAndRoomList GetUserAndRoomList() { return null; }
@@ -495,6 +506,12 @@ namespace Oculus.Platform
           message = new MessageWithHttpTransferUpdate(messageHandle);
           break;
 
+        case Message.MessageType.Platform_InitializeStandaloneOculus:
+        case Message.MessageType.Platform_InitializeAndroidAsynchronous:
+        case Message.MessageType.Platform_InitializeWindowsAsynchronous:
+          message = new MessageWithPlatformInitialize(messageHandle);
+          break;
+
         default:
           message = PlatformInternal.ParseMessageHandle(messageHandle, message_type);
           if (message == null)
@@ -659,6 +676,30 @@ namespace Oculus.Platform
     }
 
   }
+  public class MessageWithLivestreamingApplicationStatus : Message<LivestreamingApplicationStatus>
+  {
+    public MessageWithLivestreamingApplicationStatus(IntPtr c_message) : base(c_message) { }
+    public override LivestreamingApplicationStatus GetLivestreamingApplicationStatus() { return Data; }
+    protected override LivestreamingApplicationStatus GetDataFromMessage(IntPtr c_message)
+    {
+      var msg = CAPI.ovr_Message_GetNativeMessage(c_message);
+      var obj = CAPI.ovr_Message_GetLivestreamingApplicationStatus(msg);
+      return new LivestreamingApplicationStatus(obj);
+    }
+
+  }
+  public class MessageWithLivestreamingStartResult : Message<LivestreamingStartResult>
+  {
+    public MessageWithLivestreamingStartResult(IntPtr c_message) : base(c_message) { }
+    public override LivestreamingStartResult GetLivestreamingStartResult() { return Data; }
+    protected override LivestreamingStartResult GetDataFromMessage(IntPtr c_message)
+    {
+      var msg = CAPI.ovr_Message_GetNativeMessage(c_message);
+      var obj = CAPI.ovr_Message_GetLivestreamingStartResult(msg);
+      return new LivestreamingStartResult(obj);
+    }
+
+  }
   public class MessageWithLivestreamingStatus : Message<LivestreamingStatus>
   {
     public MessageWithLivestreamingStatus(IntPtr c_message) : base(c_message) { }
@@ -668,6 +709,18 @@ namespace Oculus.Platform
       var msg = CAPI.ovr_Message_GetNativeMessage(c_message);
       var obj = CAPI.ovr_Message_GetLivestreamingStatus(msg);
       return new LivestreamingStatus(obj);
+    }
+
+  }
+  public class MessageWithLivestreamingVideoStats : Message<LivestreamingVideoStats>
+  {
+    public MessageWithLivestreamingVideoStats(IntPtr c_message) : base(c_message) { }
+    public override LivestreamingVideoStats GetLivestreamingVideoStats() { return Data; }
+    protected override LivestreamingVideoStats GetDataFromMessage(IntPtr c_message)
+    {
+      var msg = CAPI.ovr_Message_GetNativeMessage(c_message);
+      var obj = CAPI.ovr_Message_GetLivestreamingVideoStats(msg);
+      return new LivestreamingVideoStats(obj);
     }
 
   }
@@ -752,6 +805,18 @@ namespace Oculus.Platform
       var msg = CAPI.ovr_Message_GetNativeMessage(c_message);
       var obj = CAPI.ovr_Message_GetParty(msg);
       return new Party(obj);
+    }
+
+  }
+  public class MessageWithPartyID : Message<PartyID>
+  {
+    public MessageWithPartyID(IntPtr c_message) : base(c_message) { }
+    public override PartyID GetPartyID() { return Data; }
+    protected override PartyID GetDataFromMessage(IntPtr c_message)
+    {
+      var msg = CAPI.ovr_Message_GetNativeMessage(c_message);
+      var obj = CAPI.ovr_Message_GetPartyID(msg);
+      return new PartyID(obj);
     }
 
   }
@@ -871,6 +936,18 @@ namespace Oculus.Platform
     {
       return CAPI.ovr_Message_GetString(c_message);
     }
+  }
+  public class MessageWithSystemPermission : Message<SystemPermission>
+  {
+    public MessageWithSystemPermission(IntPtr c_message) : base(c_message) { }
+    public override SystemPermission GetSystemPermission() { return Data; }
+    protected override SystemPermission GetDataFromMessage(IntPtr c_message)
+    {
+      var msg = CAPI.ovr_Message_GetNativeMessage(c_message);
+      var obj = CAPI.ovr_Message_GetSystemPermission(msg);
+      return new SystemPermission(obj);
+    }
+
   }
   public class MessageWithSystemVoipState : Message<SystemVoipState>
   {
@@ -1010,6 +1087,18 @@ namespace Oculus.Platform
       var msg = CAPI.ovr_Message_GetNativeMessage(c_message);
       var obj = CAPI.ovr_Message_GetHttpTransferUpdate(msg);
       return new HttpTransferUpdate(obj);
+    }
+  }
+
+  public class MessageWithPlatformInitialize : Message<PlatformInitialize>
+  {
+    public MessageWithPlatformInitialize(IntPtr c_message) : base(c_message) {}
+    public override PlatformInitialize GetPlatformInitialize() { return Data; }
+    protected override PlatformInitialize GetDataFromMessage(IntPtr c_message)
+    {
+      var msg = CAPI.ovr_Message_GetNativeMessage(c_message);
+      var obj = CAPI.ovr_Message_GetPlatformInitialize(msg);
+      return new PlatformInitialize(obj);
     }
   }
 

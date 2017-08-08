@@ -61,10 +61,15 @@
     <Compile Include="lcm\URLParser.cs" />
     <Compile Include="oculuslcm\cmd_t.cs" />
     <Compile Include="oculuslcm\image_t.cs" />
+    <Compile Include="oculuslcm\info_t.cs" />
     <Compile Include="oculuslcm\pose_t.cs" />
+    <Compile Include="oculuslcm\query_t.cs" />
     <Compile Include="oculuslcm\range_t.cs" />
+    <Compile Include="oculuslcm\robotself_t.cs" />
     <Compile Include="oculuslcm\trigger_t.cs" />
     <Compile Include="oculuslcm\velocity_t.cs" />
+    <Compile Include="InfoandSelfSender.cs" />
+    <Compile Include="ValidTransmit.cs" />
     <Compile Include="RangeTransmit.cs" />
     <Compile Include="util\BitConverter.cs" />
   </ItemGroup>

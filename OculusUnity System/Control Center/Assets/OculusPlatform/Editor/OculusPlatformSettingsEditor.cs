@@ -13,11 +13,11 @@ namespace Oculus.Platform
   {
     #if UNITY_EDITOR_WIN
     static bool windowsPlatformAllowedInEditor = true;
-    GUIContent riftAppIDLabel = new GUIContent("Oculus Rift App Id [?]", 
+    GUIContent riftAppIDLabel = new GUIContent("Oculus Rift App Id [?]",
       "This AppID will be used when building to the Windows Standalone target.");
 #else
     static bool windowsPlatformAllowedInEditor = false;
-    GUIContent riftAppIDLabel = new GUIContent("Oculus Rift App Id [?]", 
+    GUIContent riftAppIDLabel = new GUIContent("Oculus Rift App Id [?]",
       "This AppID will be used when building to the Windows Standalone target. It will also be used when running in the editor so long as \"Use Oculus Platform\" is checked in editor settings below");
 #endif
     GUIContent gearAppIDLabel = new GUIContent("Gear VR App Id [?]", "This AppID will be used when building to the Android target");
@@ -29,7 +29,7 @@ namespace Oculus.Platform
     private bool showUnityEditorSettings = false; //always expand this if we need an hardcoded token
     private bool showBuildSettings = false;
 
-    void OnEnable() 
+    void OnEnable()
     {
       // Always expand the editor settings if we're not on windows
       showUnityEditorSettings = !windowsPlatformAllowedInEditor;
@@ -58,7 +58,7 @@ namespace Oculus.Platform
         return result;
       });
     }
-    
+
     [UnityEditor.MenuItem("Oculus Platform/Edit Settings")]
     public static void Edit()
     {
@@ -101,7 +101,7 @@ namespace Oculus.Platform
           }
 
           PlayerSettings.virtualRealitySupported = MakeToggle(new GUIContent("Virtual Reality Support"), PlayerSettings.virtualRealitySupported);
-          PlayerSettings.bundleIdentifier = MakeTextBox(new GUIContent("Bundle Identifier"), PlayerSettings.bundleIdentifier);
+          PlayerSettings.applicationIdentifier = MakeTextBox(new GUIContent("Bundle Identifier"), PlayerSettings.applicationIdentifier);
           PlayerSettings.bundleVersion = MakeTextBox(new GUIContent("Bundle Version"), PlayerSettings.bundleVersion);
         });
       }
@@ -130,11 +130,11 @@ namespace Oculus.Platform
           } else {
             if(String.IsNullOrEmpty(StandalonePlatformSettings.OculusPlatformAccessToken)) {
               EditorGUILayout.HelpBox(
-                "Please enter a valid user token below.", 
+                "Please enter a valid user token below.",
                 MessageType.Error);
             } else {
               EditorGUILayout.HelpBox(
-                "The Unity editor will use the supplied user token and operate in standalone mode.  Some user data will be mocked.", 
+                "The Unity editor will use the supplied user token and operate in standalone mode.  Some user data will be mocked.",
                 MessageType.Info);
             }
           }
@@ -143,7 +143,7 @@ namespace Oculus.Platform
           {
             PlatformSettings.UseStandalonePlatform = MakeToggle(useStandalonePlatformLabel, PlatformSettings.UseStandalonePlatform);
           }
-            
+
           GUI.enabled = !usingWindowsPlatformInEditor;
           if (String.IsNullOrEmpty(StandalonePlatformSettings.OculusPlatformAccessToken))
           {

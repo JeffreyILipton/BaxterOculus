@@ -6,16 +6,15 @@ using System;
 
 
 
-public class LCMtoTexture : MonoBehaviour, LCMSubscriber
+public class LCMtoTexture : ChannelSubscriber
 {
-    public string channel;
 
     private image_t imageRAW; // the message recieved from LCM containing the raw texture data
     private LCM.LCM.LCM myLCM; //the LCM object
     private bool runTexture; // true when there is a fresh image recieved
     private Texture2D texture; // the texture object to be applied to the monitors 
 
-    
+
 
     /// <summary>
     /// Updates image raw and sets runTexture to true
@@ -23,16 +22,17 @@ public class LCMtoTexture : MonoBehaviour, LCMSubscriber
     /// <param name="lcm"></param>
     /// <param name="channel"></param>
     /// <param name="ins"></param>
-    public void MessageReceived(LCM.LCM.LCM lcm, string channel, LCMDataInputStream ins)
+    public override void HandleMessage(LCM.LCM.LCM lcm, string channel, LCMDataInputStream ins)
     {
+        base.MessageReceived(lcm, channel, ins);
         imageRAW = new image_t(ins);
         runTexture = true;
     }
 
     void Start()
     {
-        myLCM = LCM.LCMManager.getLCM(); //Sets the LCM object to the global LCM object
-        myLCM.Subscribe(channel, this); // Subscribe to to "hand"_lcm_camera
+        //myLCM = LCM.LCMManager.lcmManager.getLCM(); //Sets the LCM object to the global LCM object
+        //myLCM.Subscribe(channel, this); // Subscribe to to "hand"_lcm_camera
         imageRAW = new oculuslcm.image_t(); // Initializes imageRaw
 
         GetComponent<Renderer>().material.EnableKeyword("_EmissionMap"); // The _EmmisionMap keyword is enabled so that the texture can be applied to Emission

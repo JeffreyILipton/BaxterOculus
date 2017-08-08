@@ -9,7 +9,7 @@ using System;
 
 
 
-public class BarBehaviorManager : MonoBehaviour, LCM.LCM.LCMSubscriber
+public class BarBehaviorManager : ChannelSubscriber
 {
     public string channel;
     ProgressBarBehaviour bar; //The progress bar
@@ -18,11 +18,10 @@ public class BarBehaviorManager : MonoBehaviour, LCM.LCM.LCMSubscriber
 
     private double value;
 
-    public void MessageReceived(LCM.LCM.LCM lcm, string channel, LCMDataInputStream ins)
+    public override void HandleMessage(LCM.LCM.LCM lcm, string channel, LCMDataInputStream ins)
     {
         oculuslcm.range_t range = new oculuslcm.range_t(ins);
         value = range.range;
-        //Debug.Log(range.range);
     }
 
     // Use this for initialization
@@ -36,12 +35,6 @@ public class BarBehaviorManager : MonoBehaviour, LCM.LCM.LCMSubscriber
     // Update is called once per frame
     void Update()
     {
-        if (!initialized && LCM.LCMManager.isInitialized())
-        {
-            LCMManager.getLCM().Subscribe(channel, this);
-            initialized = true;
-            //Debug.Log(initialized);
-        }
         bar.SetFillerSizeAsPercentage((float)value*100);
     }
 }

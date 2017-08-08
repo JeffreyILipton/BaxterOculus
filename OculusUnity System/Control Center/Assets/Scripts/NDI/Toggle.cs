@@ -5,6 +5,7 @@ using System.Text;
 
 public class Toggle : MonoBehaviour {
     private bool isRunning = false; //Wether or not the images are activly being sent to the display
+    public string NDIChannelName;
 
     // Use this for initialization
     void Start () {
@@ -20,17 +21,8 @@ public class Toggle : MonoBehaviour {
         GUI.Label(rect, "Press / to initialize ports");
         if (Input.GetKeyDown(KeyCode.Slash)) //If slash is hit then reinit ports
         {
-            Loader.EndThread();
-            isRunning = false;
-            for (int nChannel = 0; nChannel < 3; nChannel++)
-            // Initializes the ports
-            {
-                StringBuilder sName = new StringBuilder(100);
-                if (Loader.EnumNDIPorts(nChannel, sName, sName.Capacity))
-                {
-                    Loader.OpenNDIPort(nChannel, nChannel);
-                }
-            }
+            initChannels();
+            
         }
 
         // Create the "Start" button
@@ -80,7 +72,30 @@ public class Toggle : MonoBehaviour {
 
         // Display collected data
         GUI.Label(rect, msg);
+    }
 
-        
+    void initChannels()
+    {
+        Loader.EndThread();
+        isRunning = false;
+        for (int nChannel = 0; nChannel < 3; nChannel++)
+            //Initializes the ports
+            {
+            StringBuilder sName = new StringBuilder(100);
+            
+            if (Loader.EnumNDIPorts(nChannel, sName, sName.Capacity) && sName.ToString().StartsWith(NDIChannelName))
+            {
+                Loader.OpenNDIPort(nChannel, nChannel);
+            }
+            Debug.Log(sName + "=?" + NDIChannelName);
+
+            //Loader.
+        }
+    }
+
+    private void OnApplicationQuit()
+    {
+        Loader.EndThread();
+       // Loader.
     }
 }

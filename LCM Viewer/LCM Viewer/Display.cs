@@ -15,22 +15,41 @@ namespace LCM.LCM_Viewer
         static public LCM.LCM myLCM;
         public static void Main(string[] args)
         {
-
-
+            bool sendDummyValues = false;
+            Console.WriteLine("Do you want to run a self and info simulator as opposed to displaying lcm signals?");
+            if (Console.ReadLine().StartsWith("y") || Console.ReadLine().StartsWith("Y"))
+            {
+                InfoandSelfSender.RunInfoandSelfSender();
+            }
+            Console.WriteLine("Display Mode");
+            Console.WriteLine("Do you want to send dummy range and valid data");
+            sendDummyValues = (Console.ReadLine().StartsWith("y") || Console.ReadLine().StartsWith("Y"));
             try
             {
                 myLCM = new LCM.LCM("udpm://239.255.76.67:7667:?ttl=1");
 
-                myLCM.SubscribeAll ( new SimpleSubscriber());
-                //RangeTransmit.Transmit();
+                myLCM.SubscribeAll(new SimpleSubscriber());
+                if (sendDummyValues)
+                {
+                    RangeTransmit.Transmit();
+                    ValidTransmit.Transmit();
+                }
                 while (true)
-                    System.Threading.Thread.Sleep(1000);
+                {
+                    if (sendDummyValues)
+                    {
+                        RangeTransmit.Transmit();
+                        ValidTransmit.Transmit();
+                        System.Threading.Thread.Sleep(100);
+                    }
+                }
             }
+
             catch (Exception ex)
             {
                 Console.Error.WriteLine("Ex: " + ex);
                 Environment.Exit(1);
-            } 
+            }
         }
 
         internal class SimpleSubscriber : LCM.LCMSubscriber
@@ -67,20 +86,20 @@ namespace LCM.LCM_Viewer
                 //    oculuslcm.trigger_t cmd = new oculuslcm.trigger_t(dins);
                 //    Console.WriteLine(channel + ": " + cmd.trigger);
                 //}
-                //if (channel == "right_lcm_trigger")
+                //if (channel == "right_lcm_valid_1")
                 //{
                 //    oculuslcm.trigger_t cmd = new oculuslcm.trigger_t(dins);
                 //    Console.WriteLine(channel + ": " + cmd.trigger);
                 //}
-                //if (channel == "right_lcm_trigger")
+                //if (channel == "right_lcm_valid_0")
                 //{
                 //    oculuslcm.trigger_t cmd = new oculuslcm.trigger_t(dins);
                 //    Console.WriteLine(channel + ": " + cmd.trigger);
                 //}
-                if (channel == "left_lcm_cmd")
-                {
-                    Console.WriteLine("recv: " + channel);
-                }
+                //if (channel == "left_lcm_cmd")
+                //{
+                //    Console.WriteLine("recv: " + channel);
+                //}
                 //if (channel == "right_lcm_cmd")
                 //{
                 //    Console.WriteLine("recv: " + channel);

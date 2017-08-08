@@ -13,3 +13,6 @@ C:\Users\jil26\Documents\GitHub\MIT\BaxterOculus\AforgeCam\obj\Debug\AforgeCam.P
 C:\Users\jil26\Documents\GitHub\MIT\BaxterOculus\AforgeCam\obj\Debug\AforgeCam.csproj.GenerateResource.Cache
 C:\Users\jil26\Documents\GitHub\MIT\BaxterOculus\AforgeCam\obj\Debug\AforgeCam.exe
 C:\Users\jil26\Documents\GitHub\MIT\BaxterOculus\AforgeCam\obj\Debug\AforgeCam.pdb
+C:\Users\afay2\Documents\GitHub\BaxterOculus\AforgeCam\bin\Debug\AforgeCam.exe.config
+C:\Users\afay2\Documents\GitHub\BaxterOculus\AforgeCam\obj\Debug\AforgeCam.exe
+C:\Users\afay2\Documents\GitHub\BaxterOculus\AforgeCam\obj\Debug\AforgeCam.pdb

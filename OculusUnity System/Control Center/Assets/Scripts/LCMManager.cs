@@ -7,18 +7,22 @@ using UnityEngine;
 
 namespace LCM
 {
-    public static class LCMManager
+    public class LCMManager : MonoBehaviour
     {
-        private static LCM.LCM myLCM; // the LCM object for all of Unity
-        private static bool initialized;
+        private LCM.LCM myLCM; // the LCM object for all of Unity
+        private bool initialized;
+        public static LCMManager lcmManager;
 
         /// <summary>
         /// Initializes the LCM object to "udpm://239.255.76.67:7667:?ttl=1"
+        /// Awake() is called before Start()
         /// </summary>
-        public static void init()
+        public void Awake()
         {
             myLCM = new LCM.LCM("udpm://239.255.76.67:7667:?ttl=1");
+            lcmManager = this;
             initialized = true;
+            DontDestroyOnLoadManager.instance.ProtectObject(this.gameObject);
         }
 
         /// <summary>
@@ -26,23 +30,33 @@ namespace LCM
         /// If LCMManager has not been initialized, then it will be
         /// </summary>
         /// <returns></returns>
-        public static LCM.LCM getLCM()
+        public LCM.LCM getLCM()
         {
             if (initialized != true)
             {
-                init();
+                Awake();
             }
             return myLCM;
         }
 
-        public static void subscribeTo(string channelName, LCMSubscriber subscriber)
+        public void subscribeTo(string channelName, LCMSubscriber subscriber)
         {
             myLCM.Subscribe(channelName, subscriber);
         }
 
-        public static bool isInitialized()
+        public bool isInitialized()
         {
             return initialized;
         }
+
+        private void OnApplicationQuit()
+        {
+            if (initialized)
+            {
+                myLCM.Close();
+                initialized = false;
+            }
+        }
+        
     }
 }

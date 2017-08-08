@@ -54,3 +54,7 @@ bins/
 bin/
 obj/
 *.py~
+*.meta
+*.meta
+*.meta
+*.meta

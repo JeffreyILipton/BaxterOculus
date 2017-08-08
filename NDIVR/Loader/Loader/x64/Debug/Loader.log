@@ -1,0 +1,26 @@
+﻿Build started 6/11/2016 6:17:55 PM.
+     1>Project "E:\Projects\NDIVR\Loader\Loader\Loader.vcxproj" on node 2 (Build target(s)).
+     1>ClCompile:
+         C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\bin\x86_amd64\CL.exe /c /ZI /nologo /W3 /WX- /Od /D _DEBUG /D _WINDOWS /D _USRDLL /D LOADER_EXPORTS /D _WINDLL /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"x64\Debug\\" /Fd"x64\Debug\vc140.pdb" /Gd /TP /errorReport:prompt Loader.cpp
+         Loader.cpp
+     1>e:\projects\ndivr\loader\loader\loader.h(46): warning C4996: 'strncpy': This function or variable may be unsafe. Consider using strncpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+         c:\program files (x86)\windows kits\10\include\10.0.10150.0\ucrt\string.h(346): note: see declaration of 'strncpy'
+     1>e:\projects\ndivr\loader\loader\loader.cpp(103): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+         c:\program files (x86)\windows kits\10\include\10.0.10150.0\ucrt\stdio.h(1769): note: see declaration of 'sprintf'
+     1>e:\projects\ndivr\loader\loader\loader.cpp(306): warning C4800: 'int': forcing value to bool 'true' or 'false' (performance warning)
+     1>e:\projects\ndivr\loader\loader\loader.cpp(381): warning C4018: '<': signed/unsigned mismatch
+     1>e:\projects\ndivr\loader\loader\loader.cpp(383): warning C4996: 'strncpy': This function or variable may be unsafe. Consider using strncpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+         c:\program files (x86)\windows kits\10\include\10.0.10150.0\ucrt\string.h(346): note: see declaration of 'strncpy'
+     1>e:\projects\ndivr\loader\loader\loader.cpp(384): warning C4996: 'strncpy': This function or variable may be unsafe. Consider using strncpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+         c:\program files (x86)\windows kits\10\include\10.0.10150.0\ucrt\string.h(346): note: see declaration of 'strncpy'
+     1>e:\projects\ndivr\loader\loader\loader.cpp(396): warning C4996: 'strncpy': This function or variable may be unsafe. Consider using strncpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+         c:\program files (x86)\windows kits\10\include\10.0.10150.0\ucrt\string.h(346): note: see declaration of 'strncpy'
+     1>C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V140\Microsoft.CppBuild.targets(1189,5): warning MSB8012: TargetPath(E:\Projects\NDIVR\Loader\x64\Debug\Loader.dll) does not match the Linker's OutputFile property value (E:\Projects\NDIVR\Example\Assets\Plugins\x64\Loader.dll). This may cause your project to build incorrectly. To correct this, please make sure that $(OutDir), $(TargetName) and $(TargetExt) property values match the value specified in %(Link.OutputFile).
+       Link:
+         C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\bin\x86_amd64\link.exe /ERRORREPORT:PROMPT /OUT:"E:\Projects\NDIVR\Example\Assets\Plugins\x64\Loader.dll" /INCREMENTAL /NOLOGO Processing.NDI.Lib.x64.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /Debug /PDB:"E:\Projects\NDIVR\Loader\x64\Debug\Loader.pdb" /SUBSYSTEM:WINDOWS /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"E:\Projects\NDIVR\Loader\x64\Debug\Loader.lib" /MACHINE:X64 /DLL x64\Debug\Loader.obj
+         Loader.vcxproj -> E:\Projects\NDIVR\Loader\x64\Debug\Loader.dll
+     1>Done Building Project "E:\Projects\NDIVR\Loader\Loader\Loader.vcxproj" (Build target(s)).
+
+Build succeeded.
+
+Time Elapsed 00:00:01.15

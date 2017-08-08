@@ -1,0 +1,19 @@
+﻿Build started 6/13/2016 9:01:39 PM.
+     1>Project "E:\Projects\NDIVR\Loader\Loader\Loader.vcxproj" on node 2 (Rebuild target(s)).
+     1>C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V140\Microsoft.CppBuild.targets(368,5): warning MSB8004: Output Directory does not end with a trailing slash.  This build instance will add the slash as it is required to allow proper evaluation of the Output Directory.
+     1>ClCompile:
+         C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\bin\x86_amd64\CL.exe /c /Zi /nologo /W3 /WX- /O2 /Oi /GL /D CODE_ANALYSIS /D NDEBUG /D _WINDOWS /D _USRDLL /D LOADER_EXPORTS /D _WINDLL /D _UNICODE /D UNICODE /Gm- /EHsc /MD /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"x64\Release\\" /Fd"x64\Release\vc140.pdb" /Gd /TP /analyze /analyze:plugin"C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\\bin\localespc.dll" /errorReport:prompt   /analyze:quiet Loader.cpp
+         Loader.cpp
+     1>C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V140\Microsoft.CppBuild.targets(1189,5): warning MSB8012: TargetPath(E:\Projects\NDIVR\Loader\Loader\.\Loader.dll) does not match the Linker's OutputFile property value (E:\Projects\NDIVR\Example\Assets\Plugins\x64\Loader.dll). This may cause your project to build incorrectly. To correct this, please make sure that $(OutDir), $(TargetName) and $(TargetExt) property values match the value specified in %(Link.OutputFile).
+       Link:
+         C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\bin\x86_amd64\link.exe /ERRORREPORT:PROMPT /OUT:"E:\Projects\NDIVR\Example\Assets\Plugins\x64\Loader.dll" /INCREMENTAL:NO /NOLOGO Processing.NDI.Lib.x64.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /Debug /PDB:".\Loader.pdb" /SUBSYSTEM:WINDOWS /OPT:REF /OPT:ICF /LTCG:incremental /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:".\Loader.lib" /MACHINE:X64 /DLL x64\Release\Loader.obj
+            Creating library .\Loader.lib and object .\Loader.exp
+         Generating code
+         All 48 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+         Finished generating code
+         Loader.vcxproj -> E:\Projects\NDIVR\Loader\Loader\.\Loader.dll
+     1>Done Building Project "E:\Projects\NDIVR\Loader\Loader\Loader.vcxproj" (Rebuild target(s)).
+
+Build succeeded.
+
+Time Elapsed 00:00:02.06
