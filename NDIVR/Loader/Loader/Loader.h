@@ -53,6 +53,8 @@ public:
 	int GetWidth() { return m_nInWidth; }
 	// Open the NDI port, given the provided NDI channel name and IP address.
 	bool OpenPort(char *pszPortName, char *pszIPAddress);
+	// Close the NDI port
+	void ClosePort();
 	// Set the Unity texture buffer to write to. This is presented as a buffer in memory, with its own width and height.
 	void SetNDIFrameBuffer(void* pvTarget, int nWidth, int nHeight);
 	// Clear the texture. Channel no longer can write to it.
@@ -131,5 +133,6 @@ public:
 	int GetNDIPortHeight(int nChannel);
 	bool EnumNDIPorts(int nPort, char *pszPortName, int nBuffSize);
 	bool OpenNDIPort(int nChannel, int nPort);
+	bool CloseNDIPort(int nChannel);
 };
 

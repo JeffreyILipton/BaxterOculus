@@ -27,6 +27,9 @@ public class Loader : MonoBehaviour {
     public static extern bool OpenNDIPort(int nChannel, int nPort);
 
     [DllImport("Loader")]
+    public static extern bool CloseNDIPort(int nChannel);
+    
+    [DllImport("Loader")]
     public static extern bool GetNDIPortName(int nChannel, StringBuilder sPortName, int nBuffSize);
 
     [DllImport("Loader")]

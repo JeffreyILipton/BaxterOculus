@@ -120,8 +120,25 @@ bool CNDIChannel::OpenPort(char *pszPortName,char *pszIPAddress)
 	return m_bInitialized;
 }
 
+/*	CNDIChannel::Close
+Close the specified NDI port.
+***Expiramental Aidan Code***
+*/
+
+void CNDIChannel::ClosePort()
+
+{
+	// If this port was previously opened, close it.
+	//if (m_bInitialized){
+
+	if (m_pNDI_recv)
+	{
+		NDIlib_recv_destroy(m_pNDI_recv);
+	}
+}
+
 /*	CNDIChannel::SetNDIFrameBuffer
-	Set the buffer pointer, width and height, for the texture frame buffer.
+Set the buffer pointer, width and height, for the texture frame buffer.
 */
 
 void CNDIChannel::SetNDIFrameBuffer(void* pvTarget, int nWidth, int nHeight)
@@ -484,6 +501,21 @@ bool CNDIManager::OpenNDIPort(int nChannel, int nPort)
 }
 
 /*
+	New, expiramental Aidan code
+*/
+bool CNDIManager::CloseNDIPort(int nChannel)
+{
+	if ((nChannel < NDI_PORTS))
+	{
+		m_aChannels[nChannel].ClosePort();
+		//m_aChannels[nChannel].~CNDIChannel();
+		return true;
+	}
+	return false;
+	
+}
+
+/*
 	DLL entry points. These are the functions exposed via loader.cs.
 */
 
@@ -500,6 +532,11 @@ extern "C"	bool UNITY_INTERFACE_EXPORT UNITY_INTERFACE_API EnumNDIPorts(int nPor
 extern "C"	bool UNITY_INTERFACE_EXPORT UNITY_INTERFACE_API OpenNDIPort(int nChannel, int nPort)
 {
 	return g_NDIManager.OpenNDIPort(nChannel, nPort);
+}
+
+extern "C"	bool UNITY_INTERFACE_EXPORT UNITY_INTERFACE_API CloseNDIPort(int nChannel, int nPort)
+{
+	return g_NDIManager.CloseNDIPort(nChannel);
 }
 
 extern "C"	bool UNITY_INTERFACE_EXPORT UNITY_INTERFACE_API GetNDIPortName(int nChannel, char *pszName, int nBuffSize)

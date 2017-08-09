@@ -19,11 +19,7 @@ public class Toggle : MonoBehaviour {
         // Create The Init button
         Rect rect = new Rect(50, 10, 200, 50);
         GUI.Label(rect, "Press / to initialize ports");
-        if (Input.GetKeyDown(KeyCode.Slash)) //If slash is hit then reinit ports
-        {
-            initChannels();
-            
-        }
+        
 
         // Create the "Start" button
         rect = new Rect(200, 10, 200, 50);
@@ -70,10 +66,19 @@ public class Toggle : MonoBehaviour {
             msg += nWidth.ToString() + "," + nHeight.ToString() + "\n";
         }
 
+
         // Display collected data
         GUI.Label(rect, msg);
     }
 
+    void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Slash)) //If slash is hit then reinit ports
+        {
+            initChannels();
+        }
+
+    }
     void initChannels()
     {
         Loader.EndThread();
@@ -82,12 +87,14 @@ public class Toggle : MonoBehaviour {
             //Initializes the ports
             {
             StringBuilder sName = new StringBuilder(100);
-            
-            if (Loader.EnumNDIPorts(nChannel, sName, sName.Capacity) && sName.ToString().StartsWith(NDIChannelName))
+            //Debug.Log(sName + "=?" + NDIChannelName);
+            Debug.Log(Loader.CloseNDIPort(nChannel));
+            if (Loader.EnumNDIPorts(nChannel, sName, sName.Capacity))// && sName.ToString().StartsWith(NDIChannelName))
             {
                 Loader.OpenNDIPort(nChannel, nChannel);
+                Debug.Log(sName + "=?" + NDIChannelName);
             }
-            Debug.Log(sName + "=?" + NDIChannelName);
+            
 
             //Loader.
         }

@@ -253,7 +253,7 @@ CNDISender::CNDISender(int nWidth, int nHeight, char *pszCameraName)
 		{
 			m_ndiFrame.FourCC = NDIlib_FourCC_type_BGRA;
 			m_ndiFrame.frame_rate_D = 1001;
-			m_ndiFrame.frame_rate_N = 30000;
+			m_ndiFrame.frame_rate_N = 10000; //10hz
 			m_ndiFrame.is_progressive = TRUE;
 			m_ndiFrame.line_stride_in_bytes = 4 * nWidth;
 			m_ndiFrame.picture_aspect_ratio = 16.0f / 9.0f;
@@ -330,7 +330,7 @@ HRESULT BuildGraph(IGraphBuilder *pGraph, int nIndex, char *pszCameraName, int n
 	VIDEOINFOHEADER format;
 	ZeroMemory(&format, sizeof(VIDEOINFOHEADER));
 	format.dwBitRate = nWidth * nHeight * 3 * 8 * 30; // 1492992000;
-	format.AvgTimePerFrame = 333333;
+	format.AvgTimePerFrame = 333333 * 3;
 	format.bmiHeader.biSize = 40;
 	format.bmiHeader.biWidth = nWidth;
 	format.bmiHeader.biHeight = nHeight;
@@ -388,7 +388,7 @@ HRESULT BuildGraph(IGraphBuilder *pGraph, int nIndex, char *pszCameraName, int n
 	VIDEOINFOHEADER pSampleGrabber_format;
 	ZeroMemory(&pSampleGrabber_format, sizeof(VIDEOINFOHEADER));
 	pSampleGrabber_format.dwBitRate = 1990657991;
-	pSampleGrabber_format.AvgTimePerFrame = 333333;
+	pSampleGrabber_format.AvgTimePerFrame = 333333 * 3;
 	pSampleGrabber_format.bmiHeader.biSize = 40;
 	pSampleGrabber_format.bmiHeader.biWidth = FRAME_WIDTH;
 	pSampleGrabber_format.bmiHeader.biHeight = FRAME_HEIGHT;

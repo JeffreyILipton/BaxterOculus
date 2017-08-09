@@ -112,7 +112,7 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <OutputFile>E:\Projects\NDIVR\Example\Assets\Plugins\x64\Loader.dll</OutputFile>
+      <OutputFile>C:\Users\afay2\Documents\GitHub\BaxterOculus\NDIVR\Loader\x64\Debug\Loader.dll</OutputFile>
       <AdditionalDependencies>Processing.NDI.Lib.x64.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
@@ -149,7 +149,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>Processing.NDI.Lib.x64.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <OutputFile>E:\Projects\NDIVR\Example\Assets\Plugins\x64\Loader.dll</OutputFile>
+      <OutputFile>C:\Users\afay2\Documents\GitHub\BaxterOculus\NDIVR\Loader\x64\Debug\Loader.dll</OutputFile>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
