@@ -1,5 +1,6 @@
 ﻿using LCM.LCM;
 using oculuslcm;
+using ProgressBar;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -13,11 +14,13 @@ public class RobotInfo : MonoBehaviour {
     private info_t info;
     private robotself_t self;
 
+    public Image Border;
     public Text IDText;
     public Text UserText;
-    public Text PriorityText;
     public Text RobotType;
+    public Button LaunchButton;
     public SceneLauncherQuery launcher;
+    public Image movingPriorityBar;
     public LCMtoTexture Monitor;
 
     /// <summary>
@@ -28,8 +31,44 @@ public class RobotInfo : MonoBehaviour {
     {
         this.info = info;
         IDText.text         = "ID: " + info.id;
-        UserText.text       = "User ID:" + info.user;
-        PriorityText.text   = "Priority" + info.priority;
+        if (info.user == -1)
+        {
+            UserText.text = "    AUTO";
+            UserText.alignment = TextAnchor.UpperLeft;
+            UserText.color = Color.green;
+
+            Border.color = Color.green;
+
+            ColorBlock colorBlock = LaunchButton.colors;
+            colorBlock.highlightedColor = Color.green;
+            LaunchButton.colors = colorBlock;
+
+        }else if (info.user == -2)
+        {
+            UserText.text = "STOPPED";
+            UserText.alignment = TextAnchor.UpperLeft;
+            UserText.color = Color.red;
+
+            Border.color = Color.red;
+
+            ColorBlock colorBlock = LaunchButton.colors;
+            colorBlock.highlightedColor = Color.green;
+            LaunchButton.colors = colorBlock;
+        } else
+        {
+            UserText.text = "User #" + info.user + " Operating ";
+            UserText.alignment = TextAnchor.UpperRight;
+            UserText.color = Color.yellow;
+
+            Border.color = Color.yellow; ;
+
+            ColorBlock colorBlock = LaunchButton.colors;
+            colorBlock.highlightedColor = Color.red;
+            LaunchButton.colors = colorBlock;
+        }
+
+        movingPriorityBar.rectTransform.localScale = new Vector3((float)info.priority, movingPriorityBar.rectTransform.localScale.y, movingPriorityBar.rectTransform.localScale.z);
+ 
     }
 
     /// <summary>

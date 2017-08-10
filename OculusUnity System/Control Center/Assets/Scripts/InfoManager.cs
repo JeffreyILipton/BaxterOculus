@@ -96,7 +96,9 @@ public class InfoManager : MonoBehaviour, LCMSubscriber
         KeyValuePair<int, InfoBlock>[] array = infoMap.ToArray();
         for (int i = 0; i < array.Length; i++)
         {
-            array[i].Value.prefabObject.transform.localPosition = transfomPositionByNumber(i);
+            array[i].Value.prefabObject.transform.localPosition = transfomPositionByNumber(i, array.Length-1);
+            array[i].Value.prefabObject.transform.rotation = Quaternion.AngleAxis((float)(transfomAngleByNumber(i, array.Length-1)), new Vector3(0, 1, 0));
+                //SetAxisAngle(new Vector3(0, 1, 0), (float)Math.Atan(array[i].Value.prefabObject.transform.localPosition.x));
         }
     }
 
@@ -104,13 +106,32 @@ public class InfoManager : MonoBehaviour, LCMSubscriber
     /// This is where the calculations are done to determine physical location for the "RobotInfo" prefab objects.
     /// </summary>
     /// <param name="num">
-    /// The array location of the object.
+    /// The row location of the object.
+    /// </param>
+    /// /// <param name="total">
+    /// The total objects in the row.
     /// </param>
     /// <returns></returns>
-    private Vector3 transfomPositionByNumber(int num)
+    private Vector3 transfomPositionByNumber(int num, int total)
     {
-        return new Vector3(2 * num * RobotInfoPrefab.GetComponent<RectTransform>().rect.width * RobotInfoPrefab.transform.localScale.x, 0, 0);
+        return new Vector3(Mathf.Sin( transfomAngleByNumber(num, total) * Mathf.PI / 180) * 2,0, (Mathf.Cos( transfomAngleByNumber(num, total) * Mathf.PI / 180) * 2) - 1.75f);
+        //return new Vector3(1.1f * (num - total/2) * RobotInfoPrefab.GetComponent<RectTransform>().rect.width * RobotInfoPrefab.transform.localScale.x , 0, 0);
     }
+
+    /// <summary>
+    /// This is where the calculations are done to determine the y angle in degrees for the "RobotInfo" prefab objects.
+    /// </summary>
+    /// <param name="num">
+    /// The row location of the object.
+    /// </param>
+    /// /// <param name="total">
+    /// The total objects in the row.
+    /// </param>
+    /// <returns></returns>
+    private float transfomAngleByNumber(int num, int total)
+    {
+        return -((float)total / 2 - num) * .4f * (180 / Mathf.PI); ;
+        }
 
     /// <summary>
     /// Will update the info_t data within the map and in the "Robot Info" object.

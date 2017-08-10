@@ -22,6 +22,7 @@ namespace oculuslcm
             id = 0;
             priority = 0;
             user = -1;
+
         }
  
         public static readonly ulong LCM_FINGERPRINT;

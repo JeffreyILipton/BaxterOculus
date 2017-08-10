@@ -1,11 +1,17 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+/// <summary>
+/// The class that recieves bitmap data from an NDIUnit and displays it as a texture
+/// </summary>
 public class NDIReciever : MonoBehaviour {
 
     private int yres, xres;
     private byte[] byteBitMap;
+
+    /// <summary>
+    /// The name of the NDI channel it recieves from
+    /// </summary>
     public string sourceName;
     private Texture2D t2dTexture;
 
@@ -66,12 +72,13 @@ public class NDIReciever : MonoBehaviour {
             {
                 initTexture();
             }
-
         }
-
     }
 
-    void initTexture()
+    /// <summary>
+    /// Initializes the texture applied to the object
+    /// </summary>
+    protected void initTexture()
     {
         t2dTexture = new Texture2D(xres, yres, TextureFormat.BGRA32, false);
         t2dTexture.filterMode = FilterMode.Trilinear;

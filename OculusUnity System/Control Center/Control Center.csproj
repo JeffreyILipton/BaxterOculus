@@ -262,6 +262,7 @@
     <Compile Include="Assets\Scripts\InfoManager.cs" />
     <Compile Include="Assets\Scripts\LCMManager.cs" />
     <Compile Include="Assets\Scripts\LCMtoTexture.cs" />
+    <Compile Include="Assets\Scripts\MasterInit.cs" />
     <Compile Include="Assets\Scripts\NDI\Loader.cs" />
     <Compile Include="Assets\Scripts\NDI\NDItoTexture.cs" />
     <Compile Include="Assets\Scripts\NDI\Toggle.cs" />
@@ -271,10 +272,10 @@
     <Compile Include="Assets\Scripts\New NDI\NDI.Utilities Interop .cs" />
     <Compile Include="Assets\Scripts\New NDI\NDIFindMaster.cs" />
     <Compile Include="Assets\Scripts\New NDI\NDIReciever.cs" />
+    <Compile Include="Assets\Scripts\New NDI\NDIRecieverLeftRight.cs" />
     <Compile Include="Assets\Scripts\New NDI\NDIUnit.cs" />
     <Compile Include="Assets\Scripts\Old\BaxterAssetManager.cs" />
     <Compile Include="Assets\Scripts\Old\HandOrbGrabManager.cs" />
-    <Compile Include="Assets\Scripts\Old\MasterInit.cs" />
     <Compile Include="Assets\Scripts\Old\SceneLauncher.cs" />
     <Compile Include="Assets\Scripts\RobotInfo.cs" />
     <Compile Include="Assets\Scripts\SceneLauncherQuery.cs" />

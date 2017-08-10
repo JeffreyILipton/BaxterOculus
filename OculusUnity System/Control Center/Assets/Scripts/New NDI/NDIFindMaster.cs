@@ -6,6 +6,9 @@ using System.Runtime.InteropServices;
 using System.Threading;
 using UnityEngine;
 
+/// <summary>
+/// NDIFindMaster is class whose purpose is to "find" all available NDI Channels and make them publicaly available to classes like NDIUnit
+/// </summary>
 public class NDIFindMaster : MonoBehaviour {
 
     #region PrivateMembers
@@ -27,10 +30,19 @@ public class NDIFindMaster : MonoBehaviour {
     // a map of names to sources
     #endregion PrivateMembers
 
+    /// <summary>
+    /// The public static instance of NDIFindMaster that contains the globaly available Source information
+    /// </summary>
     public static NDIFindMaster instance;
 
+    /// <summary>
+    /// The dictionary containing all of the NDI sources. The key is the sourcename.
+    /// </summary>
     public Dictionary<String, NDI.NDIlib_source_t> _sources = new Dictionary<string, NDI.NDIlib_source_t>();
 
+    /// <summary>
+    /// An ArrayList of strings, containing the names of all detected sources
+    /// </summary>
     public ArrayList SourceNames;
 
     public bool manualFind;
@@ -46,6 +58,7 @@ public class NDIFindMaster : MonoBehaviour {
         if(instance == null)
         {
             instance = this;
+            DontDestroyOnLoadManager.instance.ProtectObject(this.gameObject);
         } else
         {
             Destroy(this.gameObject);
@@ -123,8 +136,10 @@ public class NDIFindMaster : MonoBehaviour {
         if (NumSources > 0)
         {
             // clear our list and dictionary
-            SourceNames.Clear();
+            //SourceNames.Clear();
             _sources.Clear();
+
+            SourceNames = new ArrayList();
 
             //SourceNames.Add("dummy1");
             // the size of an NDIlib_source_t, for pointer offsets
@@ -157,7 +172,55 @@ public class NDIFindMaster : MonoBehaviour {
     }
     #endregion NdiFind
 
+    #region Disconnect
+    void SetTallyIndicators(bool onProgram, bool onPreview)
+    {
+        // we need to have a receive instance
+        if (_recvInstancePtr != IntPtr.Zero)
+        {
+            // set up a state descriptor
+            NDI.NDIlib_tally_t tallyState = new NDI.NDIlib_tally_t()
+            {
+                on_program = onProgram,
+                on_preview = onPreview
+            };
+
+            // set it on the receiver instance
+            NDI.Receive.NDIlib_recv_set_tally(_recvInstancePtr, ref tallyState);
+        }
+    }
+
+    void Disconnect()
+    {
+        // in case we're connected, reset the tally indicators
+        SetTallyIndicators(false, false);
+
+        // check for a running thread
+        if (_receiveThread != null)
+        {
+            // tell it to exit
+            _exitThread = true;
+
+            // wait for it to exit
+            while (_receiveThread.IsAlive)
+                Thread.Sleep(100);
+        }
+
+        // reset thread defaults
+        _receiveThread = null;
+        _exitThread = false;
+
+        // Destroy the receiver
+        NDI.Receive.NDIlib_recv_destroy(_recvInstancePtr);
+
+        // set it to a safe value
+        _recvInstancePtr = IntPtr.Zero;
+    }
+
+    #endregion
+
     private void OnApplicationQuit()
     {
+        Disconnect();
     }
 }

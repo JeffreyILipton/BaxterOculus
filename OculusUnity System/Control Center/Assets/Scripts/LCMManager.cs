@@ -32,10 +32,10 @@ namespace LCM
         /// <returns></returns>
         public LCM.LCM getLCM()
         {
-            if (initialized != true)
-            {
-                Awake();
-            }
+            //if (initialized != true)
+            //{
+            //    Awake();
+            //}
             return myLCM;
         }
 

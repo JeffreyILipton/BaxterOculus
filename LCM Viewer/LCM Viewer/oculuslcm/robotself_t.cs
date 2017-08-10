@@ -18,16 +18,20 @@ namespace oculuslcm
         public string queryChannel;
         public int channelCount;
         public string[] channels;
+        public string leftNDIChannel;
+        public string rightNDIChannel;
         public bool enabled;
 
         public robotself_t()
         {
             id              = 0;
-            type            = "BAXTER";
+            type            = "MAINSCENE";
             ability         = "ABILITY UNKNOWN";
             queryChannel    = "control_query|" + id;
             channelCount    = 0;
             channels        = new string[channelCount];
+            leftNDIChannel  = "defaultLeftNDI";
+            rightNDIChannel = "defaultRightNDI";
         }
  
         public static readonly ulong LCM_FINGERPRINT;
@@ -66,7 +70,9 @@ namespace oculuslcm
             for (int i = 0; i < this.channelCount; i++)
             {
                 outs.WriteStringZ((string)this.channels[i]);
-            } 
+            }
+            outs.WriteStringZ(leftNDIChannel);
+            outs.WriteStringZ(rightNDIChannel);
             outs.Write(this.enabled);
         }
  
@@ -99,10 +105,14 @@ namespace oculuslcm
             this.queryChannel   = ins.ReadStringZ();
             this.channelCount   = ins.ReadInt32();
             this.channels       = new string[channelCount];
+
             for (int i = 0; i < this.channelCount; i++)
             {
                 channels[i] = ins.ReadStringZ();
             }
+
+            leftNDIChannel      = ins.ReadStringZ();
+            rightNDIChannel     = ins.ReadStringZ();
             this.enabled        = ins.ReadBoolean();
 
         }
@@ -111,11 +121,14 @@ namespace oculuslcm
         {
             oculuslcm.robotself_t outobj = new oculuslcm.robotself_t();
 
-            outobj.id       = this.id;
-            outobj.type     = this.type;
-            outobj.ability  = this.ability;
-            outobj.channels = this.channels;
-            outobj.enabled  = this.enabled;
+            outobj.id               = this.id;
+            outobj.type             = this.type;
+            outobj.ability          = this.ability;
+            outobj.channelCount     = this.channelCount;
+            outobj.channels         = this.channels;
+            outobj.leftNDIChannel   = this.leftNDIChannel;
+            outobj.rightNDIChannel  = this.rightNDIChannel;
+            outobj.enabled          = this.enabled;
  
             return outobj;
         }

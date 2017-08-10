@@ -16,8 +16,6 @@ public class BackToLobby: MonoBehaviour
     {
         SceneManager.LoadScene("Lobby");
 
-        // The lobby will reinstantiate all of our protected objects, so lets destroy them to avoid duplicates. This includes destroying ourselves.
-        DontDestroyOnLoadManager.instance.DestroyAllProtectedObjects();
         query_t query = new query_t();
         query.userID = -1; // We need to tell our robot we are leaving, otherwise it will send us right back when we get to the lobby
         LCM.LCMManager.lcmManager.getLCM().Publish(HomunculusGlobals.instance.currentRobotSelf.queryChannel, query);
