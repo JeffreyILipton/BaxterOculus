@@ -83,6 +83,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\oculuslcm\confidence_t.cs" />
     <Compile Include="Assets\OSPNative\scenes\Standard Assets\Character Controllers\Sources\Scripts\MouseLook.cs" />
     <Compile Include="Assets\OSPNative\scripts\ONSPAmbisonicsNative.cs" />
     <Compile Include="Assets\OSPNative\scripts\ONSPAudioSource.cs" />
@@ -248,6 +249,7 @@
     <Compile Include="Assets\Scripts\Baxter\BaxterAssetManager.cs" />
     <Compile Include="Assets\Scripts\Baxter\BaxterDataManager.cs" />
     <Compile Include="Assets\Scripts\Baxter\CameraRotator.cs" />
+    <Compile Include="Assets\Scripts\Baxter\ConfidenceThreshold.cs" />
     <Compile Include="Assets\Scripts\Baxter\ConsoleManager.cs" />
     <Compile Include="Assets\Scripts\Baxter\OculusHand.cs" />
     <Compile Include="Assets\Scripts\Baxter\OculusHandOrbGrabManager.cs" />

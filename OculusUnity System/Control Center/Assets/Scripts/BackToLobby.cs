@@ -12,6 +12,9 @@ using UnityEngine.SceneManagement;
 public class BackToLobby: MonoBehaviour
 {
 
+    public OVRInput.Controller m_controller;
+    public OVRInput.Button m_button;
+
     public void toLobby()
     {
         SceneManager.LoadScene("Lobby");
@@ -25,7 +28,7 @@ public class BackToLobby: MonoBehaviour
     public void Update()
     {
         //Did we press the button? If so lets go back to lobby
-        if (OVRInput.Get(OVRInput.Button.Two, OVRInput.Controller.LTouch) && SceneManager.GetActiveScene().name != "Lobby") {
+        if (OVRInput.Get(m_button, m_controller) && SceneManager.GetActiveScene().name != "Lobby") {
             toLobby();
         }
     }
