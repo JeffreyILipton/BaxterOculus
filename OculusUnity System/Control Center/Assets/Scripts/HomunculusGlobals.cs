@@ -18,7 +18,7 @@ public class HomunculusGlobals : MonoBehaviour {
     /// <summary>
     /// The userID of this user. This is the client side unique identifier.
     /// </summary>
-    public int userID;
+    public short userID;
 
     /// <summary>
     /// The object containing the globably available information that we want to transcend scenes, 

@@ -13,14 +13,13 @@ namespace oculuslcm
     public sealed class trigger_t : LCM.LCM.LCMEncodable
     {
         public bool trigger;
-        public bool enabled;
  
         public trigger_t()
         {
         }
  
         public static readonly ulong LCM_FINGERPRINT;
-        public static readonly ulong LCM_FINGERPRINT_BASE = 0xba55452197cdf285L;
+        public static readonly ulong LCM_FINGERPRINT_BASE = 0x4b54427c3c3d322cL;
  
         static trigger_t()
         {
@@ -49,8 +48,6 @@ namespace oculuslcm
         {
             outs.Write(this.trigger); 
  
-            outs.Write(this.enabled); 
- 
         }
  
         public trigger_t(byte[] data) : this(new LCMDataInputStream(data))
@@ -76,16 +73,12 @@ namespace oculuslcm
         {
             this.trigger = ins.ReadBoolean();
  
-            this.enabled = ins.ReadBoolean();
- 
         }
  
         public oculuslcm.trigger_t Copy()
         {
             oculuslcm.trigger_t outobj = new oculuslcm.trigger_t();
             outobj.trigger = this.trigger;
- 
-            outobj.enabled = this.enabled;
  
             return outobj;
         }

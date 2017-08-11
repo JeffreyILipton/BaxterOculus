@@ -40,6 +40,7 @@
     <Compile Include="Quaternion.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="LCMSelf.py" />
     <Compile Include="RosToLCM.py" />
     <Compile Include="ServiceTimeout.py">
       <SubType>Code</SubType>

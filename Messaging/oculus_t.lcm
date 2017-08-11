@@ -28,6 +28,31 @@ struct cmd_t
 	int16_t command;
 }
 
+struct info_t
+{
+	int16_t id;
+	float priority;
+	int16_t user;
+	boolean enabled;
+}
+
+struct robotself_t
+{
+	int16_t id;
+	string type;
+	string ability;
+	string queryChannel;
+	int16_t channelCount;
+	string channels[channelCount];
+	string leftNDIChannel;
+	string rightNDIChannel;
+	boolean enabled;
+}
+
+struct query_t
+{
+	int16_t userID;
+}
 
 struct image_t
 {

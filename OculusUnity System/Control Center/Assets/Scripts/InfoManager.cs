@@ -253,7 +253,7 @@ public class InfoManager : MonoBehaviour, LCMSubscriber
             Test = false;
             info_t fakeInfo         = new info_t();
             robotself_t fakeSelf    = new robotself_t();
-            int id  = (int)(UnityEngine.Random.value * 1000);
+            short id  = (short)(UnityEngine.Random.value * 1000);
 
             fakeSelf.id = id;
             UpdateMapSelf(fakeSelf);

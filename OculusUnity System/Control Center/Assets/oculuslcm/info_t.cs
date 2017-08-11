@@ -12,21 +12,17 @@ namespace oculuslcm
 {
     public sealed class info_t : LCM.LCM.LCMEncodable
     {
-        public int id;
-        public double priority;
-        public int user;
+        public short id;
+        public float priority;
+        public short user;
         public bool enabled;
  
         public info_t()
         {
-            id = 0;
-            priority = 0;
-            user = -1;
-
         }
  
         public static readonly ulong LCM_FINGERPRINT;
-        public static readonly ulong LCM_FINGERPRINT_BASE = 0xea8a3a46f83c6991L;
+        public static readonly ulong LCM_FINGERPRINT_BASE = 0xefe152b98e5058d0L;
  
         static info_t()
         {
@@ -50,13 +46,17 @@ namespace oculuslcm
             outs.Write((long) LCM_FINGERPRINT);
             _encodeRecursive(outs);
         }
-
+ 
         public void _encodeRecursive(LCMDataOutputStream outs)
         {
-            outs.Write(this.id);
-            outs.Write(this.priority);
-            outs.Write(this.user);
-            outs.Write(this.enabled);
+            outs.Write(this.id); 
+ 
+            outs.Write(this.priority); 
+ 
+            outs.Write(this.user); 
+ 
+            outs.Write(this.enabled); 
+ 
         }
  
         public info_t(byte[] data) : this(new LCMDataInputStream(data))
@@ -77,25 +77,29 @@ namespace oculuslcm
             o._decodeRecursive(ins);
             return o;
         }
-
+ 
         public void _decodeRecursive(LCMDataInputStream ins)
         {
-
-            this.id = ins.ReadInt32();
-            this.priority = ins.ReadDouble();
-            this.user = ins.ReadInt32();
+            this.id = ins.ReadInt16();
+ 
+            this.priority = ins.ReadSingle();
+ 
+            this.user = ins.ReadInt16();
+ 
             this.enabled = ins.ReadBoolean();
-
+ 
         }
  
         public oculuslcm.info_t Copy()
         {
             oculuslcm.info_t outobj = new oculuslcm.info_t();
-
-            outobj.id       = this.id;
+            outobj.id = this.id;
+ 
             outobj.priority = this.priority;
-            outobj.user     = this.user;
-            outobj.enabled  = this.enabled;
+ 
+            outobj.user = this.user;
+ 
+            outobj.enabled = this.enabled;
  
             return outobj;
         }

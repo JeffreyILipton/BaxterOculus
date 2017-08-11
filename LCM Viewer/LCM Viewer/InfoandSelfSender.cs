@@ -17,11 +17,12 @@ namespace LCM.LCM_Viewer
             self = new robotself_t[3];
             info = new info_t[3];
 
-            for (int i = 0; i < self.Length; i++)
+            for (short i = 0; i < self.Length; i++)
             {
                 self[i] = new robotself_t();
                 self[i].id = i;
                 self[i].queryChannel = "control_query|" + self[i].id;
+                self[i].ability = "idk";
                 info[i] = new info_t();
                 info[i].id = i;
             }
@@ -30,9 +31,9 @@ namespace LCM.LCM_Viewer
             info[1].user = -1;
             info[2].user = 7;
 
-            info[0].priority = .8;
-            info[1].priority = .2;
-            info[2].priority = .7;
+            info[0].priority = .8f;
+            info[1].priority = .2f;
+            info[2].priority = .7f;
 
             self[0].type = "Baxter";
             self[1].type = "Baxter";
@@ -49,7 +50,7 @@ namespace LCM.LCM_Viewer
             self[0].channels[6] = "right_lcm_cmd|"          + self[0].id;
             self[0].channels[7] = "left_lcm_cmd|"           + self[0].id;
             self[0].channels[8] = "right_trigger_lcm|"      + self[0].id;
-            self[0].channels[9] = "left_trigger_lcm|"       + self[0].id;
+            self[0].channels[9] = "left_trigger_lcm|"       + self[0].id;   
             self[0].channels[10] = "right_lcm_currentpos|"  + self[0].id;
             self[0].channels[11] = "left_lcm_currentpos|"   + self[0].id;
             self[0].channels[12] = "right_lcm_range|"       + self[0].id;
@@ -78,6 +79,8 @@ namespace LCM.LCM_Viewer
             self[1].leftNDIChannel  = "DESKTOP-42UGJFF (Logitech Webcam C930e 0)";
             self[1].rightNDIChannel = "NDIBOX (Logitech Webcam C930e 0)";
 
+            self[2].leftNDIChannel = "DESKTOP-42UGJFF (Logitech Webcam C930e 0)";
+            self[2].rightNDIChannel = "NDIBOX (Logitech Webcam C930e 0)";
             try
             {
                 myLCM = new LCM.LCM("udpm://239.255.76.67:7667:?ttl=1");
@@ -92,12 +95,13 @@ namespace LCM.LCM_Viewer
                     for (int i = 0; i < 3; i++)
                     {
                         //info[i].priority += (rand.NextDouble() - .5) / 100;
-                        if(info[i].priority > 1)
+                        if (info[i].priority > 1)
                         {
-                            info[i].priority = 1;
-                        } else if (info[i].priority < 0)
+                            info[i].priority = 1f;
+                        }
+                        else if (info[i].priority < 0f)
                         {
-                            info[i].priority = 0;
+                            info[i].priority = 0f;
                         }
                         //Console.WriteLine(info[i].priority);
                         myLCM.Publish("global_info", info[i]);
