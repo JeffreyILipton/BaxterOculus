@@ -72,7 +72,7 @@ public class ChannelSubscriber : MonoBehaviour, LCMSubscriber
     /// </summary>
     public void Unsubscribe()
     {
-        LCM.LCMManager.lcmManager.getLCM().Unsubscribe(subscriptionChannel, this);
+        LCM.LCMManager.lcmManager.getLCM().Unsubscribe("", this);
         subscriptionChannel = "No Channel";
     }
 
@@ -114,5 +114,9 @@ public class ChannelSubscriber : MonoBehaviour, LCMSubscriber
         }
     }
 
-    
+    private void OnDestroy()
+    {
+        Unsubscribe();
+    }
+
 }

@@ -13,7 +13,8 @@ namespace oculuslcm
     public sealed class info_t : LCM.LCM.LCMEncodable
     {
         public short id;
-        public float priority;
+        public float confidence;
+        public float threshold;
         public short user;
         public bool enabled;
  
@@ -22,7 +23,7 @@ namespace oculuslcm
         }
  
         public static readonly ulong LCM_FINGERPRINT;
-        public static readonly ulong LCM_FINGERPRINT_BASE = 0xefe152b98e5058d0L;
+        public static readonly ulong LCM_FINGERPRINT_BASE = 0xdb029d012ed70616L;
  
         static info_t()
         {
@@ -51,7 +52,9 @@ namespace oculuslcm
         {
             outs.Write(this.id); 
  
-            outs.Write(this.priority); 
+            outs.Write(this.confidence); 
+ 
+            outs.Write(this.threshold); 
  
             outs.Write(this.user); 
  
@@ -82,7 +85,9 @@ namespace oculuslcm
         {
             this.id = ins.ReadInt16();
  
-            this.priority = ins.ReadSingle();
+            this.confidence = ins.ReadSingle();
+ 
+            this.threshold = ins.ReadSingle();
  
             this.user = ins.ReadInt16();
  
@@ -95,7 +100,9 @@ namespace oculuslcm
             oculuslcm.info_t outobj = new oculuslcm.info_t();
             outobj.id = this.id;
  
-            outobj.priority = this.priority;
+            outobj.confidence = this.confidence;
+ 
+            outobj.threshold = this.threshold;
  
             outobj.user = this.user;
  

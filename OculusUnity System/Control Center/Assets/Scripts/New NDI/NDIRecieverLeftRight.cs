@@ -15,10 +15,10 @@ public class NDIRecieverLeftRight : NDIReciever
         initTexture();
         if (left)
         {
-            sourceName = HomunculusGlobals.instance.currentRobotSelf.leftNDIChannel;
+            sourceName = HomunculusGlobals.instance.CurrentRobotSelf.leftNDIChannel;
         } else
         {
-            sourceName = HomunculusGlobals.instance.currentRobotSelf.rightNDIChannel;
+            sourceName = HomunculusGlobals.instance.CurrentRobotSelf.rightNDIChannel;
         }
     }
 }

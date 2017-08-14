@@ -11,4 +11,5 @@ from .cmd_t import cmd_t
 from .info_t import info_t
 from .robotself_t import robotself_t
 from .query_t import query_t
+from .confidencethreshold_t import confidencethreshold_t
 from .image_t import image_t

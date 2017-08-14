@@ -60,6 +60,7 @@
     <Compile Include="lcm\UDPMulticastProvider.cs" />
     <Compile Include="lcm\URLParser.cs" />
     <Compile Include="oculuslcm\cmd_t.cs" />
+    <Compile Include="oculuslcm\confidencethreshold_t.cs" />
     <Compile Include="oculuslcm\image_t.cs" />
     <Compile Include="oculuslcm\info_t.cs" />
     <Compile Include="oculuslcm\pose_t.cs" />

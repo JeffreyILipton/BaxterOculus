@@ -162,4 +162,21 @@ public class OrbMain : ChannelPublisher
     //        }
     //    }
     //}
+
+    /// <summary>
+    /// Hide orb if we can't use it
+    /// </summary>
+
+    protected override void NotInUse()
+    {
+        gameObject.SetActive(false);
+    }
+
+    /// <summary>
+    /// Unhide orb if the channel is available
+    /// </summary>
+    protected override void InUse()
+    {
+        gameObject.SetActive(true);
+    }
 }

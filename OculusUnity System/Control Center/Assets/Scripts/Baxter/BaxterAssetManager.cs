@@ -23,12 +23,20 @@ class BaxterAssetManager : MonoBehaviour
     public void updateFromRobotSelf(robotself_t self)
     {
         ArrayList channelSubscribers = BaxterDataManager.baxterDataManager.ChannelSubscribers;
+        ArrayList channelPublishers = BaxterDataManager.baxterDataManager.ChannelPublishers;
+
 
         ArrayList enabledChannels = new ArrayList(self.channels);
         for (int i = 0; i < channelSubscribers.Count; i++)
         {
             ((ChannelSubscriber)channelSubscribers[i]).IsInUse = (enabledChannels.Contains(((ChannelSubscriber)channelSubscribers[i]).getSubscriptionChannel()));
-        }  
+        }
+
+        for (int i = 0; i < channelPublishers.Count; i++)
+        {
+            ((ChannelPublisher)channelPublishers[i]).IsInUse = (enabledChannels.Contains(((ChannelPublisher)channelPublishers[i]).sendChannel));
+        }
+
     }
 
     /// <summary>
@@ -37,7 +45,7 @@ class BaxterAssetManager : MonoBehaviour
     /// <param name="self"></param>
     public void updateFromRobotSelf()
     {
-        robotself_t self = HomunculusGlobals.instance.currentRobotSelf;
+        robotself_t self = HomunculusGlobals.instance.CurrentRobotSelf;
         updateFromRobotSelf(self);
     }
 
@@ -49,7 +57,7 @@ class BaxterAssetManager : MonoBehaviour
         }
         else
         {
-            updateFromRobotSelf(HomunculusGlobals.instance.currentRobotSelf);
+            updateFromRobotSelf(HomunculusGlobals.instance.CurrentRobotSelf);
             baxterAssetManager = this;
         }
     }

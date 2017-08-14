@@ -13,7 +13,7 @@ namespace ProgressBar
         /// Rect from the panel that will act as Filler.
         /// </summary>
         [SerializeField]
-        private RectTransform m_FillRect;
+        protected RectTransform m_FillRect;
         /// <summary>
         /// Class used for storing the Min and Max width values that the Filler will vary between.
         /// </summary>
@@ -64,7 +64,7 @@ namespace ProgressBar
         /// Otherwise no Error will be raised.
         /// </summary>
         [SerializeField]
-        private Text m_AttachedText;
+        protected Text m_AttachedText;
 
         /// <summary>
         /// In pixels per seconds, the speed at which the Filler will be animated.
@@ -166,10 +166,10 @@ namespace ProgressBar
         /// This method is used to set the Filler's width
         /// </summary>
         /// <param name="Width">the new Filler's width</param>
-        public void SetFillerSize(float Width)
+        public virtual void SetFillerSize(float Width)
         {
             if (m_AttachedText)
-                m_AttachedText.text = Mathf.Round(Width / FillerInfo.MaxWidth * 100).ToString() + " mm";
+                m_AttachedText.text = Mathf.Round(Width / FillerInfo.MaxWidth * 100).ToString() + " %";
 
             m_FillRect.SetInsetAndSizeFromParentEdge(RectTransform.Edge.Left, XOffset, Width);
         }

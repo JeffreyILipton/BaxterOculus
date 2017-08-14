@@ -392,7 +392,7 @@ public class OVRLint : EditorWindow
 		var sources = GameObject.FindObjectsOfType<AudioSource> ();
 		if (sources.Length > 16 &&
 		    EditorUtility.DisplayDialog ("Optimize Audio Source Count", "For CPU performance, please disable all but the top 16 AudioSources.", "Use recommended", "Skip")) {
-			Array.Sort(sources, (a, b) => { return a.priority.CompareTo(b.priority); });
+			Array.Sort(sources, (a, b) => { return a.confidence.CompareTo(b.confidence); });
 			for (int i = 16; i < sources.Length; ++i) {
 				sources[i].enabled = false;
 			}

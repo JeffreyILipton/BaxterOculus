@@ -9,11 +9,9 @@ using System;
 
 
 
-public class BarBehaviorManager : ChannelSubscriber
+public class BarBehaviorSubscriber : ChannelSubscriber
 {
-    public string channel;
-    ProgressBarBehaviour bar; //The progress bar
-    bool initialized; //Has LCM warmed up?
+    public ProgressBarBehaviour bar; //The progress bar
 
 
     private double value;
@@ -22,14 +20,6 @@ public class BarBehaviorManager : ChannelSubscriber
     {
         oculuslcm.range_t range = new oculuslcm.range_t(ins);
         value = range.range;
-    }
-
-    // Use this for initialization
-    void Start()
-    {
-
-        bar = gameObject.GetComponent(typeof(ProgressBarBehaviour)) as ProgressBarBehaviour;
-        
     }
 
     // Update is called once per frame

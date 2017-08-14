@@ -39,13 +39,18 @@ public class BaxterDataManager : MonoBehaviour
     /// <summary>
     /// These publishers and senders will change channels to the correct robot
     /// </summary>
-    public ChannelPublisher rightMoveSender, rightCommandSender, rightTriggerSender, leftMoveSender, leftCommandSender, leftTriggerSender;
+    public ChannelPublisher rightMoveSender, rightCommandSender, rightTriggerSender, leftMoveSender, leftCommandSender, leftTriggerSender, confidenceThresholdSender;
     public ChannelSubscriber rightValidReciever, rightHandCameraReciever, rightWristCameraReciever, rightCurrentPosReciever, leftValidReciever, leftHandCameraReciever, leftWristCameraReciever, leftCurrentPosReciever;
 
     /// <summary>
     /// An array of all the ChannelSubscribers, this for BaxterAssetManager to access
     /// </summary>
     public ArrayList ChannelSubscribers;
+
+    /// <summary>
+    /// An array of all the ChannelPublishers, this for BaxterAssetManager to access
+    /// </summary>
+    public ArrayList ChannelPublishers;
 
     private LCM.LCM.LCM myLCM;
     
@@ -56,7 +61,7 @@ public class BaxterDataManager : MonoBehaviour
     {
         public Vector3 rightOrbPosition, leftOrbPosition;
         public Quaternion rightOrbRotation, leftOrbRotation;
-        public string rightMoveChannel, rightValidChannel, rightHandCameraChannel, rightWristCameraChannel, rightCommandChannel, rightTriggerChannel, rightCurrentPosChannel, leftMoveChannel, leftValidChannel, leftHandCameraChannel, leftWristCameraChannel, leftCommandChannel, leftTriggerChannel, leftCurrentPosChannel;
+        public string rightMoveChannel, rightValidChannel, rightHandCameraChannel, rightWristCameraChannel, rightCommandChannel, rightTriggerChannel, rightCurrentPosChannel, leftMoveChannel, leftValidChannel, leftHandCameraChannel, leftWristCameraChannel, leftCommandChannel, leftTriggerChannel, leftCurrentPosChannel, confidenceThresholdChannel;
     }
 
     /// <summary>
@@ -68,7 +73,7 @@ public class BaxterDataManager : MonoBehaviour
         {
             myLCM = LCM.LCMManager.lcmManager.getLCM();
             dataMap = new Dictionary<int, BaxterData>();
-            targetNumber = HomunculusGlobals.instance.currentRobotSelf.id;//Get us on the correct robot
+            targetNumber = HomunculusGlobals.instance.CurrentRobotSelf.id;//Get us on the correct robot
             dataMap.Add(targetNumber, initalizeBaxterData(targetNumber)); //Set our channels
 
             //Lets actually subscribe to the channels whose names we determined in initalizeBaxterData()
@@ -81,12 +86,13 @@ public class BaxterDataManager : MonoBehaviour
             leftCurrentPosReciever.     Subscribe   (CurrentLeftPosChannel);
 
             //Lets actually set the publishing channels whose names we determined in initalizeBaxterData()
-            rightMoveSender.    sendChannel = (CurrentRightMoveChannel);
-            leftMoveSender.     sendChannel = (CurrentLeftMoveChannel);
-            rightCommandSender. sendChannel = (CurrentRightCommandChannel);
-            leftCommandSender.  sendChannel = (CurrentLeftCommandChannel);
-            rightTriggerSender. sendChannel = (CurrentRightTriggerChannel);
-            leftTriggerSender.  sendChannel = (CurrentLeftTriggerChannel);
+            rightMoveSender.    sendChannel         = (CurrentRightMoveChannel);
+            leftMoveSender.     sendChannel         = (CurrentLeftMoveChannel);
+            rightCommandSender. sendChannel         = (CurrentRightCommandChannel);
+            leftCommandSender.  sendChannel         = (CurrentLeftCommandChannel);
+            rightTriggerSender. sendChannel         = (CurrentRightTriggerChannel);
+            leftTriggerSender.  sendChannel         = (CurrentLeftTriggerChannel);
+            confidenceThresholdSender.sendChannel   = ((CurrentThresholdSender));
 
             //Now lets add the subscribers to the ArrayList so that BaxterAssetManager (or whatever else) can iterate through them
             ChannelSubscribers = new ArrayList();
@@ -99,12 +105,21 @@ public class BaxterDataManager : MonoBehaviour
             ChannelSubscribers.Add(rightCurrentPosReciever);
             ChannelSubscribers.Add(leftCurrentPosReciever);
 
+            ChannelPublishers = new ArrayList();
+            ChannelPublishers.Add(rightMoveSender);
+            ChannelPublishers.Add(rightCommandSender);
+            ChannelPublishers.Add(rightTriggerSender);
+            ChannelPublishers.Add(leftMoveSender);
+            ChannelPublishers.Add(leftCommandSender);
+            ChannelPublishers.Add(leftTriggerSender);
+            ChannelPublishers.Add(confidenceThresholdSender);
+
             //Lets set our selves as the public static instance that is globaly available
             baxterDataManager = this;  
         }
         else
         {
-            //We aren't the first... so therefor we are posers. POSERS MUST BE DESTROYED!!!
+            //We aren't the first... so therefore we are posers. POSERS MUST BE DESTROYED!!!
             Destroy(this.gameObject);
             throw new Exception("Only one BaxterDataManager can exist at a time!");
         }
@@ -116,9 +131,9 @@ public class BaxterDataManager : MonoBehaviour
     void Update()
     {
         //This means that only way to change the target baxter is through HomunculusGlobals
-        if (HomunculusGlobals.instance.currentRobotSelf.id != targetNumber)
+        if (HomunculusGlobals.instance.CurrentRobotSelf.id != targetNumber)
         {
-            changeTargetBaxter(HomunculusGlobals.instance.currentRobotSelf.id);
+            changeTargetBaxter(HomunculusGlobals.instance.CurrentRobotSelf.id);
         }
     }
 
@@ -133,20 +148,21 @@ public class BaxterDataManager : MonoBehaviour
         tempData.leftOrbRotation    = defaultLeftTransform.rotation;
 
         //Set the channel names. The format includes adding the id number to the end
-        tempData.rightHandCameraChannel     = "right_lcm_channel|"      + id;
-        tempData.leftHandCameraChannel      = "left_lcm_channel|"       + id;
-        tempData.rightWristCameraChannel    = "right_lcm_channel|"      + id;
-        tempData.leftWristCameraChannel     = "left_lcm_channel|"       + id;
-        tempData.rightValidChannel          = "right_lcm_valid|"        + id;
-        tempData.leftValidChannel           = "left_lcm_valid|"         + id;
-        tempData.rightMoveChannel           = "right_lcm|"              + id;
-        tempData.leftMoveChannel            = "left_lcm|"               + id;
-        tempData.rightCommandChannel        = "right_lcm_cmd|"          + id;
-        tempData.leftCommandChannel         = "left_lcm_cmd|"           + id;
-        tempData.rightTriggerChannel        = "right_trigger_lcm|"      + id;
-        tempData.leftTriggerChannel         = "left_trigger_lcm|"       + id;
-        tempData.rightCurrentPosChannel     = "right_lcm_currentpos|"   + id;
-        tempData.leftCurrentPosChannel      = "left_lcm_currentpos|"    + id;
+        tempData.rightHandCameraChannel     = "right_lcm_channel|"          + id;
+        tempData.leftHandCameraChannel      = "left_lcm_channel|"           + id;
+        tempData.rightWristCameraChannel    = "right_lcm_channel|"          + id;
+        tempData.leftWristCameraChannel     = "left_lcm_channel|"           + id;
+        tempData.rightValidChannel          = "right_lcm_valid|"            + id;
+        tempData.leftValidChannel           = "left_lcm_valid|"             + id;
+        tempData.rightMoveChannel           = "right_lcm|"                  + id;
+        tempData.leftMoveChannel            = "left_lcm|"                   + id;
+        tempData.rightCommandChannel        = "right_lcm_cmd|"              + id;
+        tempData.leftCommandChannel         = "left_lcm_cmd|"               + id;
+        tempData.rightTriggerChannel        = "right_trigger_lcm|"          + id;
+        tempData.leftTriggerChannel         = "left_trigger_lcm|"           + id;
+        tempData.rightCurrentPosChannel     = "right_lcm_currentpos|"       + id;
+        tempData.leftCurrentPosChannel      = "left_lcm_currentpos|"        + id;
+        tempData.confidenceThresholdChannel = "confidence_threshold_lcm|"    + id;
 
         return tempData;
     }
@@ -452,6 +468,21 @@ public class BaxterDataManager : MonoBehaviour
         {
             BaxterData tempData = dataMap[targetNumber];
             tempData.leftTriggerChannel = value;
+            dataMap[targetNumber] = tempData;
+        }
+    }
+
+    public string CurrentThresholdSender
+    {
+        get
+        {
+            return dataMap[targetNumber].confidenceThresholdChannel;
+        }
+
+        set
+        {
+            BaxterData tempData = dataMap[targetNumber];
+            tempData.confidenceThresholdChannel = value;
             dataMap[targetNumber] = tempData;
         }
     }

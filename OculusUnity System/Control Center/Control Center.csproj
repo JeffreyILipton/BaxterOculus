@@ -13,13 +13,11 @@
     <TargetFrameworkIdentifier>.NETFramework</TargetFrameworkIdentifier>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <TargetFrameworkProfile>Unity Subset v3.5</TargetFrameworkProfile>
-    <CompilerResponseFile>
-    </CompilerResponseFile>
+    <CompilerResponseFile></CompilerResponseFile>
     <UnityProjectType>Game:1</UnityProjectType>
     <UnityBuildTarget>StandaloneWindows64:19</UnityBuildTarget>
     <UnityVersion>5.6.3f1</UnityVersion>
-    <RootNamespace>
-    </RootNamespace>
+    <RootNamespace></RootNamespace>
     <LangVersion Condition=" '$(VisualStudioVersion)' != '10.0' ">4</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -83,7 +81,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\oculuslcm\confidence_t.cs" />
     <Compile Include="Assets\OSPNative\scenes\Standard Assets\Character Controllers\Sources\Scripts\MouseLook.cs" />
     <Compile Include="Assets\OSPNative\scripts\ONSPAmbisonicsNative.cs" />
     <Compile Include="Assets\OSPNative\scripts\ONSPAudioSource.cs" />
@@ -239,17 +236,19 @@
     <Compile Include="Assets\OvrAvatar\Scripts\OvrAvatarSkinnedMeshRenderComponent.cs" />
     <Compile Include="Assets\OvrAvatar\Scripts\OvrAvatarSkinnedMeshRenderPBSComponent.cs" />
     <Compile Include="Assets\OvrAvatar\Scripts\OvrAvatarTouchController.cs" />
-    <Compile Include="Assets\ProgressBar\Script\BarBehaviorManager.cs" />
     <Compile Include="Assets\ProgressBar\Script\ProgressBarBehaviour.cs" />
+    <Compile Include="Assets\ProgressBar\Script\ProgressBarBehaviourMM.cs" />
     <Compile Include="Assets\ProgressBar\Script\ProgressRadialBehaviour.cs" />
     <Compile Include="Assets\ProgressBar\Script\Utils.cs" />
     <Compile Include="Assets\Scripts\BackToLobby.cs" />
     <Compile Include="Assets\Scripts\Baxter\AlphaManager.cs" />
     <Compile Include="Assets\Scripts\Baxter\ArrowReciever.cs" />
+    <Compile Include="Assets\Scripts\Baxter\BarBehaviorConfidence.cs" />
+    <Compile Include="Assets\Scripts\Baxter\BarBehaviorSubscriber.cs" />
     <Compile Include="Assets\Scripts\Baxter\BaxterAssetManager.cs" />
     <Compile Include="Assets\Scripts\Baxter\BaxterDataManager.cs" />
     <Compile Include="Assets\Scripts\Baxter\CameraRotator.cs" />
-    <Compile Include="Assets\Scripts\Baxter\ConfidenceThreshold.cs" />
+    <Compile Include="Assets\Scripts\Baxter\ConfidenceThresholdCircle.cs" />
     <Compile Include="Assets\Scripts\Baxter\ConsoleManager.cs" />
     <Compile Include="Assets\Scripts\Baxter\OculusHand.cs" />
     <Compile Include="Assets\Scripts\Baxter\OculusHandOrbGrabManager.cs" />
@@ -553,6 +552,7 @@
     <Compile Include="Assets\lcm\UDPMulticastProvider.cs" />
     <Compile Include="Assets\lcm\URLParser.cs" />
     <Compile Include="Assets\oculuslcm\cmd_t.cs" />
+    <Compile Include="Assets\oculuslcm\confidencethreshold_t.cs" />
     <Compile Include="Assets\oculuslcm\image_t.cs" />
     <Compile Include="Assets\oculuslcm\info_t.cs" />
     <Compile Include="Assets\oculuslcm\pose_t.cs" />

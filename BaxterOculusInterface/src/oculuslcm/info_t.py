@@ -10,11 +10,12 @@ except ImportError:
 import struct
 
 class info_t(object):
-    __slots__ = ["id", "priority", "user", "enabled"]
+    __slots__ = ["id", "confidence", "threshold", "user", "enabled"]
 
     def __init__(self):
         self.id = 0
-        self.priority = 0.0
+        self.confidence = 0.0
+        self.threshold = 0.0
         self.user = 0
         self.enabled = False
 
@@ -25,7 +26,7 @@ class info_t(object):
         return buf.getvalue()
 
     def _encode_one(self, buf):
-        buf.write(struct.pack(">hfhb", self.id, self.priority, self.user, self.enabled))
+        buf.write(struct.pack(">hffhb", self.id, self.confidence, self.threshold, self.user, self.enabled))
 
     def decode(data):
         if hasattr(data, 'read'):
@@ -39,7 +40,7 @@ class info_t(object):
 
     def _decode_one(buf):
         self = info_t()
-        self.id, self.priority, self.user = struct.unpack(">hfh", buf.read(8))
+        self.id, self.confidence, self.threshold, self.user = struct.unpack(">hffh", buf.read(12))
         self.enabled = bool(struct.unpack('b', buf.read(1))[0])
         return self
     _decode_one = staticmethod(_decode_one)
@@ -47,7 +48,7 @@ class info_t(object):
     _hash = None
     def _get_hash_recursive(parents):
         if info_t in parents: return 0
-        tmphash = (0xefe152b98e5058d0) & 0xffffffffffffffff
+        tmphash = (0xdb029d012ed70616) & 0xffffffffffffffff
         tmphash  = (((tmphash<<1)&0xffffffffffffffff)  + (tmphash>>63)) & 0xffffffffffffffff
         return tmphash
     _get_hash_recursive = staticmethod(_get_hash_recursive)

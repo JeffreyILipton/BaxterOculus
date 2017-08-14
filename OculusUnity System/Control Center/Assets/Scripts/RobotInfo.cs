@@ -67,7 +67,7 @@ public class RobotInfo : MonoBehaviour {
             LaunchButton.colors = colorBlock;
         }
 
-        movingPriorityBar.rectTransform.localScale = new Vector3((float)info.priority, movingPriorityBar.rectTransform.localScale.y, movingPriorityBar.rectTransform.localScale.z);
+        movingPriorityBar.rectTransform.localScale = new Vector3((float)info.confidence, movingPriorityBar.rectTransform.localScale.y, movingPriorityBar.rectTransform.localScale.z);
  
     }
 

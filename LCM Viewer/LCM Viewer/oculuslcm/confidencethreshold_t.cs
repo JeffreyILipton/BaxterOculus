@@ -10,28 +10,28 @@ using LCM.LCM;
  
 namespace oculuslcm
 {
-    public sealed class confidence_t : LCM.LCM.LCMEncodable
+    public sealed class confidencethreshold_t : LCM.LCM.LCMEncodable
     {
         public float confidence;
  
-        public confidence_t()
+        public confidencethreshold_t()
         {
         }
  
         public static readonly ulong LCM_FINGERPRINT;
-        public static readonly ulong LCM_FINGERPRINT_BASE = 0x89a6a50363fb9211L;
+        public static readonly ulong LCM_FINGERPRINT_BASE = 0x43e284394d0c85abL;
  
-        static confidence_t()
+        static confidencethreshold_t()
         {
             LCM_FINGERPRINT = _hashRecursive(new List<String>());
         }
  
         public static ulong _hashRecursive(List<String> classes)
         {
-            if (classes.Contains("oculuslcm.confidence_t"))
+            if (classes.Contains("oculuslcm.confidencethreshold_t"))
                 return 0L;
  
-            classes.Add("oculuslcm.confidence_t");
+            classes.Add("oculuslcm.confidencethreshold_t");
             ulong hash = LCM_FINGERPRINT_BASE
                 ;
             classes.RemoveAt(classes.Count - 1);
@@ -50,11 +50,11 @@ namespace oculuslcm
  
         }
  
-        public confidence_t(byte[] data) : this(new LCMDataInputStream(data))
+        public confidencethreshold_t(byte[] data) : this(new LCMDataInputStream(data))
         {
         }
  
-        public confidence_t(LCMDataInputStream ins)
+        public confidencethreshold_t(LCMDataInputStream ins)
         {
             if ((ulong) ins.ReadInt64() != LCM_FINGERPRINT)
                 throw new System.IO.IOException("LCM Decode error: bad fingerprint");
@@ -62,9 +62,9 @@ namespace oculuslcm
             _decodeRecursive(ins);
         }
  
-        public static oculuslcm.confidence_t _decodeRecursiveFactory(LCMDataInputStream ins)
+        public static oculuslcm.confidencethreshold_t _decodeRecursiveFactory(LCMDataInputStream ins)
         {
-            oculuslcm.confidence_t o = new oculuslcm.confidence_t();
+            oculuslcm.confidencethreshold_t o = new oculuslcm.confidencethreshold_t();
             o._decodeRecursive(ins);
             return o;
         }
@@ -75,9 +75,9 @@ namespace oculuslcm
  
         }
  
-        public oculuslcm.confidence_t Copy()
+        public oculuslcm.confidencethreshold_t Copy()
         {
-            oculuslcm.confidence_t outobj = new oculuslcm.confidence_t();
+            oculuslcm.confidencethreshold_t outobj = new oculuslcm.confidencethreshold_t();
             outobj.confidence = this.confidence;
  
             return outobj;

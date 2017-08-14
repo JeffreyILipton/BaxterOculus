@@ -37,12 +37,12 @@ public class InfoManager : MonoBehaviour, LCMSubscriber
     /// <summary>
     /// The name of the channel where global info data can be recieved
     /// </summary>
-    public string infoChannel;
+    private string infoChannel;
 
     /// <summary>
     /// The name of the channel where global robotself data can be recieved
     /// </summary>
-    public string robotselfChannel;
+    private string robotselfChannel;
 
     /// <summary>
     /// A queue of robotself_t data. We recieve data on a seperate thread than the thread we want to process it on.
@@ -80,7 +80,8 @@ public class InfoManager : MonoBehaviour, LCMSubscriber
     {
         if (channel.Equals(infoChannel))
         {
-            infoQueue.Enqueue(new info_t(ins));
+            info_t tempInfo = new info_t(ins);
+            infoQueue.Enqueue(tempInfo);
 
         } else if (channel.Equals(robotselfChannel))
         {
@@ -155,7 +156,8 @@ public class InfoManager : MonoBehaviour, LCMSubscriber
 
             if (info.user == HomunculusGlobals.instance.userID && SceneManager.GetActiveScene().name.Equals("Lobby")) //Only would want this to work if we are in the lobby
             {
-                HomunculusGlobals.instance.currentRobotSelf = infoMap[info.id].self; //The next scene will need our self information
+                HomunculusGlobals.instance.CurrentRobotSelf = infoMap[info.id].self; //The next scene will need our self information
+                HomunculusGlobals.instance.CurrentInfo      = infoMap[info.id].info; //The next scene will need our info information
                 SceneManager.LoadScene(infoMap[info.id].self.type);
             }
         }
@@ -210,7 +212,7 @@ public class InfoManager : MonoBehaviour, LCMSubscriber
         myLCM.Unsubscribe(infoMap[id].prefabObject.GetComponentInChildren<LCMtoTexture>().getSubscriptionChannel(), infoMap[id].prefabObject.GetComponentInChildren<LCMtoTexture>());
         GameObject.Destroy(infoMap[id].prefabObject);
         infoMap.Remove(id);
-    }
+    } 
 
     /// <summary>
     /// Called when the objects spawns, after Awake() and OnEnable(). We instantiate things and make sure this is the only InfoManager object.
@@ -219,6 +221,8 @@ public class InfoManager : MonoBehaviour, LCMSubscriber
     {
         infoQueue = new Queue<info_t>();
         selfQueue = new Queue<robotself_t>();
+        infoChannel         = HomunculusGlobals.instance.InfoChannel;
+        robotselfChannel    = HomunculusGlobals.instance.SelfChannel;
         if (instance == null)
         {
             instance = this;
@@ -227,6 +231,7 @@ public class InfoManager : MonoBehaviour, LCMSubscriber
             myLCM.Subscribe(robotselfChannel, this);
         } else
         {
+            Destroy(this.gameObject);
             throw new Exception("Only one InfoManager can exist at a time");
         }
     }
@@ -261,5 +266,10 @@ public class InfoManager : MonoBehaviour, LCMSubscriber
             fakeInfo.id = id;
             UpdateMapInfo(fakeInfo);
         }
+    }
+
+    private void OnDestroy()
+    {
+        myLCM.Unsubscribe("", this);
     }
 }

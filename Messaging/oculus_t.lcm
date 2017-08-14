@@ -31,7 +31,8 @@ struct cmd_t
 struct info_t
 {
 	int16_t id;
-	float priority;
+	float confidence;
+	float threshold;
 	int16_t user;
 	boolean enabled;
 }
@@ -52,6 +53,11 @@ struct robotself_t
 struct query_t
 {
 	int16_t userID;
+}
+
+struct confidencethreshold_t
+{
+	float confidence;	
 }
 
 struct image_t

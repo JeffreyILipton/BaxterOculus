@@ -8,3 +8,4 @@ C:\Users\afay2\Documents\GitHub\BaxterOculus\LCM Viewer\LCM Viewer\obj\Release\L
 C:\Users\afay2\Documents\GitHub\BaxterOculus\LCM Viewer\LCM Viewer\obj\Release\LCM Viewer.pdb
 C:\Users\afay2\Documents\GitHub\BaxterOculus\LCM Viewer\LCM Viewer\bin\Release\LCM Viewer.exe
 C:\Users\afay2\Documents\GitHub\BaxterOculus\LCM Viewer\LCM Viewer\bin\Release\LCM Viewer.pdb
+C:\Users\afay2\Documents\GitHub\BaxterOculus\LCM Viewer\LCM Viewer\obj\Release\LCM Viewer.csprojResolveAssemblyReference.cache

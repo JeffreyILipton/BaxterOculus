@@ -31,30 +31,31 @@ namespace LCM.LCM_Viewer
             info[1].user = -1;
             info[2].user = 7;
 
-            info[0].priority = .8f;
-            info[1].priority = .2f;
-            info[2].priority = .7f;
+            info[0].confidence = .8f;
+            info[1].confidence = .2f;
+            info[2].confidence = .7f;
 
             self[0].type = "Baxter";
             self[1].type = "Baxter";
             self[2].type = "Fish";
 
-            self[0].channelCount = 14;
+            self[0].channelCount = 15;
             self[0].channels = new string [self[0].channelCount];
-            self[0].channels[0] = "right_lcm_channel|"      + self[0].id;
-            self[0].channels[1] = "left_lcm_channel|"       + self[0].id;
-            self[0].channels[2] = "right_lcm_valid|"        + self[0].id;
-            self[0].channels[3] = "left_lcm_valid|"         + self[0].id;
-            self[0].channels[4] = "right_lcm|"              + self[0].id;
-            self[0].channels[5] = "left_lcm|"               + self[0].id;
-            self[0].channels[6] = "right_lcm_cmd|"          + self[0].id;
-            self[0].channels[7] = "left_lcm_cmd|"           + self[0].id;
-            self[0].channels[8] = "right_trigger_lcm|"      + self[0].id;
-            self[0].channels[9] = "left_trigger_lcm|"       + self[0].id;   
-            self[0].channels[10] = "right_lcm_currentpos|"  + self[0].id;
-            self[0].channels[11] = "left_lcm_currentpos|"   + self[0].id;
-            self[0].channels[12] = "right_lcm_range|"       + self[0].id;
-            self[0].channels[13] = "left_lcm_range|"        + self[0].id;
+            self[0].channels[0] = "right_lcm_channel|"          + self[0].id;
+            self[0].channels[1] = "left_lcm_channel|"           + self[0].id;
+            self[0].channels[2] = "right_lcm_valid|"            + self[0].id;
+            self[0].channels[3] = "left_lcm_valid|"             + self[0].id;
+            self[0].channels[4] = "right_lcm|"                  + self[0].id;
+            self[0].channels[5] = "left_lcm|"                   + self[0].id;
+            self[0].channels[6] = "right_lcm_cmd|"              + self[0].id;
+            self[0].channels[7] = "left_lcm_cmd|"               + self[0].id;
+            self[0].channels[8] = "right_trigger_lcm|"          + self[0].id;
+            self[0].channels[9] = "left_trigger_lcm|"           + self[0].id;   
+            self[0].channels[10] = "right_lcm_currentpos|"      + self[0].id;
+            self[0].channels[11] = "left_lcm_currentpos|"       + self[0].id;
+            self[0].channels[12] = "right_lcm_range|"           + self[0].id;
+            self[0].channels[13] = "left_lcm_range|"            + self[0].id;
+            self[0].channels[14] = "confidence_threshold_lcm|"  + self[0].id;
 
             self[0].leftNDIChannel  = "NDIBOX (Logitech Webcam C930e 1)";
             self[0].rightNDIChannel = "NDIBOX (Logitech Webcam C930e 0)";
@@ -88,22 +89,26 @@ namespace LCM.LCM_Viewer
                 myLCM.Subscribe("control_query|1", new SimpleSubscriber());
                 myLCM.Subscribe("control_query|2", new SimpleSubscriber());
                 myLCM.Subscribe("control_query|3", new SimpleSubscriber());
+
+                myLCM.Subscribe("confidence_threshold_lcm|1", new SimpleSubscriber());
+                myLCM.Subscribe("confidence_threshold_lcm|2", new SimpleSubscriber());
+                myLCM.Subscribe("confidence_threshold_lcm|3", new SimpleSubscriber());
                 Random rand = new Random();
 
                 while (run)
                 {
                     for (int i = 0; i < 3; i++)
                     {
-                        //info[i].priority += (rand.NextDouble() - .5) / 100;
-                        if (info[i].priority > 1)
+                        //info[i].confidence += (rand.NextDouble() - .5) / 100;
+                        if (info[i].confidence > 1)
                         {
-                            info[i].priority = 1f;
+                            info[i].confidence = 1f;
                         }
-                        else if (info[i].priority < 0f)
+                        else if (info[i].confidence < 0f)
                         {
-                            info[i].priority = 0f;
+                            info[i].confidence = 0f;
                         }
-                        //Console.WriteLine(info[i].priority);
+                        //Console.WriteLine(info[i].confidence);
                         myLCM.Publish("global_info", info[i]);
                         myLCM.Publish("global_self", self[i]);
                     };
@@ -127,6 +132,13 @@ namespace LCM.LCM_Viewer
                     {
                         info[id].user = query.userID;
                     }
+                }
+
+                if (channel.StartsWith("confidence_threshold_lcm|"))
+                {
+                    confidencethreshold_t threshold = new confidencethreshold_t(dins);
+                    int id = int.Parse((channel.Split('|')[1]));
+                    info[id].threshold = threshold.confidence;
                 }
             }
         }

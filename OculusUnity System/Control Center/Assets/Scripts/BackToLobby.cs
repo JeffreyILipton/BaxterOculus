@@ -21,7 +21,7 @@ public class BackToLobby: MonoBehaviour
 
         query_t query = new query_t();
         query.userID = -1; // We need to tell our robot we are leaving, otherwise it will send us right back when we get to the lobby
-        LCM.LCMManager.lcmManager.getLCM().Publish(HomunculusGlobals.instance.currentRobotSelf.queryChannel, query);
+        LCM.LCMManager.lcmManager.getLCM().Publish(HomunculusGlobals.instance.CurrentRobotSelf.queryChannel, query);
         
     }
 

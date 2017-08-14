@@ -11,7 +11,7 @@ public class SceneLauncher : MonoBehaviour
     public robotself_t self;
     public void Launch()
     {
-        HomunculusGlobals.instance.currentRobotSelf = self;
+        HomunculusGlobals.instance.CurrentRobotSelf = self;
         SceneManager.LoadScene(self.type);
     }
 }
