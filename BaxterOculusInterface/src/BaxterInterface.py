@@ -34,7 +34,7 @@ import time
 import numpy as np
 
 sys.path.insert(0, '/home/drl/ros_ws/src/baxter-soft-hand/scripts/softhandpy')
-from softhandpy.SoftHand import * # SoftHand, HandType
+from softhandpy.TubeSoftHand import * # SoftHand, HandType
 
 
 DEBUG = False
@@ -150,15 +150,17 @@ def ProcessTriggerCMDAsGripper(gripper,data):
 
 def ProcessSoftGripperCmd(handobj,l,data):
     if data.data<1:
-        if l==True:
-            handobj.LeftOpen()
-        else:
-            handobj.RightOpen()
+        handobj.Open()
+        #if l==True:
+        #    handobj.LeftOpen()
+        #else:
+        #    handobj.RightOpen()
     elif data.data<2:
-        if l==True:
-            handobj.LeftClose()
-        else:
-            handobj.RightClose()
+        handobj.Close()
+        #if l==True:
+        #    handobj.LeftClose()
+        #else:
+        #    handobj.RightClose()
     else:
         print "unknown cmd"
     print "Hand:",l,"cmd",data.data

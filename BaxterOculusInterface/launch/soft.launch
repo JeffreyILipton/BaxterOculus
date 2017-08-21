@@ -7,11 +7,14 @@
      <node pkg="baxter_lcm" name ="listener_r" type = "BaxterInterface.py" output="screen">
         <param name="part" value="right" />
      </node>
-     <node pkg="baxter_lcm" name ="listener_r_g" type = "BaxterInterface.py" output="screen">
+     <!--node pkg="baxter_lcm" name ="listener_r_g" type = "BaxterInterface.py" output="screen">
         <param name="part" value="right_soft_gripper" />
-     </node>
+     </node-->
      <node pkg="baxter_lcm" name ="listener_r_r" type = "BaxterInterface.py" output="screen">
         <param name="part" value="right_range" />
+     </node>
+     <node pkg="baxter_lcm" name ="listener_r_g" type = "BaxterInterface.py" output="screen">
+        <param name="part" value="right_gripper" />
      </node>
 
 

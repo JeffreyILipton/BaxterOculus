@@ -13,7 +13,9 @@
      <node pkg="baxter_lcm" name ="listener_r_r" type = "BaxterInterface.py" output="screen">
         <param name="part" value="right_range" />
      </node>
-
+     <node pkg="baxter_lcm" name ="listener_r_trig" type = "BaxterInterface.py" output="screen">
+        <param name="part" value="right_trigger" />
+     </node>
 
      <node pkg="baxter_lcm" name ="listener_l" type = "BaxterInterface.py" output="screen">
         <param name="part" value="left" />
@@ -30,8 +32,16 @@
      <node pkg="baxter_lcm" name ="listener_r_cam" type = "BaxterInterface.py" output="screen">
         <param name="part" value="right_camera" />
      </node>
-     <node pkg="baxter_lcm" name ="listener_r_trig" type = "BaxterInterface.py" output="screen">
-        <param name="part" value="right_trigger" />
+
+
+     <node pkg="baxter_lcm" name ="self_sender" type = "LSMSelf.py" output="screen">
+        <param name="id" 		value="32375" />
+        <param name="type" 		value="Baxter" />
+        <param name="ability" 	value="idk" />
+        <param name="channels" 	value="right_lcm_channel|left_lcm_channel|right_lcm_valid|left_lcm_valid|right_lcm|left_lcm|right_lcm_cmd|left_lcm_cmd|right_trigger_lcm|left_trigger_lcm|right_lcm_currentpos|left_lcm_currentpos|right_lcm_range|left_lcm_range" />
+        <param name="channels" 	value="query|32375" />
+ 		<param name="leftNDIChannel" 	value="left" />
+        <param name="rightNDIChannel" 	value="right"/>
      </node>
   </group>
 </launch>
