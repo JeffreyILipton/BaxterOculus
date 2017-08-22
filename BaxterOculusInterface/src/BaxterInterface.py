@@ -229,7 +229,6 @@ def ProcessTrigger(arduino,data):
 def ProcessRange(lc,lcChannel,data):
     global curtime 
     global RANGE_TIME
-    #print "tick"
     if time.time()-curtime  >RANGE_TIME:
         msg = range_t()
         msg.range = data.range
@@ -281,6 +280,10 @@ def main():
     part = param_value
     #print "PART IS:",part
 
+    full_param_name = rospy.search_param('id')
+    param_value = rospy.get_param(full_param_name)
+    id = param_value
+
 
     scales=[1.00,1.00,1.00]# m/mm
     offsets = [0,00,0.0]
@@ -306,10 +309,10 @@ def main():
 
         iksvc_l,ns_l = iksvcForLimb(l)
 
-        lcChannel = LCM_LEFT_VALID
+        lcChannel = LCM_LEFT_VALID  + "-" + str(id)
         
 
-        sub_func = partial(ProcessHand,lc,lcChannel,LCM_LEFT_CURRNEPOS, iksvc_l,ns_l,timeout,handToBaxter, l,left_limb)
+        sub_func = partial(ProcessHand,lc,lcChannel,LCM_LEFT_CURRNEPOS  + "-" + str(id), iksvc_l,ns_l,timeout,handToBaxter, l,left_limb)
         msgType = Pose
         connection_list.append((channel,msgType,sub_func))   
          
@@ -321,9 +324,9 @@ def main():
         #right_limb.set_position_speed(1)
         iksvc_r,ns_r = iksvcForLimb(r)
         
-        lcChannel = LCM_RIGHT_VALID
+        lcChannel = LCM_RIGHT_VALID  + "-" + str(id)
 
-        sub_func = partial(ProcessHand,lc,lcChannel,LCM_RIGHT_CURRNEPOS,iksvc_r,ns_r,timeout,handToBaxter, r,right_limb)
+        sub_func = partial(ProcessHand,lc,lcChannel,LCM_RIGHT_CURRNEPOS  + "-" + str(id),iksvc_r,ns_r,timeout,handToBaxter, r,right_limb)
         msgType = Pose   
         connection_list.append((channel,msgType,sub_func))  
          
@@ -380,21 +383,21 @@ def main():
         sub_func = partial(ProcessGripperVel,gripper)
         connection_list.append((channel,msgType,sub_func))
     elif part == 'left_range':
-        lcChannel = LCM_L_RANGE
+        lcChannel = LCM_L_RANGE  + "-" + str(id)
         channel = ROS_L_RANGE
         msgType = Range
         sub_func = partial(ProcessRange,lc,lcChannel)
         connection_list.append((channel,msgType,sub_func))
 
     elif part == 'right_range':
-        lcChannel = LCM_R_RANGE
+        lcChannel = LCM_R_RANGE  + "-" + str(id)
         channel = ROS_R_RANGE
         msgType = Range
         sub_func = partial(ProcessRange,lc,lcChannel)
         connection_list.append((channel,msgType,sub_func))
 
     elif part == 'right_camera':
-        lcChannel = LCM_R_CAMERA
+        lcChannel = LCM_R_CAMERA  + "-" + str(id)
         channel = ROS_R_CAMERA
         msgType = Image
 
@@ -409,7 +412,7 @@ def main():
 
     elif part == 'left_camera':
 
-        lcChannel = LCM_L_CAMERA
+        lcChannel = LCM_L_CAMERA  + "-" + str(id)
         #lc = lcm.LCM("udpm://239.255.76.67:7667:?ttl=1")
         channel = ROS_L_CAMERA
         msgType = Image

@@ -38,7 +38,8 @@ CAM_TIME = 0.1
 RANGE_TIME = 0.05
 curtime = time.time()
 
-confidence = 0
+confidence = 0.5
+threshold  = 0.5
 userID = -1
 id
 lcmChannel = ""
@@ -50,7 +51,8 @@ if DEBUG: print "time:", curtime
 
 def ProcessConfidence(data):
     global confidence
-    confidence = data
+    confidence = np.float32(data.data)
+    SendLCM()
     
 def ProcessQuery(data):
     receivedValue = int(data.data)
@@ -59,21 +61,28 @@ def ProcessQuery(data):
         userID = receivedValue
     SendLCM()
 
+def ProcessThreshold(data):
+    global threshold
+    threshold =  np.float32(data.data)
+    SendLCM()
+
 def SendLCM():
     global userID
     global id
     global lcmChannel
     global confidence
-    print "user ID: ", userID
+    global threshold
+    #print "user ID: ", userID
 
     data                    = info_t()
     data.id                 = id
     data.confidence         = confidence
-    data.threshold          = .5
+    data.threshold          = threshold
     data.user               = userID
     data.enabled            = True
 
     lc = lcm.LCM("udpm://239.255.76.67:7667:?ttl=1")
+
     lc.publish(lcmChannel,data.encode())
 
 def main():
@@ -124,6 +133,11 @@ def main():
     sub_func2 = ProcessQuery
     msgType2 = Int16   
     connection_list.append((channel2,msgType2,sub_func2))  
+
+    channel3 = ROS_THRESHOLD
+    sub_func3 = ProcessThreshold
+    msgType3 = Float32  
+    connection_list.append((channel3,msgType3,sub_func3))  
         
 
      
@@ -142,7 +156,7 @@ def main():
 
     rate = rospy.Rate(1) # 1hz
     while not rospy.is_shutdown():
-           print "tick"
+           #print "tick"
            #print lcChannel
            SendLCM()
            #rospy.spin()
