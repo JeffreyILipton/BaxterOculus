@@ -166,6 +166,7 @@ def ProcessSoftGripperCmd(handobj,l,data):
     print "Hand:",l,"cmd",data.data
 
 def ProcessGripperCMD(gripper,data):
+<<<<<<< HEAD
     #print "gripper:",data.data
     if data.data<1:
         gripper.open()
@@ -317,7 +318,7 @@ def main():
 
     connection_list = []
     lc = lcm.LCM("udpm://239.255.76.67:7667:?ttl=1")
-    ardPort = "/dev/ttyACM1"
+    ardPort = "/dev/ttyACM2"
 
     if part == 'left':
         channel = ROS_LEFT

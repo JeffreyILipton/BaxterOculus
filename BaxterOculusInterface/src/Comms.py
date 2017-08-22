@@ -19,12 +19,12 @@ LCM_L_TRIGGER = "left_trigger_lcm"
 
 ROS_R_VEL   = "right_vel"
 LCM_R_VEL   = "right_lcm_vel"
-ROS_R_CMD   = "right_cmd"
+ROS_R_CMD   = "right_gripper_cmd"
 LCM_R_CMD   = "right_lcm_cmd"
 
 ROS_L_VEL   = "left_vel"
 LCM_L_VEL   = "left_lcm_vel"
-ROS_L_CMD   = "left_cmd"
+ROS_L_CMD   = "left_gripper__cmd"
 LCM_L_CMD   = "left_lcm_cmd"
 
 ROS_L_RANGE = "/robot/range/left_hand_range/state"

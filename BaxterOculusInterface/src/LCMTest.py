@@ -15,7 +15,7 @@ message2.orientation = [0.0490787797075,-0.386342787948,0.920786840126,0.0219572
 
 channel = LCM_RIGHT
 try:
-    lc = lcm.LCM()
+    lc = lcm.LCM("udpm://239.255.76.67:7667:?ttl=1")
     notdone = True
     while notdone:
         ang = input('ang in degrees: ')
@@ -32,7 +32,8 @@ try:
         else:
             message2.position=array3
             message2.orientation = array4
-            lc.publish(channel,message2.encode())
+	    while True:
+                lc.publish(channel,message2.encode())
     #val = raw_input("A,B,C: ")
     #if val == 'a' or val == 'A':
     #    lc.publish(channel,message1.encode())
