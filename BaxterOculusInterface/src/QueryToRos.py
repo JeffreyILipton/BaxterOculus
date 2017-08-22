@@ -25,10 +25,12 @@ def QueryRos(RosPub,LcmChannel,lcmData):
     except:
         print "errored"
 
+
 class LCMInterface():
     def __init__(self):
 
         rospy.init_node('QueryRos',anonymous = True)
+
 
         full_param_name = rospy.search_param('queryChannel')
         param_value = rospy.get_param(full_param_name)
@@ -39,6 +41,7 @@ class LCMInterface():
 
         connections = [(ROS_QUERY,queryChannel,Int16)]
         
+
         ros_channnel,lcm_channel,ros_msg_type = connections[0]
         pub = rospy.Publisher(ros_channnel, ros_msg_type, queue_size=1)
 
@@ -57,7 +60,7 @@ class LCMInterface():
 def main():
     print "lcm start"
     LCMI = LCMInterface()
-    
+
     try:
         LCMI.run()
     except rospy.ROSInterruptException:pass

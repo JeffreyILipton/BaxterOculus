@@ -54,7 +54,7 @@ public class RobotInfo : MonoBehaviour {
             ColorBlock colorBlock = LaunchButton.colors;
             colorBlock.highlightedColor = Color.green;
             LaunchButton.colors = colorBlock;
-        } else
+        } else if (info.user > 0)
         {
             UserText.text = "User #" + info.user + " Operating ";
             UserText.alignment = TextAnchor.UpperRight;
@@ -66,8 +66,20 @@ public class RobotInfo : MonoBehaviour {
             colorBlock.highlightedColor = Color.red;
             LaunchButton.colors = colorBlock;
         }
+        else if (info.user < -2)
+        {                                   
+            UserText.text = "User #" + info.user + " Supervising";
+            UserText.alignment = TextAnchor.UpperRight;
+            UserText.color = Color.yellow;
 
-        movingPriorityBar.rectTransform.localScale = new Vector3((float)info.confidence, movingPriorityBar.rectTransform.localScale.y, movingPriorityBar.rectTransform.localScale.z);
+            Border.color = Color.yellow; ;
+
+            ColorBlock colorBlock = LaunchButton.colors;
+            colorBlock.highlightedColor = Color.red;
+            LaunchButton.colors = colorBlock;
+        }
+
+movingPriorityBar.rectTransform.localScale = new Vector3((float)info.confidence, movingPriorityBar.rectTransform.localScale.y, movingPriorityBar.rectTransform.localScale.z);
  
     }
 
