@@ -67,6 +67,7 @@ def main():
    A program from MIT's DRL for using Baxter via LCM messages
  
    """
+    rospy.init_node('self_sender', anonymous=True)
     full_param_name = rospy.search_param('id')
     param_value = rospy.get_param(full_param_name)
     id = int(param_value)
@@ -74,7 +75,7 @@ def main():
 
     full_param_name = rospy.search_param('type')
     param_value = rospy.get_param(full_param_name)
-    type = int(param_value)
+    type = param_value
 
     full_param_name = rospy.search_param('ability')
     param_value = rospy.get_param(full_param_name)
@@ -111,12 +112,14 @@ def main():
     data.rightNDIChannel    = rightNDIChannel
 
     for i in range(0,data.channelCount):
-        data.channels[i] = data.channels[i] + "|" + id
+        data.channels[i] = data.channels[i] + "|" + str(id)
 
     lc = lcm.LCM("udpm://239.255.76.67:7667:?ttl=1")
     
     rate = rospy.Rate(1) # 1hz
     while not rospy.is_shutdown():
+           #print "tick"
+           #print lcChannel
            lc.publish(lcChannel,data.encode())
            rate.sleep()
     return 0
@@ -124,6 +127,7 @@ def main():
 
 
 if __name__ == "__main__":
+    print "STARTING"
     sys.exit(int(main() or 0))
 
 

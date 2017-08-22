@@ -83,9 +83,11 @@ public class InfoManager : MonoBehaviour, LCMSubscriber
             info_t tempInfo = new info_t(ins);
             infoQueue.Enqueue(tempInfo);
 
-        } else if (channel.Equals(robotselfChannel))
+        }
+        else if (channel.Equals(robotselfChannel))
         {
-            selfQueue.Enqueue(new robotself_t(ins));
+            robotself_t temp = (new robotself_t(ins));
+            selfQueue.Enqueue(temp);
         }
     }
 

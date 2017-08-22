@@ -27,6 +27,17 @@
     <Compile Include="ArduinoInterface.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="BaxterInterfaceMCU.py" />
+    <Compile Include="CChoi\scripts\add_grasping_dataset.py" />
+    <Compile Include="CChoi\scripts\demo_base.py" />
+    <Compile Include="CChoi\scripts\demo_grasping.py" />
+    <Compile Include="CChoi\scripts\demo_homunculus.py" />
+    <Compile Include="CChoi\scripts\test_srv.py" />
+    <Compile Include="LCMInfo.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="LCMGripperTest.py" />
+    <Compile Include="LCMListen.py" />
     <Compile Include="LCMMonitor.py" />
     <Compile Include="BaxterInterface.py" />
     <Compile Include="Comms.py">
@@ -36,9 +47,13 @@
     <Compile Include="LCMToRos.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="LCMToRosMCU.py" />
     <Compile Include="oculuslcm\cmd_t.py" />
     <Compile Include="oculuslcm\image_t.py" />
     <Compile Include="oculuslcm\info_t.py" />
+    <Compile Include="QueryToRos.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="oculuslcm\pose_t.py" />
     <Compile Include="oculuslcm\query_t.py" />
     <Compile Include="oculuslcm\range_t.py" />
@@ -57,10 +72,27 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="CChoi\" />
+    <Folder Include="CChoi\scripts\" />
+    <Folder Include="CChoi\scripts\.idea\" />
+    <Folder Include="CChoi\srv\" />
     <Folder Include="oculuslcm\" />
   </ItemGroup>
   <ItemGroup>
     <InterpreterReference Include="{9a7a9026-48c1-4688-9d5d-e5699d47d074}\2.7" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="CChoi\scripts\.idea\misc.xml" />
+    <Content Include="CChoi\scripts\.idea\modules.xml" />
+    <Content Include="CChoi\scripts\.idea\scripts.iml" />
+    <Content Include="CChoi\scripts\.idea\workspace.xml" />
+    <Content Include="CChoi\scripts\demo_base.pyc" />
+    <Content Include="CChoi\srv\GetThreshold.srv" />
+    <Content Include="CChoi\srv\LearnGrasp.srv" />
+    <Content Include="CChoi\srv\NeedHelp.srv" />
+    <Content Include="CChoi\srv\SetThreshold.srv" />
+    <Content Include="CChoi\srv\Start.srv" />
+    <Content Include="CChoi\srv\Stop.srv" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
