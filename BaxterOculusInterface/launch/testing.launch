@@ -2,18 +2,27 @@
   <group name='bax'>
 
      <node pkg="baxter_lcm" name ="self_sender" type = "LCMSelf.py" output="screen">
-        <param name="id"    value="32375" />
+        <param name="id"    value="100" />
         <param name="type"    value="Baxter" />
         <param name="ability"   value="idk" />
-        <param name="channels"  value="right_lcm_channel|left_lcm_channel|right_lcm_valid|left_lcm_valid|right_lcm|left_lcm|right_lcm_cmd|left_lcm_cmd|right_trigger_lcm|left_trigger_lcm|right_lcm_currentpos|left_lcm_currentpos|right_lcm_range|left_lcm_range" />
-        <param name="queryChannel"  value="query|32375" />
+        <param name="channels"  value="right_lcm_channel|left_lcm_channel|right_lcm_valid|left_lcm_valid|right_lcm|left_lcm|right_lcm_cmd|left_lcm_cmd|right_trigger_lcm|left_trigger_lcm|right_lcm_currentpos|left_lcm_currentpos|right_lcm_range|left_lcm_range|confidence_threshold_lcm" />
+        <param name="queryChannel"  value="control_query|100" />
         <param name="leftNDIChannel"  value="left" />
         <param name="rightNDIChannel"   value="right"/>
         <param name="broadcastChannel"   value="global_self"/>
      </node>
 
      <node pkg="baxter_lcm" name ="QueryRos" type = "QueryToRos.py" output="screen">
-        <param name="queryChannel"  value="query|32375" />
+        <param name="queryChannel"  value="control_query|100" />
+     </node>
+
+     <node pkg="baxter_lcm" name ="ConfidenceThresholdRos" type = "ConfidenceThresholdRos.py" output="screen">
+        <param name="confidenceThresholdChannel"  value="confidence_threshold_lcm|100" />
+     </node>
+
+     <node pkg="baxter_lcm" name ="info_sender" type = "LCMInfo.py" output="screen">
+        <param name="id"  value="100" />
+        <param name="lcmChannel"  value="global_info"/>
      </node>
   </group>
 </launch>

@@ -16,12 +16,12 @@ from oculuslcm import *
 from functools import *
 from Comms import *
 
-def QueryRos(RosPub,LcmChannel,lcmData):
+def ConfidenceThresholdRos(RosPub,LcmChannel,lcmData):
     #print "test"
     try:
-        lcm_msg = query_t.decode(lcmData)
-        print lcm_msg.userID
-        RosPub.publish(lcm_msg.userID)
+        lcm_msg = confidencethreshold_t.decode(lcmData)
+        print "confidence:", lcm_msg.confidence
+        RosPub.publish(lcm_msg.confidence )
     except:
         pass
         #print "errored"
@@ -30,23 +30,23 @@ def QueryRos(RosPub,LcmChannel,lcmData):
 class LCMInterface():
     def __init__(self):
 
-        rospy.init_node('QueryRos',anonymous = True)
+        rospy.init_node('ConfidenceThresholdRos',anonymous = True)
 
 
-        full_param_name = rospy.search_param('queryChannel')
+        full_param_name = rospy.search_param('confidenceThresholdChannel')
         param_value = rospy.get_param(full_param_name)
-        queryChannel = param_value
+        confidenceThresholdChannel = param_value
 
         self.lc = lcm.LCM("udpm://239.255.76.67:7667:?ttl=1")
         self.subscriptions={}
 
-        connections = [(ROS_QUERY,queryChannel,Int16)]
+        connections = [(ROS_THRESHOLD,confidenceThresholdChannel,Float32)]
         
 
         ros_channnel,lcm_channel,ros_msg_type = connections[0]
         pub = rospy.Publisher(ros_channnel, ros_msg_type, queue_size=1)
 
-        subscriber = partial(QueryRos,pub)
+        subscriber = partial(ConfidenceThresholdRos,pub)
 
         self.subscriptions[ros_channnel] = self.lc.subscribe(lcm_channel,subscriber)
 

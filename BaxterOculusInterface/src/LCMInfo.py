@@ -38,9 +38,11 @@ CAM_TIME = 0.1
 RANGE_TIME = 0.05
 curtime = time.time()
 
-confidence = 0
+confidence = 0.5
+threshold  = 0.5
 userID = -1
 id
+lcmChannel = ""
 
 if DEBUG: print "time:", curtime
 
@@ -48,15 +50,41 @@ if DEBUG: print "time:", curtime
 
 
 def ProcessConfidence(data):
-    confidence = data
+    global confidence
+    confidence = np.float32(data.data)
+    SendLCM()
     
 def ProcessQuery(data):
-    if userID == -1 or userID == -2 or data*-1 == userID or data == -1 or data == -2:
-        userID = data
+    receivedValue = int(data.data)
+    global userID
+    if (userID == -1) or (userID == -2) or (-receivedValue == userID) or (receivedValue == -1) or (receivedValue == -2):
+        userID = receivedValue
+    SendLCM()
+
+def ProcessThreshold(data):
+    global threshold
+    threshold =  np.float32(data.data)
     SendLCM()
 
 def SendLCM():
-    print userID
+    global userID
+    global id
+    global lcmChannel
+    global confidence
+    global threshold
+    #print "user ID: ", userID
+
+    data                    = info_t()
+    data.id                 = id
+    data.confidence         = confidence
+    data.threshold          = threshold
+    data.user               = userID
+    data.enabled            = True
+
+    lc = lcm.LCM("udpm://239.255.76.67:7667:?ttl=1")
+
+    lc.publish(lcmChannel,data.encode())
+
 def main():
     """BaxterInterface
  
@@ -73,15 +101,18 @@ def main():
     #    help="the part to control, 'left', 'right','head','right_trigger','right_gripper','left_gripper','left_range','right_range'"
     #)
     #args = parser.parse_args(rospy.myargv()[1:])
-    rospy.init_node('part_listener', anonymous=True)
-    full_param_name = rospy.search_param('part')
-    param_value = rospy.get_param(full_param_name)
-    part = param_value
+
+    global lcmChannel
+    global id
 
     rospy.init_node('id', anonymous=True)
     full_param_name = rospy.search_param('id')
     param_value = rospy.get_param(full_param_name)
     id = param_value
+
+    full_param_name = rospy.search_param('lcmChannel')
+    param_value = rospy.get_param(full_param_name)
+    lcmChannel = str(param_value)
     
     timeout =0.1
     sub_func = None
@@ -89,29 +120,30 @@ def main():
     msgType = None
 
     connection_list = []
-    lc = lcm.LCM("udpm://239.255.76.67:7667:?ttl=1")
-    ardPort = "/dev/ttyACM2"
 
-    if part == '~confidence':
-        channel = ROS_CONFIDENCE
-        sub_func = ProcessConfidence
-        msgType = Float32
-        connection_list.append((channel,msgType,sub_func))   
+
+
+
+    channel = ROS_CONFIDENCE
+    sub_func = ProcessConfidence
+    msgType = Float32
+    connection_list.append((channel,msgType,sub_func))   
          
-    elif part == 'query':
-        channel = ROS_QUERY
-        sub_func = ProcessQuery
-        msgType = Int16   
-        connection_list.append((channel,msgType,sub_func))  
+    channel2 = ROS_QUERY
+    sub_func2 = ProcessQuery
+    msgType2 = Int16   
+    connection_list.append((channel2,msgType2,sub_func2))  
+
+    channel3 = ROS_THRESHOLD
+    sub_func3 = ProcessThreshold
+    msgType3 = Float32  
+    connection_list.append((channel3,msgType3,sub_func3))  
         
-    else :
-        print "unknown part:", part
-        return 0
+
      
 
     
     #Start movement
-    print "starting part: ",part
     curtime = time.time()
     rs = RobotEnable(CHECK_VERSION)
     for connection in connection_list:
@@ -120,13 +152,16 @@ def main():
         
 
 
-    rospy.spin()
+    
 
-
-    #print "done"
-    #rs.disable()
+    rate = rospy.Rate(1) # 1hz
+    while not rospy.is_shutdown():
+           #print "tick"
+           #print lcChannel
+           SendLCM()
+           #rospy.spin()
+           rate.sleep()
     return 0
-        
 
 
 if __name__ == "__main__":

@@ -44,6 +44,7 @@ def LCMGripperVelToRos(RosPub,LcmChannel,lcmData):
 
 
 def LCMPoseToRos(RosPub,LcmChannel,lcmData):
+    print "LCMPOSE CALLED"
     lcm_msg = pose_t.decode(lcmData)
     p = PointQuatToPose(lcm_msg.position, lcm_msg.orientation)
     #print "lcm pose:",lcm_msg.position,lcm_msg.orientation
@@ -56,19 +57,27 @@ def LCMBoolToRos(RosPub,lcmChannel, lcmData):
 
 class LCMInterface():
     def __init__(self):
+        rospy.init_node('repeater', anonymous=True)
+
+        full_param_name = rospy.search_param('id')
+        param_value = rospy.get_param(full_param_name)
+        id = param_value
+
+
+
         self.lc = lcm.LCM("udpm://239.255.76.67:7667:?ttl=1")
         self.subscriptions={}
 
-        connections = [(ROS_LEFT,LCM_LEFT,Pose),
-                       (ROS_L_CMD,LCM_L_CMD,UInt16),
-                       (ROS_L_VEL,LCM_L_VEL,Float64),
-                       (ROS_L_TRIGGER,LCM_L_TRIGGER,Bool),
-                       (ROS_RIGHT,LCM_RIGHT,Pose),
-                       (ROS_R_CMD,LCM_R_CMD,UInt16),
-                       (ROS_R_VEL,LCM_R_VEL,Float64),
-                       (ROS_R_TRIGGER,LCM_R_TRIGGER,Bool)]#,
+        connections = [(ROS_LEFT,       LCM_LEFT  + "-" + str(id),  Pose),
+                       (ROS_L_CMD,      LCM_L_CMD  + "-" + str(id), UInt16),
+                       (ROS_L_VEL,      LCM_L_VEL  + "-" + str(id), Float64),
+                       (ROS_L_TRIGGER,  LCM_L_TRIGGER  + "-" + str(id), Bool),
+                       (ROS_RIGHT,      LCM_RIGHT  + "-" + str(id), Pose),
+                       (ROS_R_CMD,      LCM_R_CMD  + "-" + str(id), UInt16),
+                       (ROS_R_VEL,      LCM_R_VEL  + "-" + str(id),Float64),
+                       (ROS_R_TRIGGER,  LCM_R_TRIGGER  + "-" + str(id),Bool)]#,
 
-        
+        print connections
 
         for connection in connections:
             ros_channnel,lcm_channel,ros_msg_type = connection
@@ -95,7 +104,7 @@ class LCMInterface():
 def main():
     print "lcm start"
     LCMI = LCMInterface()
-    rospy.init_node('LCM_rebroadcast',anonymous = True)
+    #rospy.init_node('LCM_rebroadcast',anonymous = True)
     try:
         LCMI.run()
     except rospy.ROSInterruptException:pass

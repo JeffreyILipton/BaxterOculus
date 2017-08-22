@@ -105,14 +105,14 @@ def main():
     data.id                 = id
     data.type               = type
     data.ability            = ability
-    data.channels           = channels.split("|")
+    data.channels           = channels.split('|')
     data.channelCount       = len(data.channels)
     data.queryChannel       = queryChannel
     data.leftNDIChannel     = leftNDIChannel
     data.rightNDIChannel    = rightNDIChannel
 
     for i in range(0,data.channelCount):
-        data.channels[i] = data.channels[i] + "|" + str(id)
+        data.channels[i] = data.channels[i] + "-" + str(id)
 
     lc = lcm.LCM("udpm://239.255.76.67:7667:?ttl=1")
     
