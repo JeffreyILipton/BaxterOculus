@@ -52,12 +52,12 @@ public class BackToLobby: MonoBehaviour
     public void Update()
     {
         //Did we press the button? If so lets go back to lobby
-        if (OVRInput.Get(LobbyButton, LobbyController) && SceneManager.GetActiveScene().name != "Lobby") {
+        if (OVRInput.GetDown(LobbyButton, LobbyController) && SceneManager.GetActiveScene().name != "Lobby") {
             toLobby();
         } 
 
-        if (OVRInput.Get(AutoButton,  AutoController)  && SceneManager.GetActiveScene().name != "Lobby") {
-            toLobby();
+        if (OVRInput.GetDown(AutoButton,  AutoController)  && SceneManager.GetActiveScene().name != "Lobby") {
+            toggleAuto();
         }
     }
 

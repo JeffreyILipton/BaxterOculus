@@ -9,7 +9,7 @@ using UnityEngine;
 /// </summary>
 public class ChannelSubscriber : MonoBehaviour, LCMSubscriber
 {
-    private string subscriptionChannel = "No Channel";
+    private string subscriptionChannel = "No Channel... Yet";
 
     private bool isInUse = true;
 

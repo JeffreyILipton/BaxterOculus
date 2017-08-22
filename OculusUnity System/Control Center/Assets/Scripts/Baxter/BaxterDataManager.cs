@@ -83,6 +83,7 @@ public class BaxterDataManager : MonoBehaviour
             leftHandCameraReciever.     Subscribe   (CurrentLeftHandCameraChannel);
             rightWristCameraReciever.   Subscribe   (CurrentRightWristCameraChannel);
             leftWristCameraReciever.    Subscribe   (CurrentLeftWristCameraChannel);
+            rightCurrentPosReciever.    Subscribe   (CurrentRightPosChannel);
             leftCurrentPosReciever.     Subscribe   (CurrentLeftPosChannel);
 
             //Lets actually set the publishing channels whose names we determined in initalizeBaxterData()
@@ -148,21 +149,21 @@ public class BaxterDataManager : MonoBehaviour
         tempData.leftOrbRotation    = defaultLeftTransform.rotation;
 
         //Set the channel names. The format includes adding the id number to the end
-        tempData.rightHandCameraChannel     = "right_lcm_channel|"          + id;
-        tempData.leftHandCameraChannel      = "left_lcm_channel|"           + id;
-        tempData.rightWristCameraChannel    = "right_lcm_channel|"          + id;
-        tempData.leftWristCameraChannel     = "left_lcm_channel|"           + id;
-        tempData.rightValidChannel          = "right_lcm_valid|"            + id;
-        tempData.leftValidChannel           = "left_lcm_valid|"             + id;
-        tempData.rightMoveChannel           = "right_lcm|"                  + id;
-        tempData.leftMoveChannel            = "left_lcm|"                   + id;
-        tempData.rightCommandChannel        = "right_lcm_cmd|"              + id;
-        tempData.leftCommandChannel         = "left_lcm_cmd|"               + id;
-        tempData.rightTriggerChannel        = "right_trigger_lcm|"          + id;
-        tempData.leftTriggerChannel         = "left_trigger_lcm|"           + id;
-        tempData.rightCurrentPosChannel     = "right_lcm_currentpos|"       + id;
-        tempData.leftCurrentPosChannel      = "left_lcm_currentpos|"        + id;
-        tempData.confidenceThresholdChannel = "confidence_threshold_lcm|"    + id;
+        tempData.rightHandCameraChannel     = "right_lcm_camera-"           + id;
+        tempData.leftHandCameraChannel      = "left_lcm_camera-"            + id;
+        tempData.rightWristCameraChannel    = "right_lcm_camera-"           + id;
+        tempData.leftWristCameraChannel     = "left_lcm_camera-"            + id;
+        tempData.rightValidChannel          = "right_lcm_valid-"            + id;
+        tempData.leftValidChannel           = "left_lcm_valid-"             + id;
+        tempData.rightMoveChannel           = "right_lcm-"                  + id;
+        tempData.leftMoveChannel            = "left_lcm-"                   + id;
+        tempData.rightCommandChannel        = "right_lcm_cmd-"              + id;
+        tempData.leftCommandChannel         = "left_lcm_cmd-"               + id;
+        tempData.rightTriggerChannel        = "right_trigger_lcm-"          + id;
+        tempData.leftTriggerChannel         = "left_trigger_lcm-"           + id;
+        tempData.rightCurrentPosChannel     = "right_lcm_currentpos-"       + id;
+        tempData.leftCurrentPosChannel      = "left_lcm_currentpos-"        + id;
+        tempData.confidenceThresholdChannel = "confidence_threshold_lcm-"   + id;
 
         return tempData;
     }

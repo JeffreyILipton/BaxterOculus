@@ -22,7 +22,7 @@ namespace LCM.LCM_Viewer
             {
                 self[i + 100] = new robotself_t();
                 self[i + 100].id = (short)(i + 100);
-                self[i + 100].queryChannel = "control_query|" + self[i + 100].id;
+                self[i + 100].queryChannel = "control_query-" + self[i + 100].id;
                 self[i + 100].ability = "idk";
                 info[i + 100] = new info_t();
                 info[i + 100].id = (short)(i + 100);
@@ -42,41 +42,41 @@ namespace LCM.LCM_Viewer
 
             self[100].channelCount = 15;
             self[100].channels = new string [self[100].channelCount];
-            self[100].channels[0] = "right_lcm_channel|"          + self[100].id;
-            self[100].channels[1] = "left_lcm_channel|"           + self[100].id;
-            self[100].channels[2] = "right_lcm_valid|"            + self[100].id;
-            self[100].channels[3] = "left_lcm_valid|"             + self[100].id;
-            self[100].channels[4] = "right_lcm|"                  + self[100].id;
-            self[100].channels[5] = "left_lcm|"                   + self[100].id;
-            self[100].channels[6] = "right_lcm_cmd|"              + self[100].id;
-            self[100].channels[7] = "left_lcm_cmd|"               + self[100].id;
-            self[100].channels[8] = "right_trigger_lcm|"          + self[100].id;
-            self[100].channels[9] = "left_trigger_lcm|"           + self[100].id;   
-            self[100].channels[10] = "right_lcm_currentpos|"      + self[100].id;
-            self[100].channels[11] = "left_lcm_currentpos|"       + self[100].id;
-            self[100].channels[12] = "right_lcm_range|"           + self[100].id;
-            self[100].channels[13] = "left_lcm_range|"            + self[100].id;
-            self[100].channels[14] = "confidence_threshold_lcm|"  + self[100].id;
+            self[100].channels[0] = "right_lcm_channel-"          + self[100].id;
+            self[100].channels[1] = "left_lcm_channel-"           + self[100].id;
+            self[100].channels[2] = "right_lcm_valid-"            + self[100].id;
+            self[100].channels[3] = "left_lcm_valid-"             + self[100].id;
+            self[100].channels[4] = "right_lcm-"                  + self[100].id;
+            self[100].channels[5] = "left_lcm-"                   + self[100].id;
+            self[100].channels[6] = "right_lcm_cmd-"              + self[100].id;
+            self[100].channels[7] = "left_lcm_cmd-"               + self[100].id;
+            self[100].channels[8] = "right_trigger_lcm-"          + self[100].id;
+            self[100].channels[9] = "left_trigger_lcm-"           + self[100].id;   
+            self[100].channels[10] = "right_lcm_currentpos-"      + self[100].id;
+            self[100].channels[11] = "left_lcm_currentpos-"       + self[100].id;
+            self[100].channels[12] = "right_lcm_range-"           + self[100].id;
+            self[100].channels[13] = "left_lcm_range-"            + self[100].id;
+            self[100].channels[14] = "confidence_threshold_lcm-"  + self[100].id;
 
             self[100].leftNDIChannel  = "NDIBOX (Logitech Webcam C930e 1)";
             self[100].rightNDIChannel = "NDIBOX (Logitech Webcam C930e 0)";
 
             self[101].channelCount = 14;
             self[101].channels = new string[self[100].channelCount];
-            self[101].channels[0] = "incorrect channel";//"right_lcm_channel|"      + self[0].id;
-            self[101].channels[1] = "left_lcm_channel|" + self[100].id;
-            self[101].channels[2] = "incorrect channel";//"right_lcm_valid|"        + self[0].id;
-            self[101].channels[3] = "left_lcm_valid|" + self[100].id;
-            self[101].channels[4] = "right_lcm|" + self[100].id;
-            self[101].channels[5] = "left_lcm|" + self[100].id;
-            self[101].channels[6] = "right_lcm_cmd|" + self[100].id;
-            self[101].channels[7] = "left_lcm_cmd|" + self[100].id;
-            self[101].channels[8] = "right_trigger_lcm|" + self[100].id;
-            self[101].channels[9] = "left_trigger_lcm|" + self[100].id;
-            self[101].channels[10] = "right_lcm_currentpos|" + self[100].id;
-            self[101].channels[11] = "left_lcm_currentpos|" + self[100].id;
-            self[101].channels[12] = "right_lcm_range|" + self[100].id;
-            self[101].channels[13] = "left_lcm_range|" + self[100].id;
+            self[101].channels[0] = "incorrect channel";//"right_lcm_channel-"      + self[0].id;
+            self[101].channels[1] = "left_lcm_channel-" + self[100].id;
+            self[101].channels[2] = "incorrect channel";//"right_lcm_valid-"        + self[0].id;
+            self[101].channels[3] = "left_lcm_valid-" + self[100].id;
+            self[101].channels[4] = "right_lcm-" + self[100].id;
+            self[101].channels[5] = "left_lcm-" + self[100].id;
+            self[101].channels[6] = "right_lcm_cmd-" + self[100].id;
+            self[101].channels[7] = "left_lcm_cmd-" + self[100].id;
+            self[101].channels[8] = "right_trigger_lcm-" + self[100].id;
+            self[101].channels[9] = "left_trigger_lcm-" + self[100].id;
+            self[101].channels[10] = "right_lcm_currentpos-" + self[100].id;
+            self[101].channels[11] = "left_lcm_currentpos-" + self[100].id;
+            self[101].channels[12] = "right_lcm_range-" + self[100].id;
+            self[101].channels[13] = "left_lcm_range-" + self[100].id;
 
             self[101].leftNDIChannel  = "DESKTOP-42UGJFF (Logitech Webcam C930e 0)";
             self[101].rightNDIChannel = "NDIBOX (Logitech Webcam C930e 0)";
@@ -126,19 +126,19 @@ namespace LCM.LCM_Viewer
         {
             public void MessageReceived(LCM.LCM lcm, string channel, LCM.LCMDataInputStream dins)
             {
-                if (channel.StartsWith("control_query|")){
+                if (channel.StartsWith("control_query-")){
                     query_t query = new query_t(dins);
-                    int id = int.Parse((channel.Split('|')[1]));
+                    int id = int.Parse((channel.Split('-')[1]));
                     if (info[id].user < 0 || query.userID < 0)
                     {
                         info[id].user = query.userID;
                     }
                 }
 
-                if (channel.StartsWith("confidence_threshold_lcm|"))
+                if (channel.StartsWith("confidence_threshold_lcm-"))
                 {
                     confidencethreshold_t threshold = new confidencethreshold_t(dins);
-                    int id = int.Parse((channel.Split('|')[1]));
+                    int id = int.Parse((channel.Split('-')[1]));
                     info[id].threshold = threshold.confidence;
                 }
             }

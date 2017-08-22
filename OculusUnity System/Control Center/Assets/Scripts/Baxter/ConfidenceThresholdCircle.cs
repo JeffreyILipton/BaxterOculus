@@ -58,6 +58,9 @@ public class ConfidenceThresholdCircle : ChannelPublisher {
             if (imageFill > -.5 && imageFill < -.25)
             {
                 imageFill = .5f;
+            } else if(imageFill < 0)
+            {
+                imageFill = 0;
             }
             UserBar.fillAmount = imageFill;
             threshold = imageFill * 2;
