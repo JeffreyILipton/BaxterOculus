@@ -41,6 +41,7 @@ curtime = time.time()
 confidence = 0
 userID = -1
 id
+lcmChannel = ""
 
 if DEBUG: print "time:", curtime
 
@@ -60,7 +61,20 @@ def ProcessQuery(data):
 
 def SendLCM():
     global userID
+    global id
+    global lcmChannel
+    global confidence
     print "user ID: ", userID
+
+    data                    = info_t()
+    data.id                 = id
+    data.confidence         = confidence
+    data.threshold          = .5
+    data.user               = userID
+    data.enabled            = True
+
+    lc = lcm.LCM("udpm://239.255.76.67:7667:?ttl=1")
+    lc.publish(lcmChannel,data.encode())
 
 def main():
     """BaxterInterface
@@ -79,10 +93,17 @@ def main():
     #)
     #args = parser.parse_args(rospy.myargv()[1:])
 
+    global lcmChannel
+    global id
+
     rospy.init_node('id', anonymous=True)
     full_param_name = rospy.search_param('id')
     param_value = rospy.get_param(full_param_name)
     id = param_value
+
+    full_param_name = rospy.search_param('lcmChannel')
+    param_value = rospy.get_param(full_param_name)
+    lcmChannel = str(param_value)
     
     timeout =0.1
     sub_func = None
@@ -90,7 +111,7 @@ def main():
     msgType = None
 
     connection_list = []
-    lc = lcm.LCM("udpm://239.255.76.67:7667:?ttl=1")
+
 
 
 
@@ -117,13 +138,16 @@ def main():
         
 
 
-    rospy.spin()
+    
 
-
-    #print "done"
-    #rs.disable()
+    rate = rospy.Rate(1) # 1hz
+    while not rospy.is_shutdown():
+           print "tick"
+           #print lcChannel
+           SendLCM()
+           #rospy.spin()
+           rate.sleep()
     return 0
-        
 
 
 if __name__ == "__main__":
