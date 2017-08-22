@@ -17,13 +17,14 @@ from functools import *
 from Comms import *
 
 def QueryRos(RosPub,LcmChannel,lcmData):
-    print "test"
+    #print "test"
     try:
         lcm_msg = query_t.decode(lcmData)
         print lcm_msg.userID
         RosPub.publish(lcm_msg.userID)
     except:
-        print "errored"
+        pass
+        #print "errored"
 
 
 class LCMInterface():

@@ -48,15 +48,20 @@ if DEBUG: print "time:", curtime
 
 
 def ProcessConfidence(data):
+    global confidence
     confidence = data
     
 def ProcessQuery(data):
-    if userID == -1 or userID == -2 or data*-1 == userID or data == -1 or data == -2:
-        userID = data
+    receivedValue = int(data.data)
+    global userID
+    if (userID == -1) or (userID == -2) or (-receivedValue == userID) or (receivedValue == -1) or (receivedValue == -2):
+        userID = receivedValue
     SendLCM()
 
 def SendLCM():
-    print userID
+    global userID
+    print "user ID: ", userID
+
 def main():
     """BaxterInterface
  
@@ -73,10 +78,6 @@ def main():
     #    help="the part to control, 'left', 'right','head','right_trigger','right_gripper','left_gripper','left_range','right_range'"
     #)
     #args = parser.parse_args(rospy.myargv()[1:])
-    rospy.init_node('part_listener', anonymous=True)
-    full_param_name = rospy.search_param('part')
-    param_value = rospy.get_param(full_param_name)
-    part = param_value
 
     rospy.init_node('id', anonymous=True)
     full_param_name = rospy.search_param('id')
@@ -90,28 +91,24 @@ def main():
 
     connection_list = []
     lc = lcm.LCM("udpm://239.255.76.67:7667:?ttl=1")
-    ardPort = "/dev/ttyACM2"
 
-    if part == '~confidence':
-        channel = ROS_CONFIDENCE
-        sub_func = ProcessConfidence
-        msgType = Float32
-        connection_list.append((channel,msgType,sub_func))   
+
+
+    channel = ROS_CONFIDENCE
+    sub_func = ProcessConfidence
+    msgType = Float32
+    connection_list.append((channel,msgType,sub_func))   
          
-    elif part == 'query':
-        channel = ROS_QUERY
-        sub_func = ProcessQuery
-        msgType = Int16   
-        connection_list.append((channel,msgType,sub_func))  
+    channel2 = ROS_QUERY
+    sub_func2 = ProcessQuery
+    msgType2 = Int16   
+    connection_list.append((channel2,msgType2,sub_func2))  
         
-    else :
-        print "unknown part:", part
-        return 0
+
      
 
     
     #Start movement
-    print "starting part: ",part
     curtime = time.time()
     rs = RobotEnable(CHECK_VERSION)
     for connection in connection_list:

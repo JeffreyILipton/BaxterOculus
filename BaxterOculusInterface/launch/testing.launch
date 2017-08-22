@@ -13,7 +13,11 @@
      </node>
 
      <node pkg="baxter_lcm" name ="QueryRos" type = "QueryToRos.py" output="screen">
-        <param name="queryChannel"  value="query|32375" />
+        <param name="queryChannel"  value="query|100" />
+     </node>
+
+     <node pkg="baxter_lcm" name ="info_sender" type = "LCMInfo.py" output="screen">
+        <param name="id"  value="100" />
      </node>
   </group>
 </launch>

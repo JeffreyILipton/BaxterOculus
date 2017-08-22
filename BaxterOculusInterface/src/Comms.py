@@ -38,3 +38,4 @@ LCM_R_CAMERA = "right_lcm_camera"
 ROS_R_CAMERA = "/cameras/right_hand_camera/image"
 
 ROS_QUERY = "query"
+ROS_CONFIDENCE = "~confidence"
