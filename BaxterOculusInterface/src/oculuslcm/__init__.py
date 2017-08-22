@@ -8,4 +8,8 @@ from .trigger_t import trigger_t
 from .range_t import range_t
 from .velocity_t import velocity_t
 from .cmd_t import cmd_t
+from .info_t import info_t
+from .robotself_t import robotself_t
+from .query_t import query_t
+from .confidencethreshold_t import confidencethreshold_t
 from .image_t import image_t

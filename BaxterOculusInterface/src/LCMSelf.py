@@ -70,13 +70,12 @@ def main():
     rospy.init_node('self_sender', anonymous=True)
     full_param_name = rospy.search_param('id')
     param_value = rospy.get_param(full_param_name)
-    print param_value
     id = int(param_value)
     #print "PART IS:",part
 
     full_param_name = rospy.search_param('type')
     param_value = rospy.get_param(full_param_name)
-    type = int(param_value)
+    type = param_value
 
     full_param_name = rospy.search_param('ability')
     param_value = rospy.get_param(full_param_name)
@@ -111,17 +110,16 @@ def main():
     data.queryChannel       = queryChannel
     data.leftNDIChannel     = leftNDIChannel
     data.rightNDIChannel    = rightNDIChannel
-    print data
 
     for i in range(0,data.channelCount):
-        data.channels[i] = data.channels[i] + "|" + id
+        data.channels[i] = data.channels[i] + "|" + str(id)
 
     lc = lcm.LCM("udpm://239.255.76.67:7667:?ttl=1")
     
     rate = rospy.Rate(1) # 1hz
     while not rospy.is_shutdown():
-           print "tick"
-           print lcChannel
+           #print "tick"
+           #print lcChannel
            lc.publish(lcChannel,data.encode())
            rate.sleep()
     return 0

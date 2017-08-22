@@ -36,3 +36,5 @@ LCM_L_CAMERA = "left_lcm_camera"
 ROS_L_CAMERA = "/cameras/left_hand_camera/image"
 LCM_R_CAMERA = "right_lcm_camera"
 ROS_R_CAMERA = "/cameras/right_hand_camera/image"
+
+ROS_QUERY = "query"
