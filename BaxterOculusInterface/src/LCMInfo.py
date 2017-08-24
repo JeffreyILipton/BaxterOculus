@@ -33,6 +33,11 @@ from Quaternion import *
 import time
 import numpy as np
 
+from cnn3d_grasping.srv import Start, StartRequest, Stop, StopRequest, \
+    GetThreshold, GetThresholdRequest, \
+    SetThreshold, SetThresholdRequest, \
+    NeedHelp, NeedHelpResponse
+
 DEBUG = False
 CAM_TIME = 0.1
 RANGE_TIME = 0.05
@@ -43,6 +48,8 @@ threshold  = 0.5
 userID = -1
 id
 lcmChannel = ""
+
+t = None
 
 if DEBUG: print "time:", curtime
 
@@ -59,6 +66,11 @@ def ProcessQuery(data):
     global userID
     if (userID == -1) or (userID == -2) or (-receivedValue == userID) or (receivedValue == -1) or (receivedValue == -2):
         userID = receivedValue
+        if(userID < -2 or userID == -1):
+            t._test_start()
+        elif(userID > 0 or userID == -2):
+            t._test_stop()
+
     SendLCM()
 
 def ProcessThreshold(data):
@@ -85,6 +97,66 @@ def SendLCM():
 
     lc.publish(lcmChannel,data.encode())
 
+class CChoi():
+    def __init__(self):
+        rospy.wait_for_service('demo_grasping/start')
+        self._srv_start = rospy.ServiceProxy('demo_grasping/start', Start)
+
+        rospy.wait_for_service('demo_grasping/stop')
+        self._srv_stop = rospy.ServiceProxy('demo_grasping/stop', Stop)
+
+        rospy.wait_for_service('demo_grasping/get_th')
+        self._srv_get_th = rospy.ServiceProxy('demo_grasping/get_th', GetThreshold)
+
+        rospy.wait_for_service('demo_grasping/set_th')
+        self._srv_set_th = rospy.ServiceProxy('demo_grasping/set_th', SetThreshold)
+
+        s = rospy.Service('~grasp_help', NeedHelp, self.srv_grasp_help)
+
+    def srv_grasp_help(self, req):
+        rospy.loginfo('srv_grasp_help')
+
+        # a human gives a good grasp pose
+        # ...
+
+        print "Help"
+
+        pose = Pose(orientation=Quaternion(w=1.0))
+        resp = NeedHelpResponse()
+        resp.pose = pose
+        return resp
+
+    def _test_start(self):
+        req = StartRequest()
+        resp = self._srv_start(req)
+        print('done _test_start')
+
+    def _test_stop(self):
+        req = StopRequest()
+        resp = self._srv_stop(req)
+        print('done _test_stop')
+
+    def _test_get_th(self):
+        req = GetThresholdRequest()
+        resp = self._srv_get_th(req)
+        print('threshold value: {}'.format(resp.th))
+        print('done _test_get_th')
+
+    def _test_set_th(self):
+        req = SetThresholdRequest()
+        req.th = 0.2
+        resp = self._srv_set_th(req)
+        print('done _test_set_th')
+
+    def test(self):
+        try:
+            self._test_start()
+            self._test_stop()
+            self._test_get_th()
+            self._test_set_th()
+        except rospy.ServiceException, e:
+            print("Service call failed: {}".format(e))
+
 def main():
     """BaxterInterface
  
@@ -104,6 +176,7 @@ def main():
 
     global lcmChannel
     global id
+    global t
 
     rospy.init_node('id', anonymous=True)
     full_param_name = rospy.search_param('id')
@@ -121,7 +194,7 @@ def main():
 
     connection_list = []
 
-
+    t = CChoi()
 
 
     channel = ROS_CONFIDENCE
@@ -138,10 +211,7 @@ def main():
     sub_func3 = ProcessThreshold
     msgType3 = Float32  
     connection_list.append((channel3,msgType3,sub_func3))  
-        
-
-     
-
+    
     
     #Start movement
     curtime = time.time()
