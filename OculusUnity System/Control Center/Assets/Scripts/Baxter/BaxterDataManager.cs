@@ -454,13 +454,13 @@ public class BaxterDataManager : MonoBehaviour
     {
         get
         {
-            return dataMap[targetNumber].leftCommandChannel;
+            return dataMap[targetNumber].rightCommandChannel;
         }
 
         set
         {
             BaxterData tempData = dataMap[targetNumber];
-            tempData.leftCommandChannel = value;
+            tempData.rightCommandChannel = value;
             dataMap[targetNumber] = tempData;
         }
     }
@@ -469,13 +469,13 @@ public class BaxterDataManager : MonoBehaviour
     {
         get
         {
-            return dataMap[targetNumber].rightCommandChannel;
+            return dataMap[targetNumber].leftCommandChannel;
         }
 
         set
         {
             BaxterData tempData = dataMap[targetNumber];
-            tempData.rightCommandChannel = value;
+            tempData.leftCommandChannel = value;
             dataMap[targetNumber] = tempData;
         }
     }

@@ -22,8 +22,8 @@ namespace LCM.LCM_Viewer
                 InfoandSelfSender.RunInfoandSelfSender();
             }
             Console.WriteLine("Display Mode");
-            Console.WriteLine("Do you want to send dummy range and valid data");
-            sendDummyValues = (Console.ReadLine().StartsWith("y"));
+            //Console.WriteLine("Do you want to send dummy range and valid data");
+            sendDummyValues = false;// (Console.ReadLine().StartsWith("y"));
             try
             {
                 myLCM = new LCM.LCM("udpm://239.255.76.67:7667:?ttl=1");

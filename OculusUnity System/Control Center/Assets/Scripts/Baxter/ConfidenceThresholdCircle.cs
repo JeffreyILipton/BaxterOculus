@@ -12,8 +12,9 @@ using UnityEngine.UI;
 public class ConfidenceThresholdCircle : ChannelPublisher {
 
     public OVRInput.Controller m_controller;
-    public OVRInput.Button m_button;
-    public OVRInput.Touch m_touch;
+    public OVRInput.Button m_set;
+    public OVRInput.Button m_view;
+    public OVRInput.Button m_grab;
     public Transform handTransform;
     public Image UserBar;
     public Image InfoBar;
@@ -30,8 +31,8 @@ public class ConfidenceThresholdCircle : ChannelPublisher {
         InfoBar.color = infoColor;
         UserBar.color = interactColor;
 
-        //If we are just touching the button, not pressing we want to display the robot's current confidence threshold
-        if (OVRInput.Get(m_touch, m_controller))
+        //Button to display
+        if (OVRInput.Get(m_view, m_controller) && !OVRInput.Get(m_grab, m_controller))
         {
             text.text = "" + (int)(HomunculusGlobals.instance.CurrentInfo.threshold * 100);
 
@@ -43,39 +44,41 @@ public class ConfidenceThresholdCircle : ChannelPublisher {
             InfoBar.transform.localRotation     = Quaternion.Euler(0, 0, handTransform.localRotation.eulerAngles.z);
             UserBar.transform.localRotation     = Quaternion.Euler(0, 0, handTransform.localRotation.eulerAngles.z);
 
+            //If we are pressing down then we will calculate a new coinfidence thershold and display a new semi circle representing it
+            if (OVRInput.Get(m_set, m_controller))
+            {
+                float imageFill = 1 - ((handTransform.localRotation.eulerAngles.z / 360) + .5f);
+                if (imageFill > -.5 && imageFill < -.25)
+                {
+                    imageFill = .5f;
+                }
+                else if (imageFill < 0)
+                {
+                    imageFill = 0;
+                }
+                UserBar.fillAmount = imageFill;
+                threshold = imageFill * 2;
+
+                text.text = "" + (int)(threshold * 100);
+            }
+
+            //If we release the button then we send the LCM message for the new confidence threshold
+            else if (OVRInput.GetUp(m_set, m_controller))
+            {
+                UserBar.fillAmount = 0;
+                confidencethreshold_t message = new confidencethreshold_t();
+                message.confidence = threshold;
+                Send(message);
+            }
         }
         //If we are no longer touching we want to hide the UI
-        else if (OVRInput.GetUp(m_touch, m_controller))
+        else if (OVRInput.GetUp(m_view, m_controller) || OVRInput.Get(m_grab, m_controller))
         {
             text.text = "";
             InfoBar.fillAmount = 0;
             background.fillAmount = 0;
-        }
-
-        //If we are pressing down then we will calculate a new coinfidence thershold and display a new semi circle representing it
-        if (OVRInput.Get(m_button, m_controller)){
-            float imageFill = 1 - ((handTransform.localRotation.eulerAngles.z / 360) + .5f);
-            if (imageFill > -.5 && imageFill < -.25)
-            {
-                imageFill = .5f;
-            } else if(imageFill < 0)
-            {
-                imageFill = 0;
-            }
-            UserBar.fillAmount = imageFill;
-            threshold = imageFill * 2;
-
-            text.text = "" + (int)(threshold * 100);
-        }
-
-        //If we release the button then we send the LCM message for the new confidence threshold
-        else if (OVRInput.GetUp(m_button, m_controller))
-        {
             UserBar.fillAmount = 0;
-            confidencethreshold_t message = new confidencethreshold_t();
-            message.confidence = threshold;
-            Send(message);
-        }
+        }     
     }
 
     /// <summary>

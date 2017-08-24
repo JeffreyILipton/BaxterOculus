@@ -5,7 +5,10 @@ using UnityEngine;
 
 public class OculusHandOrbGrabManager : MonoBehaviour {
     private bool grabbing = false; //Are we trying to grab an object?
-    public OculusHand hand; //The hand object we are passed through Unity's drag n drop interface
+    public OVRInput.Controller m_controller; 
+    public OVRInput.Button GripButton;
+    public OVRInput.Button CommandButton;
+    public OVRInput.Button TriggerButton; 
 
     private Material normalMat; //The material that looks like an actual hand
     private Material glowMat; //The material that looks like it is are part of the radiacive blue man group
@@ -15,7 +18,6 @@ public class OculusHandOrbGrabManager : MonoBehaviour {
     private oculuslcm.trigger_t trigger; //Used to shoot things of LCM
     private short prevCommand; // The previous command message sent
     private bool prevTrigger; // The previous trigger message
-    public bool leftHanded;
 
     public ChannelPublisher triggerSender;
     public ChannelPublisher commandSender;
@@ -23,7 +25,6 @@ public class OculusHandOrbGrabManager : MonoBehaviour {
     // Use this for initialization
     void Start()
     {
-        hand = gameObject.GetComponent(typeof(OculusHand)) as OculusHand; //Fetches he SixenseHand object within the gameObject
         rend = gameObject.GetComponentInChildren<Renderer>(); //Fetches the render object
         normalMat = rend.material; //Sets the normalMat as what the object is set to in Unity's enviornment (this should be the fleshy meterial
         glowMat = (Material)Resources.Load("Hands_Glow") as Material; // This loads the glow material, which MUST be located inside the resource folder
@@ -36,12 +37,12 @@ public class OculusHandOrbGrabManager : MonoBehaviour {
     // Update is called once per frame
     void Update()
     {
-        grabbing = OVRInput.Get(OVRInput.Button.PrimaryHandTrigger, hand.m_controller);//Set grabbing to wether we are pulling the trigger
+        grabbing = OVRInput.Get(GripButton, m_controller);//Set grabbing to wether we are pulling the trigger
 
-        if (hand.m_controller == OVRInput.Controller.LTouch)
+        if (m_controller == OVRInput.Controller.LTouch)
         {
             // If the user is pressing the bumper, determine wether command.command is 1 or 0, only for left
-            if (OVRInput.Get(OVRInput.RawButton.X))
+            if (OVRInput.Get(CommandButton, m_controller))
             {
                 command.command = 0;
             }
@@ -59,8 +60,8 @@ public class OculusHandOrbGrabManager : MonoBehaviour {
             prevCommand = command.command; //Updating the previous command
 
         }
-        else if (hand.m_hand == OculusHands.RIGHT) {
-            Vector2 xy = OVRInput.Get(OVRInput.Axis2D.PrimaryThumbstick, hand.m_controller);
+        else if (m_controller == OVRInput.Controller.RTouch) {
+            Vector2 xy = OVRInput.Get(OVRInput.Axis2D.PrimaryThumbstick, m_controller);
 
             //If the user presses both four and the bumper then the trigger is pulled, other wise it is not. Only for the right hand
             trigger.trigger = ((xy[1] > 0.5) && OVRInput.Get(OVRInput.Button.PrimaryThumbstick));
@@ -74,7 +75,7 @@ public class OculusHandOrbGrabManager : MonoBehaviour {
 
 
 
-            if (OVRInput.Get(OVRInput.RawButton.A))
+            if (OVRInput.Get(CommandButton, m_controller))
             {
                 command.command = 0;
             }
@@ -118,9 +119,9 @@ public class OculusHandOrbGrabManager : MonoBehaviour {
     /// <returns></returns>
     public Quaternion getRotation()
     {
-        if (OVRInput.Get(OVRInput.Button.PrimaryIndexTrigger, hand.m_controller))
+        if (OVRInput.Get(TriggerButton, m_controller))
         {
-            Quaternion Q = OVRInput.GetLocalControllerRotation(hand.m_controller);
+            Quaternion Q = OVRInput.GetLocalControllerRotation(m_controller);
             double w = Q[0];
             double x = Q[1];
             double y = Q[2];

@@ -27,10 +27,11 @@ public class RobotInfo : MonoBehaviour {
     /// Update our info_t data and apply it to the UI
     /// </summary>
     /// <param name="info"></param>
-    public void RefreshInfo (info_t info)
+    public void RefreshInfo(info_t info)
     {
         this.info = info;
-        IDText.text         = "ID: " + info.id;
+        launcher.info = info;
+        IDText.text = "ID: " + info.id;
         if (info.user == -1)
         {
             UserText.text = "    AUTO";
@@ -43,7 +44,8 @@ public class RobotInfo : MonoBehaviour {
             colorBlock.highlightedColor = Color.green;
             LaunchButton.colors = colorBlock;
 
-        }else if (info.user == -2)
+        }
+        else if (info.user == -2)
         {
             UserText.text = "STOPPED";
             UserText.alignment = TextAnchor.UpperLeft;
@@ -54,7 +56,8 @@ public class RobotInfo : MonoBehaviour {
             ColorBlock colorBlock = LaunchButton.colors;
             colorBlock.highlightedColor = Color.green;
             LaunchButton.colors = colorBlock;
-        } else if (info.user > 0)
+        }
+        else if (info.user > 0)
         {
             UserText.text = "User #" + info.user + " Operating ";
             UserText.alignment = TextAnchor.UpperRight;
@@ -67,8 +70,8 @@ public class RobotInfo : MonoBehaviour {
             LaunchButton.colors = colorBlock;
         }
         else if (info.user < -2)
-        {                                   
-            UserText.text = "User #" + info.user + " Supervising";
+        {
+            UserText.text = "User #" + -info.user + " Supervising";
             UserText.alignment = TextAnchor.UpperRight;
             UserText.color = Color.yellow;
 
@@ -79,8 +82,8 @@ public class RobotInfo : MonoBehaviour {
             LaunchButton.colors = colorBlock;
         }
 
-movingPriorityBar.rectTransform.localScale = new Vector3((float)info.confidence, movingPriorityBar.rectTransform.localScale.y, movingPriorityBar.rectTransform.localScale.z);
- 
+        movingPriorityBar.rectTransform.localScale = new Vector3((float)info.confidence, movingPriorityBar.rectTransform.localScale.y, movingPriorityBar.rectTransform.localScale.z);
+
     }
 
     /// <summary>
@@ -92,5 +95,6 @@ movingPriorityBar.rectTransform.localScale = new Vector3((float)info.confidence,
         this.self  = robotSelf;
         RobotType.text  = robotSelf.type;
         launcher.self   = robotSelf;
+        Monitor.Subscribe(self.ability);
     }
 }
