@@ -35,6 +35,7 @@ import numpy as np
 
 DEBUG = False
 CAM_TIME = 0.1
+MONITOR_TIME = 0.5
 RANGE_TIME = 0.05
 curtime = time.time()
 if DEBUG: print "time:", curtime
@@ -257,6 +258,22 @@ def ProcessImage(lc,lcChannel,rosmsg):
     #lc.publish(LCM_L_CAMERA,tm.encode())
     #lc.publish(LCM_L_TRIGGER,tm.encode())
 
+def ProcessMonitorImage(lc,lcChannel,rosmsg):
+    global curtime
+    global MONITOR_TIME
+    #print "tick"
+
+    if time.time()-curtime >MONITOR_TIME:
+        lcm_msg = image_t()
+        lcm_msg.height = rosmsg.height
+        lcm_msg.width = rosmsg.width
+        lcm_msg.row_stride = rosmsg.step
+        lcm_msg.data = rosmsg.data
+        lcm_msg.size = len(rosmsg.data)
+        lc.publish(lcChannel,lcm_msg.encode())
+
+        curtime = time.time()
+
 
 def main():
     """BaxterInterface
@@ -417,6 +434,21 @@ def main():
         channel = ROS_L_CAMERA
         msgType = Image
         sub_func = lambda x : ProcessImage(lc,lcChannel,x)
+        #sub_func = partial(ProcessImage,lc,lcChannel)
+        connection_list.append((channel,msgType,sub_func))
+        connection_list.append((channel,msgType,sub_func))
+
+        l_cam = CameraController('left_hand_camera')
+        l_cam.resolution=(320,200)#(1280, 800)
+        l_cam.open()
+
+    elif part == 'monitor_camera':
+
+        lcChannel = LCM_MONITOR_CAMERA  + "-" + str(id)
+        #lc = lcm.LCM("udpm://239.255.76.67:7667:?ttl=1")
+        channel = ROS_L_CAMERA
+        msgType = Image
+        sub_func = lambda x : ProcessMonitorImage(lc,lcChannel,x)
         #sub_func = partial(ProcessImage,lc,lcChannel)
         connection_list.append((channel,msgType,sub_func))
         connection_list.append((channel,msgType,sub_func))

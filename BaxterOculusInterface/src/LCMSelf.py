@@ -104,7 +104,7 @@ def main():
     data                    = robotself_t()
     data.id                 = id
     data.type               = type
-    data.ability            = ability
+    data.ability            = LCM_MONITOR_CAMERA + "-" + str(id)
     data.channels           = channels.split('|')
     data.channelCount       = len(data.channels)
     data.queryChannel       = queryChannel
