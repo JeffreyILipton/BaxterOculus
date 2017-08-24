@@ -22,6 +22,13 @@ class BaxterAssetManager : MonoBehaviour
     /// <param name="self"></param>
     public void updateFromRobotSelf(robotself_t self)
     {
+        //if (BaxterDataManager.baxterDataManager == null)
+        //{
+        //    BaxterDataManager dataManager = gameObject.GetComponent<BaxterDataManager>();
+        //    dataManager.Awake();
+        //}
+        //Debug.Log(BaxterDataManager.baxterDataManager.ChannelSubscribers.Count);
+
         ArrayList channelSubscribers = BaxterDataManager.baxterDataManager.ChannelSubscribers;
         ArrayList channelPublishers = BaxterDataManager.baxterDataManager.ChannelPublishers;
 
@@ -29,12 +36,13 @@ class BaxterAssetManager : MonoBehaviour
         ArrayList enabledChannels = new ArrayList(self.channels);
         for (int i = 0; i < channelSubscribers.Count; i++)
         {
-            ((ChannelSubscriber)channelSubscribers[i]).IsInUse = (enabledChannels.Contains(((ChannelSubscriber)channelSubscribers[i]).getSubscriptionChannel()));
-        }
+            bool temp = (enabledChannels.Contains(((ChannelSubscriber)channelSubscribers[i]).getSubscriptionChannel()));
+            ((ChannelSubscriber)channelSubscribers[i]).IsInUse = temp;        }
 
         for (int i = 0; i < channelPublishers.Count; i++)
         {
-            ((ChannelPublisher)channelPublishers[i]).IsInUse = (enabledChannels.Contains(((ChannelPublisher)channelPublishers[i]).sendChannel));
+            bool temp = (enabledChannels.Contains(((ChannelPublisher)channelPublishers[i]).sendChannel));
+            ((ChannelPublisher)channelPublishers[i]).IsInUse = temp;
         }
 
     }
@@ -49,7 +57,7 @@ class BaxterAssetManager : MonoBehaviour
         updateFromRobotSelf(self);
     }
 
-    private void OnEnable() //called inbetween awake and start
+    private void OnEnable()
     {
         if (baxterAssetManager != null)
         {

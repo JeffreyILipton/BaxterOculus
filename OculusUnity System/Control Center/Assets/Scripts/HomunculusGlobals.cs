@@ -14,6 +14,8 @@ public class HomunculusGlobals : MonoBehaviour, LCMSubscriber{
 
     public string InfoChannel, SelfChannel;
 
+    public bool isAuto;
+
     /// <summary>
     /// The robotself_t data of the robot currently being targeted
     /// </summary>
@@ -46,7 +48,15 @@ public class HomunculusGlobals : MonoBehaviour, LCMSubscriber{
 
         set
         {
-            currentInfo = value;   
+            currentInfo = value;
+            if (currentInfo.user > 0 || currentInfo.user == -2)
+            {
+                isAuto = false;
+            }
+            else if (CurrentInfo.user < -2 || currentInfo.user == -1)
+            {
+                isAuto = true;
+            }
         }
     }
 

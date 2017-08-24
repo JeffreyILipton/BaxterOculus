@@ -12,6 +12,7 @@ using UnityEngine.SceneManagement;
 public class SceneLauncherQuery : MonoBehaviour   
 {
     public robotself_t self;
+    public info_t info;
     public LCM.LCM.LCM myLCM;
 
     public void Start()
@@ -26,7 +27,14 @@ public class SceneLauncherQuery : MonoBehaviour
     public void Query()
     {
         query_t query = new query_t();
-        query.userID = HomunculusGlobals.instance.userID;
+        if (info.user == -1)
+        {
+            query.userID = (short)(-1 * HomunculusGlobals.instance.userID);
+        } else
+        {
+            query.userID = HomunculusGlobals.instance.userID;
+        }
+        
         myLCM.Publish(self.queryChannel, query);
     }
 }

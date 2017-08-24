@@ -25,7 +25,7 @@ public class BarBehaviorSubscriber : ChannelSubscriber
     // Update is called once per frame
     void Update()
     {
-        bar.SetFillerSizeAsPercentage((float)value*100);
+        bar.SetFillerSize((float)value*100);
     }
 }
 

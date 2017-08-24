@@ -20,7 +20,7 @@ namespace LCM.LCM_Viewer
                 oculuslcm.range_t range = new oculuslcm.range_t();
                 range.range = (float).5;//(25.0 + 5 * Math.Sin(DateTime.Now.Ticks / 10000000.0));
 
-                myLCM.Publish("right_lcm_range", range);
+                myLCM.Publish("right_lcm_range-100", range);
 
                 System.Threading.Thread.Sleep(10);
             }

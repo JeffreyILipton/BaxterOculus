@@ -9,7 +9,6 @@ public class ArrowReciever : ChannelSubscriber
 
     //public string channel;
     //public SelectedHand hand; //Hand given through Unity's drag n drop system
-    bool initialized; //Has LCM warmed up?
     private bool newData;
     private Quaternion orientation;
     private Vector3 positon;

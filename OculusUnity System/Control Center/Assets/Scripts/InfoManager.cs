@@ -156,7 +156,7 @@ public class InfoManager : MonoBehaviour, LCMSubscriber
            
             infoMap[info.id] = newInfoBlock; //Applying our changes to the map
 
-            if (info.user == HomunculusGlobals.instance.userID && SceneManager.GetActiveScene().name.Equals("Lobby")) //Only would want this to work if we are in the lobby
+            if (Math.Abs(info.user) == HomunculusGlobals.instance.userID && SceneManager.GetActiveScene().name.Equals("Lobby")) //Only would want this to work if we are in the lobby
             {
                 HomunculusGlobals.instance.CurrentRobotSelf = infoMap[info.id].self; //The next scene will need our self information
                 HomunculusGlobals.instance.CurrentInfo      = infoMap[info.id].info; //The next scene will need our info information

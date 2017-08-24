@@ -24,7 +24,6 @@ public class LCMtoTexture : ChannelSubscriber
     /// <param name="ins"></param>
     public override void HandleMessage(LCM.LCM.LCM lcm, string channel, LCMDataInputStream ins)
     {
-        base.MessageReceived(lcm, channel, ins);
         imageRAW = new image_t(ins);
         runTexture = true;
     }
@@ -57,7 +56,10 @@ public class LCMtoTexture : ChannelSubscriber
                 texture.Apply();
                
             }
-            texture.LoadRawTextureData(imageRAW.data);
+            if (imageRAW.data != null)
+            {
+                texture.LoadRawTextureData(imageRAW.data);
+            }
 
             //The texture is applied to the _MainTex and _EmissionMap textures within the the object's material
             texture.Apply();
