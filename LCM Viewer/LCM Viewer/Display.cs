@@ -17,13 +17,13 @@ namespace LCM.LCM_Viewer
         {
             bool sendDummyValues = false;
             Console.WriteLine("Do you want to run a self and info simulator as opposed to displaying lcm signals?");
-            if (Console.ReadLine().StartsWith("y") || Console.ReadLine().StartsWith("Y"))
+            if (Console.ReadLine().StartsWith("y"))
             {
                 InfoandSelfSender.RunInfoandSelfSender();
             }
             Console.WriteLine("Display Mode");
             Console.WriteLine("Do you want to send dummy range and valid data");
-            sendDummyValues = (Console.ReadLine().StartsWith("y") || Console.ReadLine().StartsWith("Y"));
+            sendDummyValues = (Console.ReadLine().StartsWith("y"));
             try
             {
                 myLCM = new LCM.LCM("udpm://239.255.76.67:7667:?ttl=1");

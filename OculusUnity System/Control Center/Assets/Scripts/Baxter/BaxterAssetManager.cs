@@ -22,6 +22,13 @@ class BaxterAssetManager : MonoBehaviour
     /// <param name="self"></param>
     public void updateFromRobotSelf(robotself_t self)
     {
+        //if (BaxterDataManager.baxterDataManager == null)
+        //{
+        //    BaxterDataManager dataManager = gameObject.GetComponent<BaxterDataManager>();
+        //    dataManager.Awake();
+        //}
+        //Debug.Log(BaxterDataManager.baxterDataManager.ChannelSubscribers.Count);
+
         ArrayList channelSubscribers = BaxterDataManager.baxterDataManager.ChannelSubscribers;
         ArrayList channelPublishers = BaxterDataManager.baxterDataManager.ChannelPublishers;
 
@@ -50,7 +57,7 @@ class BaxterAssetManager : MonoBehaviour
         updateFromRobotSelf(self);
     }
 
-    private void OnEnable() //called inbetween awake and start
+    private void OnEnable()
     {
         if (baxterAssetManager != null)
         {

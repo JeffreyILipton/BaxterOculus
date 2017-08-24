@@ -78,8 +78,8 @@ namespace LCM.LCM_Viewer
             self[101].channels[12] = "right_lcm_range-" + self[100].id;
             self[101].channels[13] = "left_lcm_range-" + self[100].id;
 
-            self[101].leftNDIChannel  = "DESKTOP-42UGJFF (Logitech Webcam C930e 0)";
-            self[101].rightNDIChannel = "NDIBOX (Logitech Webcam C930e 0)";
+            self[101].leftNDIChannel  = "ALIENBOB (Logitech Webcam C930e 0)";
+            self[101].rightNDIChannel = "ALIENBOB (Logitech Webcam C930e 1)";
 
             self[102].leftNDIChannel = "DESKTOP-42UGJFF (Logitech Webcam C930e 0)";
             self[102].rightNDIChannel = "NDIBOX (Logitech Webcam C930e 0)";
@@ -98,7 +98,7 @@ namespace LCM.LCM_Viewer
 
                 while (run)
                 {
-                    for (int i = 0; i < 3; i++)
+                    for (int i = 1; i < 3; i++)
                     {
                         //info[i].confidence += (rand.NextDouble() - .5) / 100;
                         if (info[i + 100].confidence > 1)

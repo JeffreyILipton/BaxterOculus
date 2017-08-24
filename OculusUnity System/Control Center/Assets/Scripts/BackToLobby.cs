@@ -18,13 +18,11 @@ public class BackToLobby: MonoBehaviour
     public OVRInput.Controller AutoController;
     public OVRInput.Button AutoButton;
 
-    private bool isAuto;
-
     public void toLobby()
     {
         SceneManager.LoadScene("Lobby");
 
-        if (isAuto) {
+        if (HomunculusGlobals.instance.isAuto) {
             launchQuery(-1);
         } else
         {
@@ -41,12 +39,11 @@ public class BackToLobby: MonoBehaviour
         {
             launchQuery(HomunculusGlobals.instance.userID);
         }
-        isAuto = auto;
     }
 
     public void toggleAuto()
     {
-        setAutonomous(!isAuto);
+        setAutonomous(!HomunculusGlobals.instance.isAuto);
     }
 
     public void Update()
