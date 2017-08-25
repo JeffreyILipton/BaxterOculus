@@ -191,7 +191,25 @@ def ProcessHand(handToBaxter,limb,pub, data):
 
 
 def ProcessIsValid(lc,lcIsValidChannel,lcPosChannel,limb_obj,data):
-    pass
+    # if valid or not
+    lcm_msg = trigger_t()
+    if data.data == True:
+        lcm_msg.trigger = False
+    else:
+        lcm_msg.trigger = False
+    lc.publish(lcIsValidChannel,lcm_msg.encode())
+
+    # return endpoint
+    newpose = limb_obj.endpoint_pose()
+    xyz = newpose['position']
+    orient = newpose['orientation']
+    quat = [orient[3],orient[0],orient[1],orient[2]]
+    quat = QuatForInverse(quat)
+    lcm_pos_msg = pose_t()
+    lcm_pos_msg.position = list(xyz)
+    lcm_pos_msg.orientation = quat
+    lc.publish(lcPosChannel,lcm_pos_msg.encode())
+
     
 def ProcessHead(Head,OculusToAngle,data):
     ang = OculusToAngle(data.orientation)
@@ -298,34 +316,46 @@ def main():
         ros_channnel = ROS_LEFT_REQUEST
         pub = rospy.Publisher(ros_channnel, Pose, queue_size=1)
         handToBaxter = partial(XYZRescale,scales, offsets, mins, maxs)
-        #r = 'right'
-        #right_limb = Limb(r)
+        h = 'left'
+        limb_obj = Limb(h)
         ##right_limb.set_position_speed(1)
-        #iksvc_r,ns_r = iksvcForLimb(r)
+        #iksvc_r,ns_r = iksvcForLimb(l)
         
         #lcChannel = LCM_RIGHT_VALID  + "-" + str(id)
 
 
-        sub_func = partial(ProcessHand,handToBaxter,'left',pub)
+        sub_func = partial(ProcessHand,handToBaxter,h,pub)
         msgType = Pose   
         connection_list.append((channel,msgType,sub_func))  
+
+        lcIsValidChannel  =LCM_LEFT_VALID+ "-" + str(id)
+        lcPosChannel = LCM_LEFT_CURRNEPOS+ "-" + str(id)
+        sub_func2 = partial(ProcessIsValid,lc,lcIsValidChannel,lcPosChannel,limb_obj)
+        connection_list.append((ROS_LEFT_ISVALID,Bool,sub_func2))
+
          
     elif part == 'right':
         channel = ROS_RIGHT
         ros_channnel = ROS_RIGHT_REQUEST
         pub = rospy.Publisher(ros_channnel, Pose, queue_size=1)
         handToBaxter = partial(XYZRescale,scales, offsets, mins, maxs)
-        #r = 'right'
-        #right_limb = Limb(r)
+        h = 'right'
+        limb_obj = Limb(h)
         ##right_limb.set_position_speed(1)
         #iksvc_r,ns_r = iksvcForLimb(r)
         
         #lcChannel = LCM_RIGHT_VALID  + "-" + str(id)
 
 
-        sub_func = partial(ProcessHand,handToBaxter,'right',pub)
+        sub_func = partial(ProcessHand,handToBaxter,h,pub)
         msgType = Pose   
         connection_list.append((channel,msgType,sub_func))  
+
+        lcIsValidChannel  =LCM_RIGHT_VALID+ "-" + str(id)
+        lcPosChannel = LCM_RIGHT_CURRNEPOS+ "-" + str(id)
+        sub_func2 = partial(ProcessIsValid,lc,lcIsValidChannel,lcPosChannel,limb_obj)
+        connection_list.append((ROS_LEFT_ISVALID,Bool,sub_func2))
+
          
     elif part == 'head':
         theta_max = pi
