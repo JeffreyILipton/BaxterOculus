@@ -119,7 +119,7 @@ class CChoi():
         # a human gives a good grasp pose
         # ...
 
-        print "Help"
+        print "Help!!!111!!111"
 
         pose = Pose(orientation=Quaternion(w=1.0))
         resp = NeedHelpResponse()
