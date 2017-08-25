@@ -193,10 +193,7 @@ def ProcessHand(handToBaxter,limb,pub, data):
 def ProcessIsValid(lc,lcIsValidChannel,lcPosChannel,limb_obj,data):
     # if valid or not
     lcm_msg = trigger_t()
-    if data.data == True:
-        lcm_msg.trigger = False
-    else:
-        lcm_msg.trigger = False
+    lcm_msg.trigger = data.data
     lc.publish(lcIsValidChannel,lcm_msg.encode())
 
     # return endpoint
