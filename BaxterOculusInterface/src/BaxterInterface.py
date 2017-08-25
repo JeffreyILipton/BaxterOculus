@@ -192,6 +192,7 @@ def ProcessHand(handToBaxter,limb,pub, data):
 
 def ProcessIsValid(lc,lcIsValidChannel,lcPosChannel,limb_obj,data):
     # if valid or not
+    print "isvalid called: ",data.data
     lcm_msg = trigger_t()
     lcm_msg.trigger = data.data
     lc.publish(lcIsValidChannel,lcm_msg.encode())
@@ -351,7 +352,7 @@ def main():
         lcIsValidChannel  =LCM_RIGHT_VALID+ "-" + str(id)
         lcPosChannel = LCM_RIGHT_CURRNEPOS+ "-" + str(id)
         sub_func2 = partial(ProcessIsValid,lc,lcIsValidChannel,lcPosChannel,limb_obj)
-        connection_list.append((ROS_LEFT_ISVALID,Bool,sub_func2))
+        connection_list.append((ROS_RIGHT_ISVALID,Bool,sub_func2))
 
          
     elif part == 'head':

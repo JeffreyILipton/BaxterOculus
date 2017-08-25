@@ -63,7 +63,7 @@
      </node>
 
      <node pkg="baxter_lcm" name ="ConfidenceThresholdRos" type = "ConfidenceThresholdRos.py" output="screen">
-        <param name="confidenceThresholdChannel"  value="confidence_threshold_lcm|100" />
+        <param name="confidenceThresholdChannel"  value="confidence_threshold_lcm-100" />
      </node>
 
      <node pkg="baxter_lcm" name ="info_sender" type = "LCMInfo.py" output="screen">

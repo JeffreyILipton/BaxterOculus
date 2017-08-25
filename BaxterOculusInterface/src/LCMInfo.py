@@ -45,7 +45,7 @@ curtime = time.time()
 
 confidence = 0.5
 threshold  = 0.5
-userID = -1
+userID = -2
 id
 lcmChannel = ""
 
@@ -63,6 +63,7 @@ def ProcessConfidence(data):
     
 def ProcessQuery(data):
     receivedValue = int(data.data)
+
     global userID
     if (userID == -1) or (userID == -2) or (-receivedValue == userID) or (receivedValue == -1) or (receivedValue == -2):
         userID = receivedValue
@@ -74,8 +75,20 @@ def ProcessQuery(data):
     SendLCM()
 
 def ProcessThreshold(data):
-    global threshold
-    threshold =  np.float32(data.data)
+    #global threshold
+    #threshold =  np.float32(data.data)
+    global t
+    t._test_set_th(np.float32(data.data))
+    SendLCM()
+
+def ProcessHelp(data):
+    global userID
+    print "Help!"
+    if (data.data):
+        if userID < -2: 
+            userID = -userID
+        elif userID == -1: 
+            userID = -2
     SendLCM()
 
 def SendLCM():
@@ -85,6 +98,15 @@ def SendLCM():
     global confidence
     global threshold
     #print "user ID: ", userID
+    req = Float32()
+    timeout = 0.5
+#    try:
+#        resp = ServiceTimeouter(timeout,t._test_get_th,None).call()
+#        if (resp is not None):
+#            threshold = resp
+#            #print threshold
+#    except:
+#        print "Get Threshold Timed Out"
 
     data                    = info_t()
     data.id                 = id
@@ -111,7 +133,7 @@ class CChoi():
         rospy.wait_for_service('demo_grasping/set_th')
         self._srv_set_th = rospy.ServiceProxy('demo_grasping/set_th', SetThreshold)
 
-        s = rospy.Service('~grasp_help', NeedHelp, self.srv_grasp_help)
+        #s = rospy.Service('demo_grasping/grasp_help', NeedHelp, self.srv_grasp_help)
 
     def srv_grasp_help(self, req):
         rospy.loginfo('srv_grasp_help')
@@ -139,14 +161,16 @@ class CChoi():
     def _test_get_th(self):
         req = GetThresholdRequest()
         resp = self._srv_get_th(req)
-        print('threshold value: {}'.format(resp.th))
-        print('done _test_get_th')
+        #print('threshold value: {}'.format(resp.th))
+        #print('done _test_get_th')
+        return resp.th
 
-    def _test_set_th(self):
-        req = SetThresholdRequest()
-        req.th = 0.2
-        resp = self._srv_set_th(req)
+    def _test_set_th(self, confidence):
         print('done _test_set_th')
+        req = SetThresholdRequest()
+        req.th = confidence
+        resp = self._srv_set_th(req)
+
 
     def test(self):
         try:
@@ -178,6 +202,7 @@ def main():
     global id
     global t
 
+
     rospy.init_node('id', anonymous=True)
     full_param_name = rospy.search_param('id')
     param_value = rospy.get_param(full_param_name)
@@ -196,23 +221,27 @@ def main():
 
     t = CChoi()
 
-
     channel = ROS_CONFIDENCE
     sub_func = ProcessConfidence
     msgType = Float32
-    connection_list.append((channel,msgType,sub_func))   
+    connection_list.append((channel,msgType,sub_func))
          
     channel2 = ROS_QUERY
     sub_func2 = ProcessQuery
-    msgType2 = Int16   
-    connection_list.append((channel2,msgType2,sub_func2))  
+    msgType2 = Int16
+    connection_list.append((channel2,msgType2,sub_func2))
 
     channel3 = ROS_THRESHOLD
     sub_func3 = ProcessThreshold
-    msgType3 = Float32  
-    connection_list.append((channel3,msgType3,sub_func3))  
-    
-    
+    msgType3 = Float32
+    connection_list.append((channel3,msgType3,sub_func3))
+
+    channel4 = ROS_HELP
+    sub_func4 = ProcessHelp
+    msgType4 = Bool
+    connection_list.append((channel4,msgType4,sub_func4))
+
+
     #Start movement
     curtime = time.time()
     rs = RobotEnable(CHECK_VERSION)

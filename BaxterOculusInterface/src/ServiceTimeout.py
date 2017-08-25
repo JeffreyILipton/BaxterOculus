@@ -34,7 +34,10 @@ class ServiceTimeouter(object):
         self.thread = threading.Thread(target=self._call_thread)
     def _call_thread(self):
         try:
-            self.retval = self.srv(self.param)
+            if self.param != None:
+                self.retval = self.srv(self.param)
+            else:
+                self.retval = self.srv()
             self.returned = True
         except rospy.ServiceException, e:
             rospy.loginfo("Service call failed: %s" % (e,))

@@ -21,14 +21,14 @@ class Test():
         rospy.wait_for_service('demo_grasping/set_th')
         self._srv_set_th = rospy.ServiceProxy('demo_grasping/set_th', SetThreshold)
 
-        s = rospy.Service('~grasp_help', NeedHelp, self.srv_grasp_help)
+        s = rospy.Service('/demo_grasping/grasp_help', NeedHelp, self.srv_grasp_help)
 
     def srv_grasp_help(self, req):
         rospy.loginfo('srv_grasp_help')
 
         # a human gives a good grasp pose
         # ...
-
+        print "HELP!!!!!11111!!!!!1!!11!!!!1!1!!"
         pose = Pose(orientation=Quaternion(w=1.0))
         resp = NeedHelpResponse()
         resp.pose = pose

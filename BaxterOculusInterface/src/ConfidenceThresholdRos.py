@@ -20,7 +20,7 @@ def ConfidenceThresholdRos(RosPub,LcmChannel,lcmData):
     #print "test"
     try:
         lcm_msg = confidencethreshold_t.decode(lcmData)
-        print "confidence:", lcm_msg.confidence
+        #print "confidence:", lcm_msg.confidence
         RosPub.publish(lcm_msg.confidence )
     except:
         pass
