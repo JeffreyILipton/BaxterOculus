@@ -42,3 +42,8 @@ LCM_MONITOR_CAMERA = "monitor_lcm_camera"
 ROS_QUERY      = "query"
 ROS_CONFIDENCE = "~confidence"
 ROS_THRESHOLD  = "threshold"
+
+ROS_RIGHT_REQUEST = "right_request"
+ROS_LEFT_REQUEST = "left_request"
+ROS_RIGHT_ISVALID = "right_isvalid"
+ROS_LEFT_ISVALID = "left_isvalid"

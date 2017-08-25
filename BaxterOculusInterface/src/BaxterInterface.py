@@ -159,7 +159,7 @@ def iksvcForLimb(limb):
     iksvc = rospy.ServiceProxy(ns, SolvePositionIK)
     return iksvc,ns
 
-def ProcessHand(lc,lcChannel,lcPosChannel,iksvc,ns,timeout,handToBaxter, limb,limb_obj, data):
+def ProcessHand(handToBaxter,limb,pub, data):
     #http://sdk.rethinkrobotics.com/wiki/IK_Service_-_Code_Walkthrough 
     print "\n\nhand called for : ",limb
     position = [data.position.x,data.position.y,data.position.z]
@@ -170,53 +170,28 @@ def ProcessHand(lc,lcChannel,lcPosChannel,iksvc,ns,timeout,handToBaxter, limb,li
 
 
     baxter_pos = handToBaxter(position)
-    ikreq = SolvePositionIKRequest()
-    hdr = Header(stamp=rospy.Time.now(), frame_id='base')
-    pose  = poseFromPosQuatLib(hdr,limb,baxter_pos,orientation)
-    ikreq.pose_stamp.append(pose[limb])
-    lcm_msg = trigger_t()
+    pose=Pose(
+                position=Point(
+                    x=baxter_pos[0],
+                    y=baxter_pos[1],
+                    z=baxter_pos[2],
+                ),
+                orientation=Quaternion(
+                    x=orientation[1],
+                    y=orientation[2],
+                    z=orientation[3],
+                    w=orientation[0],
+                ),
+            )
 
-    try:
-        print "\ntarget:", baxter_pos,"\n\t",orientation
-        #print ikreq
-        #rospy.wait_for_service(ns, timeout)
-        resp = ServiceTimeouter(timeout,iksvc, ikreq).call()
-        if (resp is not None and resp.isValid[0]):
-            print "SUCCESS - Valid Joint Solution Found:"
-            # Format solution into Limb API-compatible dictionary
-            limb_joints = dict(zip(resp.joints[0].name, resp.joints[0].position))
-            lcm_msg.trigger = True
-            lc.publish(lcChannel,lcm_msg.encode())
-            #print limb_joints
-            limb_obj.move_to_joint_positions(limb_joints)
-        else:
-            print "ERROR - No valid Joint Solution:",limb
-            lcm_msg.trigger = False
-            lc.publish(lcChannel,lcm_msg.encode())
-            
-            #print resp
-        #if msg.position[0]>10: limb_obj.move_to_joint_positions(wave_1)
-        #else: limb_obj.move_to_joint_positions(wave_2)
+    #hdr = Header(stamp=rospy.Time.now(), frame_id='base')
+    #pose  = poseFromPosQuatLib(hdr,limb,baxter_pos,orientation)
+    print pose
+    pub.publish(pose)
 
-            
 
-    except (rospy.ServiceException, rospy.ROSException), e:
-        print "except"
-        lcm_msg.trigger = False
-        rospy.logerr("Service call failed: %s" % (e,))
-        lc.publish(lcChannel,lcm_msg.encode())
-    
-    # return endpoint
-    newpose = limb_obj.endpoint_pose()
-    xyz = newpose['position']
-    orient = newpose['orientation']
-    quat = [orient[3],orient[0],orient[1],orient[2]]
-    quat = QuatForInverse(quat)
-    lcm_pos_msg = pose_t()
-    lcm_pos_msg.position = list(xyz)
-    lcm_pos_msg.orientation = quat
-    lc.publish(lcPosChannel,lcm_pos_msg.encode())
-    
+def ProcessIsValid(lc,lcIsValidChannel,lcPosChannel,limb_obj,data):
+    pass
     
 def ProcessHead(Head,OculusToAngle,data):
     ang = OculusToAngle(data.orientation)
@@ -320,30 +295,35 @@ def main():
 
     if part == 'left':
         channel = ROS_LEFT
+        ros_channnel = ROS_LEFT_REQUEST
+        pub = rospy.Publisher(ros_channnel, Pose, queue_size=1)
         handToBaxter = partial(XYZRescale,scales, offsets, mins, maxs)
-        l = 'left'
-        left_limb = Limb(l)
-
-        iksvc_l,ns_l = iksvcForLimb(l)
-
-        lcChannel = LCM_LEFT_VALID  + "-" + str(id)
+        #r = 'right'
+        #right_limb = Limb(r)
+        ##right_limb.set_position_speed(1)
+        #iksvc_r,ns_r = iksvcForLimb(r)
         
+        #lcChannel = LCM_RIGHT_VALID  + "-" + str(id)
 
-        sub_func = partial(ProcessHand,lc,lcChannel,LCM_LEFT_CURRNEPOS  + "-" + str(id), iksvc_l,ns_l,timeout,handToBaxter, l,left_limb)
-        msgType = Pose
-        connection_list.append((channel,msgType,sub_func))   
+
+        sub_func = partial(ProcessHand,handToBaxter,'left',pub)
+        msgType = Pose   
+        connection_list.append((channel,msgType,sub_func))  
          
     elif part == 'right':
         channel = ROS_RIGHT
+        ros_channnel = ROS_RIGHT_REQUEST
+        pub = rospy.Publisher(ros_channnel, Pose, queue_size=1)
         handToBaxter = partial(XYZRescale,scales, offsets, mins, maxs)
-        r = 'right'
-        right_limb = Limb(r)
-        #right_limb.set_position_speed(1)
-        iksvc_r,ns_r = iksvcForLimb(r)
+        #r = 'right'
+        #right_limb = Limb(r)
+        ##right_limb.set_position_speed(1)
+        #iksvc_r,ns_r = iksvcForLimb(r)
         
-        lcChannel = LCM_RIGHT_VALID  + "-" + str(id)
+        #lcChannel = LCM_RIGHT_VALID  + "-" + str(id)
 
-        sub_func = partial(ProcessHand,lc,lcChannel,LCM_RIGHT_CURRNEPOS  + "-" + str(id),iksvc_r,ns_r,timeout,handToBaxter, r,right_limb)
+
+        sub_func = partial(ProcessHand,handToBaxter,'right',pub)
         msgType = Pose   
         connection_list.append((channel,msgType,sub_func))  
          
