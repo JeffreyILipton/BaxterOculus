@@ -1,0 +1,86 @@
+<launch>
+  <arg name="moveit" default="true"/>
+  <arg name="homunculus" default="false"/>
+
+  <group if="$(arg moveit)">
+    <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" respawn="true" />
+
+    <arg name="kinect" default="false" />
+    <arg name="xtion" default="false" />
+    <arg name="camera_link_pose" default="0.15 0.075 0.5 0.0 0.7854 0.0"/>
+    <include file="$(find baxter_moveit_config)/launch/move_group.launch">
+      <arg name="kinect" value="$(arg kinect)" />
+      <arg name="xtion" value="$(arg xtion)" />
+      <arg name="camera_link_pose" default="$(arg camera_link_pose)"/>
+      <arg name="allow_trajectory_execution" value="true"/>
+    </include>
+
+    <include file="$(find baxter_moveit_config)/launch/planning_context.launch">
+      <arg name="load_robot_description" value="true"/>
+    </include>
+
+    <include file="$(find baxter_moveit_config)/launch/default_warehouse_db.launch" />
+
+    <arg name="config" default="true"/>
+    <arg name="rviz_config" default="$(find baxter_moveit_config)/launch/moveit.rviz" />
+    <include file="$(find baxter_moveit_config)/launch/moveit_rviz.launch">
+      <arg name="config" value="$(arg config)" />
+      <arg name="rviz_config" value="$(arg rviz_config)" />
+    </include>
+
+  </group>
+
+  <node pkg="cnn3d_grasping" name ="MoveItCommunicatorL" type = "MoveItCommunicator.py" output="screen">
+        <param name="part" value="left" />
+  </node>
+  <node pkg="cnn3d_grasping" name ="MoveItCommunicatorR" type = "MoveItCommunicator.py" output="screen">
+        <param name="part" value="right" />
+  </node>
+
+  <node pkg="cnn3d_grasping" name ="ServInterface" type = "test_srv.py" output="screen">
+  </node>
+
+  <node name="Motor_Controller_Node" pkg="baxter_soft_hand" type="motor_controller_node"  output="log">
+
+    <param name="~finger_1_port" value="/dev/serial/by-id/usb-Pololu_Corporation_Pololu_Jrk_12v12_Motor_Controller_00097078-if00"/>
+    <param name="~finger_2_port" value="/dev/serial/by-id/usb-Pololu_Corporation_Pololu_Jrk_12v12_Motor_Controller_00115355-if00"/>
+    <param name="~finger_3_port" value="/dev/serial/by-id/usb-Pololu_Corporation_Pololu_Jrk_12v12_Motor_Controller_00097133-if00"/>
+    <param name="~finger_4_port" value="/dev/serial/by-id/usb-Pololu_Corporation_Pololu_Jrk_12v12_Motor_Controller_00097106-if00"/>
+    
+    <!-- change max_values if closing force is too strong or weak -->
+    <param name="~finger_1_min_value" value="0"/>
+    <param name="~finger_2_min_value" value="0"/>
+    <param name="~finger_3_min_value" value="0"/>
+    <param name="~finger_4_min_value" value="0"/>
+    <param name="~finger_1_max_value" value="2800"/>
+    <param name="~finger_2_max_value" value="2800"/>
+    <param name="~finger_3_max_value" value="2800"/>
+    <param name="~finger_4_max_value" value="2800"/>
+  </node>
+
+  <node name="demo_grasping" pkg="cnn3d_grasping" type="demo_grasping.py" output="screen" unless="$(arg homunculus)"/>
+  <node name="demo_grasping" pkg="cnn3d_grasping" type="demo_homunculus.py" output="screen" if="$(arg homunculus)"/>
+
+  <include file="$(find openni2_launch)/launch/openni2_registered.launch">
+    <!-- <arg name="auto_exposure" value="true" /> -->
+    <!-- <arg name="auto_white_balance" value="false" /> -->
+  </include>
+
+  <include file="$(find baxter_kinect_calibration)/launch/load_drl_baxter_calibration.launch"/>
+
+  <include file="$(find pcl_planar_segmentation)/launch/obj_segmentor.launch">
+    <arg name="clustering_min_size" value="1000"/>
+    <arg name="clustering_max_size" value="2500000"/>
+    <arg name="clustering_tolerance" value="0.03"/>
+  </include>
+  
+  <node name="soft_grasp_node" pkg="soft_grasp" type="soft_grasp_node.py" output="screen">
+    <!-- <param name='grasping_method_name' type='str' value='rand'/> -->
+    <!-- <param name='grasping_method_name' type='str' value='pca'/> -->
+    <!-- <param name='grasping_method_name' type='str' value='svm'/> -->
+    <!-- <param name='grasping_method_name' type='str' value='fcn'/> -->
+    <param name='grasping_method_name' type='str' value='cnn3d'/>
+  </node>
+
+  <node name="joint_trajectory_action_server" pkg="baxter_interface" type="joint_trajectory_action_server.py"/>
+</launch>

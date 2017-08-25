@@ -1,0 +1,67 @@
+<launch>
+  <arg name="moveit" default="true"/>
+
+  <group if="$(arg moveit)">
+    <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" respawn="true" />
+
+    <arg name="kinect" default="false" />
+    <arg name="xtion" default="false" />
+    <arg name="camera_link_pose" default="0.15 0.075 0.5 0.0 0.7854 0.0"/>
+    <include file="$(find baxter_moveit_config)/launch/move_group.launch">
+      <arg name="kinect" value="$(arg kinect)" />
+      <arg name="xtion" value="$(arg xtion)" />
+      <arg name="camera_link_pose" default="$(arg camera_link_pose)"/>
+      <arg name="allow_trajectory_execution" value="true"/>
+    </include>
+
+    <include file="$(find baxter_moveit_config)/launch/planning_context.launch">
+      <arg name="load_robot_description" value="true"/>
+    </include>
+
+    <include file="$(find baxter_moveit_config)/launch/default_warehouse_db.launch" />
+
+    <arg name="config" default="true"/>
+    <arg name="rviz_config" default="$(find baxter_moveit_config)/launch/moveit.rviz" />
+    <include file="$(find baxter_moveit_config)/launch/moveit_rviz.launch">
+      <arg name="config" value="$(arg config)" />
+      <arg name="rviz_config" value="$(arg rviz_config)" />
+    </include>
+
+  </group>
+
+  <node name="Motor_Controller_Node" pkg="baxter_soft_hand" type="motor_controller_node"  output="log">
+
+    <param name="~finger_1_port" value="/dev/serial/by-id/usb-Pololu_Corporation_Pololu_Jrk_12v12_Motor_Controller_00097078-if00"/>
+    <param name="~finger_2_port" value="/dev/serial/by-id/usb-Pololu_Corporation_Pololu_Jrk_12v12_Motor_Controller_00115355-if00"/>
+    <param name="~finger_3_port" value="/dev/serial/by-id/usb-Pololu_Corporation_Pololu_Jrk_12v12_Motor_Controller_00097133-if00"/>
+    <param name="~finger_4_port" value="/dev/serial/by-id/usb-Pololu_Corporation_Pololu_Jrk_12v12_Motor_Controller_00097106-if00"/>
+    
+    <!-- change max_values if closing force is too strong or weak -->
+    <param name="~finger_1_min_value" value="0"/>
+    <param name="~finger_2_min_value" value="0"/>
+    <param name="~finger_3_min_value" value="0"/>
+    <param name="~finger_4_min_value" value="0"/>
+    <param name="~finger_1_max_value" value="2800"/>
+    <param name="~finger_2_max_value" value="2800"/>
+    <param name="~finger_3_max_value" value="2800"/>
+    <param name="~finger_4_max_value" value="2800"/>
+  </node>
+
+  <arg name="object_name" default="new_object"/>
+  <node name="add_grasping_dataset" pkg="cnn3d_grasping" type="add_grasping_dataset.py" output="screen">
+    <param name="~object_name" value="$(arg object_name)"/>
+    <param name="~dataset_path" value="~/dataset/grasping/$(arg object_name)/"/>
+  </node>
+
+  <include file="$(find openni2_launch)/launch/openni2_registered.launch">
+    <arg name="auto_exposure" value="true" />
+    <arg name="auto_white_balance" value="true" />
+  </include>
+
+  <!-- extrinsic calibration values are here -->
+  <node pkg="tf" type="static_transform_publisher" name="kinectTransformer" args="0.191 0.059 0.520 0.001 0.455 -0.002 0.890 /world /camera_link 10"/>
+
+  <include file="$(find pcl_planar_segmentation)/launch/obj_segmentor.launch"/>
+  
+  <node name="joint_trajectory_action_server" pkg="baxter_interface" type="joint_trajectory_action_server.py"/>
+</launch>

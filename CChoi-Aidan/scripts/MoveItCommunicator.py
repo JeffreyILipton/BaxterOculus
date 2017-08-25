@@ -134,7 +134,6 @@ def main():
     
     #Start movement
     print "starting part: ",part
-    #rs = RobotEnable(CHECK_VERSION)
     for connection in connection_list:
         channel,msgType,sub_func = connection
         rospy.Subscriber(channel, msgType, sub_func)
@@ -142,10 +141,6 @@ def main():
 
 
     rospy.spin()
-
-
-    #print "done"
-    #rs.disable()
 
 
     ## When finished shut down moveit_commander.
