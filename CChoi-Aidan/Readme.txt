@@ -1,0 +1,1 @@
+Drag folders to ros_ws/src/cnn3d_grasping

@@ -1,0 +1,8 @@
+<launch>
+  <node pkg="cnn3d_grasping" name ="MoveItCommunicatorL" type = "MoveItCommunicator.py" output="screen">
+        <param name="part" value="left" />
+  </node>
+  <node pkg="cnn3d_grasping" name ="MoveItCommunicatorR" type = "MoveItCommunicator.py" output="screen">
+        <param name="part" value="right" />
+  </node>
+</launch>
