@@ -1,0 +1,34 @@
+<launch>
+  <group name='bax'>
+     <node pkg="baxter_lcm" name ="listener_m_cam101" type = "BaxterInterface.py" output="screen">
+        <param name="part" value="monitor_camera" />
+        <param name="id"  value="101" />
+     </node>
+
+     
+     <node pkg="baxter_lcm" name ="self_sender101" type = "LCMSelf.py" output="screen">
+        <param name="id"    value="101" />
+        <param name="type"    value="Baxter" />
+        <param name="ability"   value="idk" />
+        <param name="channels"  value="right_lcm_channel|left_lcm_channel|right_lcm_valid|left_lcm_valid|left_lcm|right_lcm|right_lcm_cmd|left_lcm_cmd|right_trigger_lcm|left_trigger_lcm|right_lcm_currentpos|left_lcm_currentpos|right_lcm_range|left_lcm_range|confidence_threshold_lcm|left_lcm_camera|right_lcm_camera"/>
+        <param name="queryChannel"     value="control_query|101" />
+        <param name="leftNDIChannel"   value="NDIBOX (Logitech Webcam C930e 1)" />
+        <param name="rightNDIChannel"  value="NDIBOX (Logitech Webcam C930e 0)"/>
+        <param name="broadcastChannel" value="global_self"/>
+     </node>
+
+     <node pkg="baxter_lcm" name ="QueryRos101" type = "QueryToRos.py" output="screen">
+        <param name="queryChannel"  value="control_query|101" />
+     </node>
+
+     <node pkg="baxter_lcm" name ="ConfidenceThresholdRos101" type = "ConfidenceThresholdRos.py" output="screen">
+        <param name="confidenceThresholdChannel"  value="confidence_threshold_lcm-101" />
+     </node>
+
+     <node pkg="baxter_lcm" name ="info_sender101" type = "LCMInfo.py" output="screen">
+        <param name="id"  value="101" />
+        <param name="lcmChannel"  value="global_info"/>
+     </node>
+    
+  </group>
+</launch>

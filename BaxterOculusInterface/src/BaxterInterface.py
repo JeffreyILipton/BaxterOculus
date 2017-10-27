@@ -166,7 +166,6 @@ def ProcessSoftGripperCmd(handobj,l,data):
     print "Hand:",l,"cmd",data.data
 
 def ProcessGripperCMD(gripper,data):
-<<<<<<< HEAD
     #print "gripper:",data.data
     if data.data<1:
         gripper.open()

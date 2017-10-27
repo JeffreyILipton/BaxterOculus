@@ -1,0 +1,57 @@
+<launch>
+  <group name='bax'>
+     <node pkg="baxter_lcm" name ="repeater" type = "LCMToRos.py" output="screen">
+        <param name="id"  value="100" />
+    </node>
+
+     <!--node pkg="baxter_lcm" name ="listener_r_trig" type = "BaxterInterface.py" output="screen">
+        <param name="part" value="right_trigger" />
+        <param name="id"  value="100" />
+     </node-->
+     <node pkg="baxter_lcm" name ="listener_l" type = "BaxterInterface.py" output="screen">
+        <param name="part" value="left" />
+        <param name="id"  value="100" />
+     </node>
+     <node pkg="baxter_lcm" name ="listener_l_g" type = "BaxterInterface.py" output="screen">
+        <param name="part" value="left_gripper" />
+        <param name="id"  value="100" />
+     </node>
+     <node pkg="baxter_lcm" name ="listener_l_r" type = "BaxterInterface.py" output="screen">
+        <param name="part" value="left_range" />
+        <param name="id"  value="100" />
+     </node>
+     <node pkg="baxter_lcm" name ="listener_m_cam" type = "BaxterInterface.py" output="screen">
+        <param name="part" value="monitor_camera" />
+        <param name="id"  value="100" />
+     </node>
+     <node pkg="baxter_lcm" name ="listener_l_cam" type = "BaxterInterface.py" output="screen">
+        <param name="part" value="left_camera" />
+        <param name="id"  value="100" />
+     </node>
+
+     <node pkg="baxter_lcm" name ="self_sender" type = "LCMSelf.py" output="screen">
+        <param name="id"    value="100" />
+        <param name="type"    value="Baxter" />
+        <param name="ability"   value="idk" />
+        <param name="channels"  value="left_lcm_channel|left_lcm_valid|left_lcm|left_lcm_cmd|left_trigger_lcm|left_lcm_currentpos|left_lcm_range|confidence_threshold_lcm|left_lcm_camera"/>
+        <param name="queryChannel"     value="control_query|100" />
+        <param name="leftNDIChannel"   value="NDIBOX (Logitech Webcam C930e 1)" />
+        <param name="rightNDIChannel"  value="NDIBOX (Logitech Webcam C930e 0)"/>
+        <param name="broadcastChannel" value="global_self"/>
+     </node>
+
+     <node pkg="baxter_lcm" name ="QueryRos" type = "QueryToRos.py" output="screen">
+        <param name="queryChannel"  value="control_query|100" />
+     </node>
+
+     <node pkg="baxter_lcm" name ="ConfidenceThresholdRos" type = "ConfidenceThresholdRos.py" output="screen">
+        <param name="confidenceThresholdChannel"  value="confidence_threshold_lcm-100" />
+     </node>
+
+     <node pkg="baxter_lcm" name ="info_sender" type = "LCMInfo.py" output="screen">
+        <param name="id"  value="100" />
+        <param name="lcmChannel"  value="global_info"/>
+     </node>
+    
+  </group>
+</launch>
