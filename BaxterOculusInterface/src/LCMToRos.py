@@ -51,10 +51,14 @@ def LCMPoseToRos(RosPub,LcmChannel,lcmData):
     #print "ROS pose:",p
     RosPub.publish(p)
     
-def LCMBoolToRos(RosPub,lcmChannel, lcmData):
+def LCMBoolToRos(RosPub, lcmChannel, lcmData):
     lcm_msg = trigger_t.decode(lcmData)
     RosPub.publish(lcm_msg.trigger)
 
+def LCMConfidenceToRos(RosPub, lcmChannel, lcmData):
+    lcm_msg = confidencethreshold_t.decode(lcmData)
+    RosPub.publish(Float32(lcm_msg.confidence))
+    
 class LCMInterface():
     def __init__(self):
         rospy.init_node('repeater', anonymous=True)
@@ -68,30 +72,35 @@ class LCMInterface():
         self.lc = lcm.LCM("udpm://239.255.76.67:7667:?ttl=1")
         self.subscriptions={}
 
-        connections = [(ROS_LEFT,       LCM_LEFT  + "-" + str(id),  Pose),
-                       (ROS_L_CMD,      LCM_L_CMD  + "-" + str(id), UInt16),
-                       (ROS_L_VEL,      LCM_L_VEL  + "-" + str(id), Float64),
-                       (ROS_L_TRIGGER,  LCM_L_TRIGGER  + "-" + str(id), Bool),
-                       (ROS_RIGHT,      LCM_RIGHT  + "-" + str(id), Pose),
-                       (ROS_R_CMD,      LCM_R_CMD  + "-" + str(id), UInt16),
-                       (ROS_R_VEL,      LCM_R_VEL  + "-" + str(id),Float64),
-                       (ROS_R_TRIGGER,  LCM_R_TRIGGER  + "-" + str(id),Bool)]#,
+        connections = [
+                        (ROS_LEFT,       LCM_LEFT  + "-" + str(id),  Pose,     LCMPoseToRos),
+                        (ROS_L_CMD,      LCM_L_CMD  + "-" + str(id), UInt16,   LCMGripperCMDToRos),
+                        (ROS_L_VEL,      LCM_L_VEL  + "-" + str(id), Float64,  LCMGripperVelToRos),
+                        (ROS_L_TRIGGER,  LCM_L_TRIGGER  + "-" + str(id), Bool, LCMBoolToRos),
+                        (ROS_RIGHT,      LCM_RIGHT  + "-" + str(id), Pose,     LCMPoseToRos),
+                        (ROS_R_CMD,      LCM_R_CMD  + "-" + str(id), UInt16,   LCMGripperCMDToRos),
+                        (ROS_R_VEL,      LCM_R_VEL  + "-" + str(id), Float64,  LCMGripperVelToRos),
+                        (ROS_R_TRIGGER,  LCM_R_TRIGGER  + "-" + str(id), Bool, LCMBoolToRos),
+                        (ROS_CONFIDENCE, LCM_CONFIDENCE_THRESHOLD  + "-" + str(id), Float32, LCMConfidenceToRos),
+                        (ROS_ORB, LCM_ORB, Bool, LCMBoolToRos),                        
+                       ]
 
         print connections
 
         for connection in connections:
-            ros_channnel,lcm_channel,ros_msg_type = connection
-            pub = rospy.Publisher(ros_channnel, ros_msg_type, queue_size=1)
-            if ros_msg_type == Pose:
-                subscriber = partial(LCMPoseToRos,pub)
-            elif ros_msg_type == Bool:
-                subscriber = partial(LCMBoolToRos,pub)
-            elif ros_msg_type == UInt16:
-                subscriber = partial(LCMGripperCMDToRos,pub)
-            elif ros_msg_type == Float64:
-                subscriber = partial(LCMGripperVelToRos,pub)
+            (ros_channel, lcm_channel, ros_msg_type, partial_function) = connection
+            pub = rospy.Publisher(ros_channel, ros_msg_type, queue_size=1)
+            subscriber = partial(partial_function, pub)
+            #if ros_msg_type == Pose:
+            #    subscriber = partial(LCMPoseToRos,pub)
+            #elif ros_msg_type == Bool:
+            #    subscriber = partial(LCMBoolToRos,pub)
+            #elif ros_msg_type == UInt16:
+            #    subscriber = partial(LCMGripperCMDToRos,pub)
+            #elif ros_msg_type == Float64:
+            #    subscriber = partial(LCMGripperVelToRos,pub)
 
-            self.subscriptions[ros_channnel] = self.lc.subscribe(lcm_channel,subscriber)
+            self.subscriptions[ros_channel] = self.lc.subscribe(lcm_channel, subscriber)
 
     def run(self):
         try:

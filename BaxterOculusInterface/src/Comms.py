@@ -42,10 +42,23 @@ LCM_MONITOR_CAMERA = "monitor_lcm_camera"
 ROS_QUERY      = "query"
 ROS_CONFIDENCE = "/demo_grasping/confidence"
 ROS_THRESHOLD  = "threshold"
+LCM_CONFIDENCE_THRESHOLD = "confidence_threshold_lcm"
+
+ROS_ORB = "orb_grab_release"
+LCM_ORB = "orb_grab_release_lcm"
 
 ROS_RIGHT_REQUEST = "right_request"
 ROS_LEFT_REQUEST = "left_request"
 ROS_RIGHT_ISVALID = "right_isvalid"
 ROS_LEFT_ISVALID = "left_isvalid"
+
+ROS_PROGRAM_START = "/human_factors/program_start"
+ROS_TRIAL_START = "/human_factors/trial_start"
+ROS_TRIAL_END = "/human_factors/trial_end_status"
+ROS_GRASP_RESULT = "/human_factors/grasp_result"
+ROS_HELP_REQUESTED = "/human_factors/help_request_start"
+ROS_HELP_COMPLETED = "/human_factors/help_request_end"
+ROS_EXP_NOTES = "/human_factors/exp_notes"
+
 
 ROS_HELP = "help"
