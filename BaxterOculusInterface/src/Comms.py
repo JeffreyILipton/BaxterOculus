@@ -40,9 +40,11 @@ ROS_R_CAMERA = "/cameras/right_hand_camera/image"
 LCM_MONITOR_CAMERA = "monitor_lcm_camera"
 
 ROS_QUERY      = "query"
-ROS_CONFIDENCE = "/demo_grasping/confidence"
+ROS_CONFIDENCE = "confidence"
 ROS_THRESHOLD  = "threshold"
 LCM_CONFIDENCE_THRESHOLD = "confidence_threshold_lcm"
+
+CC_PREFIX = "grasp_learning"
 
 ROS_ORB = "orb_grab_release"
 LCM_ORB = "orb_grab_release_lcm"

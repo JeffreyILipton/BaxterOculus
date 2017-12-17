@@ -120,18 +120,20 @@ def SendLCM():
     lc.publish(lcmChannel,data.encode())
 
 class CChoi():
-    def __init__(self):
-        rospy.wait_for_service('demo_grasping/start')
-        self._srv_start = rospy.ServiceProxy('demo_grasping/start', Start)
+    def __init__(self,lr='L'):
+        name = 'left'
+        if lr == 'R': name = 'right'
+        rospy.wait_for_service(CC_PREFIX+'_'+name+'/start')
+        self._srv_start = rospy.ServiceProxy(CC_PREFIX+'_'+name+'/start', Start)
 
-        rospy.wait_for_service('demo_grasping/stop')
-        self._srv_stop = rospy.ServiceProxy('demo_grasping/stop', Stop)
+        rospy.wait_for_service(CC_PREFIX+'_'+name+'/stop')
+        self._srv_stop = rospy.ServiceProxy(CC_PREFIX+'_'+name+'/stop', Stop)
 
-        rospy.wait_for_service('demo_grasping/get_th')
-        self._srv_get_th = rospy.ServiceProxy('demo_grasping/get_th', GetThreshold)
+        rospy.wait_for_service(CC_PREFIX+'_'+name+'/get_th')
+        self._srv_get_th = rospy.ServiceProxy(CC_PREFIX+'_'+name+'/get_th', GetThreshold)
 
-        rospy.wait_for_service('demo_grasping/set_th')
-        self._srv_set_th = rospy.ServiceProxy('demo_grasping/set_th', SetThreshold)
+        rospy.wait_for_service(CC_PREFIX+'_'+name+'/set_th')
+        self._srv_set_th = rospy.ServiceProxy(CC_PREFIX+'_'+name+'/set_th', SetThreshold)
 
         #s = rospy.Service('demo_grasping/grasp_help', NeedHelp, self.srv_grasp_help)
 
@@ -211,6 +213,10 @@ def main():
     full_param_name = rospy.search_param('lcmChannel')
     param_value = rospy.get_param(full_param_name)
     lcmChannel = str(param_value)
+
+    full_param_name = rospy.search_param('lr')
+    param_value = rospy.get_param(full_param_name)
+    lr = param_value
     
     timeout =0.1
     sub_func = None
@@ -219,28 +225,43 @@ def main():
 
     connection_list = []
 
-    t = CChoi()
+    t = CChoi(lr)
 
     channel = ROS_CONFIDENCE
+    if lr =="R":
+        channel ='/'+CC_PREFIX+'_right/'+ROS_CONFIDENCE
+        channel2 = ROS_QUERY
+        channel3 = ROS_THRESHOLD
+        channel4 = ROS_HELP+'_right'
+    elif lr =='L':
+        channel ='/'+CC_PREFIX+'_left/'+ROS_CONFIDENCE
+        channel2 = ROS_QUERY
+        channel3 = ROS_THRESHOLD
+        channel4 = ROS_HELP+'_left'
+
+
     sub_func = ProcessConfidence
     msgType = Float32
     connection_list.append((channel,msgType,sub_func))
          
-    channel2 = ROS_QUERY
+    
     sub_func2 = ProcessQuery
     msgType2 = Int16
     connection_list.append((channel2,msgType2,sub_func2))
 
-    channel3 = ROS_THRESHOLD
+    
     sub_func3 = ProcessThreshold
     msgType3 = Float32
     connection_list.append((channel3,msgType3,sub_func3))
 
-    channel4 = ROS_HELP
     sub_func4 = ProcessHelp
     msgType4 = Bool
     connection_list.append((channel4,msgType4,sub_func4))
 
+    print "confidence is ", channel
+    print "Query is", channel2
+    print "Threshold is ",channel3
+    print "Help is ", channel4
 
     #Start movement
     curtime = time.time()

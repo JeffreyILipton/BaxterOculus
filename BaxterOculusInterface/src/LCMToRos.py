@@ -67,23 +67,46 @@ class LCMInterface():
         param_value = rospy.get_param(full_param_name)
         id = param_value
 
+        full_param_name = rospy.search_param('lr')
+        param_value = rospy.get_param(full_param_name)
+        lr = param_value
+
 
 
         self.lc = lcm.LCM("udpm://239.255.76.67:7667:?ttl=1")
         self.subscriptions={}
 
         connections = [
-                        (ROS_LEFT,       LCM_LEFT  + "-" + str(id),  Pose,     LCMPoseToRos),
-                        (ROS_L_CMD,      LCM_L_CMD  + "-" + str(id), UInt16,   LCMGripperCMDToRos),
-                        (ROS_L_VEL,      LCM_L_VEL  + "-" + str(id), Float64,  LCMGripperVelToRos),
-                        (ROS_L_TRIGGER,  LCM_L_TRIGGER  + "-" + str(id), Bool, LCMBoolToRos),
-                        (ROS_RIGHT,      LCM_RIGHT  + "-" + str(id), Pose,     LCMPoseToRos),
-                        (ROS_R_CMD,      LCM_R_CMD  + "-" + str(id), UInt16,   LCMGripperCMDToRos),
-                        (ROS_R_VEL,      LCM_R_VEL  + "-" + str(id), Float64,  LCMGripperVelToRos),
-                        (ROS_R_TRIGGER,  LCM_R_TRIGGER  + "-" + str(id), Bool, LCMBoolToRos),
-                        (ROS_CONFIDENCE, LCM_CONFIDENCE_THRESHOLD  + "-" + str(id), Float32, LCMConfidenceToRos),
-                        (ROS_ORB, LCM_ORB, Bool, LCMBoolToRos),                        
-                       ]
+            (ROS_LEFT,       LCM_LEFT  + "-" + str(id),  Pose,     LCMPoseToRos),
+            (ROS_L_CMD,      LCM_L_CMD  + "-" + str(id), UInt16,   LCMGripperCMDToRos),
+            (ROS_L_VEL,      LCM_L_VEL  + "-" + str(id), Float64,  LCMGripperVelToRos),
+            (ROS_L_TRIGGER,  LCM_L_TRIGGER  + "-" + str(id), Bool, LCMBoolToRos),
+            (ROS_RIGHT,      LCM_RIGHT  + "-" + str(id), Pose,     LCMPoseToRos),
+            (ROS_R_CMD,      LCM_R_CMD  + "-" + str(id), UInt16,   LCMGripperCMDToRos),
+            (ROS_R_VEL,      LCM_R_VEL  + "-" + str(id), Float64,  LCMGripperVelToRos),
+            (ROS_R_TRIGGER,  LCM_R_TRIGGER  + "-" + str(id), Bool, LCMBoolToRos),
+            (ROS_ORB, LCM_ORB, Bool, LCMBoolToRos),                        
+           ]
+
+        if lr == 'R':
+            connections = [
+                (ROS_RIGHT,      LCM_RIGHT  + "-" + str(id), Pose,     LCMPoseToRos),
+                (ROS_R_CMD,      LCM_R_CMD  + "-" + str(id), UInt16,   LCMGripperCMDToRos),
+                (ROS_R_VEL,      LCM_R_VEL  + "-" + str(id), Float64,  LCMGripperVelToRos),
+                (ROS_R_TRIGGER,  LCM_R_TRIGGER  + "-" + str(id), Bool, LCMBoolToRos),
+                ('/'+CC_PREFIX+'_right/'+ROS_CONFIDENCE, LCM_CONFIDENCE_THRESHOLD  + "-" + str(id), Float32, LCMConfidenceToRos),
+                (ROS_ORB, LCM_ORB, Bool, LCMBoolToRos),                        
+               ]
+        elif lr == 'L':
+            connections = [
+                (ROS_LEFT,       LCM_LEFT  + "-" + str(id),  Pose,     LCMPoseToRos),
+                (ROS_L_CMD,      LCM_L_CMD  + "-" + str(id), UInt16,   LCMGripperCMDToRos),
+                (ROS_L_VEL,      LCM_L_VEL  + "-" + str(id), Float64,  LCMGripperVelToRos),
+                (ROS_L_TRIGGER,  LCM_L_TRIGGER  + "-" + str(id), Bool, LCMBoolToRos),
+                ('/'+CC_PREFIX+'_left/'+ROS_CONFIDENCE, LCM_CONFIDENCE_THRESHOLD  + "-" + str(id), Float32, LCMConfidenceToRos),
+                (ROS_ORB, LCM_ORB, Bool, LCMBoolToRos),                        
+               ]
+
 
         print connections
 

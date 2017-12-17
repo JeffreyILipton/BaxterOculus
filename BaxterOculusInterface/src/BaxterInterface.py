@@ -464,6 +464,34 @@ def main():
         l_cam = CameraController('left_hand_camera')
         l_cam.resolution=(320,200)#(1280, 800)
         l_cam.open()
+    elif part == 'monitor_camera_r':
+
+        lcChannel = LCM_MONITOR_CAMERA  + "-" + str(id)
+        #lc = lcm.LCM("udpm://239.255.76.67:7667:?ttl=1")
+        channel = ROS_R_CAMERA
+        msgType = Image
+        sub_func = lambda x : ProcessMonitorImage(lc,lcChannel,x)
+        #sub_func = partial(ProcessImage,lc,lcChannel)
+        connection_list.append((channel,msgType,sub_func))
+        connection_list.append((channel,msgType,sub_func))
+
+        l_cam = CameraController('right_hand_camera')
+        l_cam.resolution=(320,200)#(1280, 800)
+        l_cam.open()
+    elif part == 'monitor_camera_l':
+
+        lcChannel = LCM_MONITOR_CAMERA  + "-" + str(id)
+        #lc = lcm.LCM("udpm://239.255.76.67:7667:?ttl=1")
+        channel = ROS_L_CAMERA
+        msgType = Image
+        sub_func = lambda x : ProcessMonitorImage(lc,lcChannel,x)
+        #sub_func = partial(ProcessImage,lc,lcChannel)
+        connection_list.append((channel,msgType,sub_func))
+        connection_list.append((channel,msgType,sub_func))
+
+        l_cam = CameraController('left_hand_camera')
+        l_cam.resolution=(320,200)#(1280, 800)
+        l_cam.open()
     else :
         print "unknown part:", part
         return 0
