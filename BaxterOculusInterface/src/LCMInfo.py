@@ -230,12 +230,12 @@ def main():
     channel = ROS_CONFIDENCE
     if lr =="R":
         channel ='/'+CC_PREFIX+'_right/'+ROS_CONFIDENCE
-        channel2 = ROS_QUERY
+        channel2 = ROS_QUERY+'_'+str(id)
         channel3 = ROS_THRESHOLD
         channel4 = ROS_HELP+'_right'
     elif lr =='L':
         channel ='/'+CC_PREFIX+'_left/'+ROS_CONFIDENCE
-        channel2 = ROS_QUERY
+        channel2 = ROS_QUERY+'_'+str(id)
         channel3 = ROS_THRESHOLD
         channel4 = ROS_HELP+'_left'
 
@@ -259,7 +259,7 @@ def main():
     connection_list.append((channel4,msgType4,sub_func4))
 
     print "confidence is ", channel
-    print "Query is", channel2
+    print "Querry is", channel2
     print "Threshold is ",channel3
     print "Help is ", channel4
 

@@ -33,7 +33,7 @@
         <param name="id"    value="100" />
         <param name="type"    value="Baxter" />
         <param name="ability"   value="idk" />
-        <param name="channels"  value="right_lcm_channel|right_lcm_valid|right_lcm|right_lcm_cmd|right_trigger_lcm|right_lcm_currentpos|right_lcm_range|left_lcm_range|confidence_threshold_lcm|right_lcm_camera"/>
+        <param name="channels"  value="right_lcm_channel|right_lcm_valid|right_lcm|right_lcm_cmd|right_trigger_lcm|right_lcm_currentpos|right_lcm_range|confidence_threshold_lcm|right_lcm_camera"/>
         <param name="queryChannel"     value="control_query|100" />
         <param name="leftNDIChannel"   value="NDIBOX (Logitech Webcam C930e 1)" />
         <param name="rightNDIChannel"  value="NDIBOX (Logitech Webcam C930e 0)"/>

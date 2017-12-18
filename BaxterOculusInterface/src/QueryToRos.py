@@ -17,11 +17,24 @@ from functools import *
 from Comms import *
 
 def QueryRos(RosPub,LcmChannel,lcmData):
-    #print "test"
+    #print "QuerryRosCalled"
     try:
         lcm_msg = query_t.decode(lcmData)
-        print lcm_msg.userID
-        RosPub.publish(lcm_msg.userID)
+        #print "LCM Channel: "+LcmChannel+"\tRos: "+RosPub.name+"\tuser id: "+str(lcm_msg.userID)
+        '''For some reason, different LCM Channels get the same call? i ahve no idea why
+        print "LCM Channel: "+LcmChannel+"\tRos: "+RosPub.name+"\tuser id: "+str(lcm_msg.userID)
+
+        looks like this 
+        LCM Channel: control_query|101  Ros: /query_101 user id: -2
+        done _test_stop
+        LCM Channel: control_query|100  Ros: /query_101 user id: 12
+        '''
+        lcmparts = LcmChannel.split("|")
+        rosparts = RosPub.name.split("_")
+        if len(lcmparts) ==2 and len(rosparts)==2:
+            if lcmparts[1] == rosparts[1]:
+                print "publishing Querry for " + str(lcmparts[1])
+                RosPub.publish(lcm_msg.userID)
     except:
         pass
         #print "errored"
@@ -40,8 +53,13 @@ class LCMInterface():
         self.lc = lcm.LCM("udpm://239.255.76.67:7667:?ttl=1")
         self.subscriptions={}
 
-        connections = [(ROS_QUERY,queryChannel,Int16)]
-        
+        print "Querry Channel in LCM: ",queryChannel
+        vals = queryChannel.split("|")
+        print "Querry Channel in ROS: ",ROS_QUERY+'_'+vals[1]
+        #vals = queryChannel.split("|")
+
+        connections = [(ROS_QUERY+'_'+vals[1],queryChannel,Int16)]
+        print connections
 
         ros_channnel,lcm_channel,ros_msg_type = connections[0]
         pub = rospy.Publisher(ros_channnel, ros_msg_type, queue_size=1)
